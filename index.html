@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mates Quest</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#2377b8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mates Quest">
+<style>
+:root{--bg:#e8f6ff;--panel:#fff;--ink:#17324d;--blue:#2f8cff;--green:#63c73a;--purple:#8b4be8;--orange:#ffb526;--red:#e8525d;--line:#cfe0ef}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:linear-gradient(180deg,#66c6ff 0 120px,var(--bg) 120px);color:var(--ink);min-height:100vh}
+button,input,select{font:inherit}.app{width:min(1220px,calc(100% - 20px));margin:auto;padding:14px 0 30px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#fff;margin-bottom:14px;flex-wrap:wrap}
+.back{border:0;color:#fff;background:#2377b8;border-radius:14px;padding:12px 16px;font-weight:900;box-shadow:0 5px 0 #175788;cursor:pointer}.stats{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.statpill{background:#2b87c7;border-radius:14px;padding:9px 13px;font-weight:900;white-space:nowrap}
+.profile-bar{display:flex;gap:8px;align-items:center;background:#2b87c7;border-radius:14px;padding:8px 12px;flex-wrap:wrap}
+.profile-bar select{border:0;border-radius:8px;padding:6px 8px;font-weight:800;max-width:160px}
+.profile-bar .btn{padding:8px 12px;font-size:.85rem;box-shadow:none}
+.layout{display:grid;grid-template-columns:220px 1fr 260px;gap:14px}.card{background:var(--panel);border:2px solid rgba(255,255,255,.8);border-radius:22px;box-shadow:0 12px 28px rgba(33,91,130,.16)}
+.left,.right{padding:14px}.main{padding:18px}h2,h3{margin-top:0}.steps{display:grid;gap:8px}.step{border:2px solid var(--line);background:#f7fbff;border-radius:14px;padding:12px;display:flex;gap:10px;align-items:flex-start}
+.step.active{border-color:#7acb52;background:#effbe9}.step.done{opacity:.62}.num{min-width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--purple);color:#fff;font-weight:1000}
+.tip{margin-top:12px;border:2px solid #d9c8ff;background:#f7f0ff;border-radius:16px;padding:13px;font-size:.88rem}.fox{font-size:52px;text-align:center;margin-top:12px}.speech{background:#fff;border:2px solid var(--line);border-radius:15px;padding:10px;font-weight:800;font-size:.92rem}
+.title{text-align:center;font-size:clamp(1.4rem,3vw,2.1rem);font-weight:1000;margin-bottom:12px}.title .dividend{color:var(--blue)}.title .divisor{color:var(--purple)}
+.instruction{background:#eefae9;border:2px solid #c8eab9;border-radius:16px;padding:14px 16px;margin-bottom:14px;font-weight:850}
+.board{background:linear-gradient(#dce8f2 1px,transparent 1px),linear-gradient(90deg,#dce8f2 1px,transparent 1px),#fff;background-size:28px 28px;border:2px solid #d6e4f1;border-radius:18px;min-height:340px;padding:26px;display:flex;align-items:flex-start;justify-content:center}
+.divisor-display{color:var(--purple);letter-spacing:.1em}.quotient{margin-top:16px;min-height:58px;color:var(--purple);letter-spacing:.15em}
+.controls{margin-top:16px;background:#f8fbfe;border:2px solid var(--line);border-radius:18px;padding:16px}.prompt{font-weight:900;margin-bottom:12px}
+.options{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.option{border:2px solid #c9d8e7;background:#fff;border-radius:12px;padding:14px;font-size:1.35rem;font-weight:1000;color:var(--ink);box-shadow:0 4px 0 #d7e2ed}
+.option.good{background:#78d64d;color:#fff;border-color:#53b52c}.option.bad{background:#ef6a73;color:#fff;border-color:#ce3f49}.inputrow{display:flex;gap:10px}.answerinput{flex:1;border:2px solid #c9d8e7;border-radius:12px;padding:14px;font-size:1.3rem;text-align:center;font-weight:900}
+.btn{border:0;border-radius:12px;padding:13px 18px;font-weight:1000;color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.18);cursor:pointer}.btn.green{background:var(--green)}.btn.orange{background:var(--orange)}.btn.blue{background:var(--blue)}.btn.grey{background:#8ba3b8;box-shadow:0 5px 0 #6b8298}.finalbox{background:#fffdf3;border:2px solid #f2df9b;border-radius:16px;padding:14px;margin-bottom:14px}
+.rulebox{background:#fff8ed;border:2px solid #ffd49d;border-radius:16px;padding:14px}.rulebox ol{padding-left:20px;margin-bottom:0}.feedback{min-height:26px;margin-top:12px;border-radius:12px;padding:10px 12px;font-weight:900}.feedback.ok{background:#eaf9e4;color:#33831e}.feedback.bad{background:#fff0f1;color:#b9323e}.hidden{display:none !important}
+@media(max-width:980px){.layout{grid-template-columns:1fr}.left{order:2}.main{order:1}.right{order:3}}
+
+.division-sheet{display:flex;align-items:flex-start;justify-content:center;font-family:"Courier New",monospace;font-weight:800;font-size:clamp(1.7rem,4vw,2.8rem)}
+.left-grid{display:grid;grid-auto-rows:52px;align-items:center;justify-items:center}.grid-cell{width:48px;height:52px;display:grid;place-items:center;position:relative}.grid-cell.line:after{content:"";position:absolute;left:2px;right:2px;bottom:3px;height:2px;background:#17324d}.grid-cell.minus:before{content:"−";position:absolute;left:-13px;top:8px;font-size:.8em}.right-side{min-width:145px;border-left:3px solid #111}.right-side .divisor-display{min-height:52px;display:flex;align-items:center;padding-left:16px;border-bottom:3px solid #111;color:var(--purple);letter-spacing:.08em}.right-side .quotient{min-height:52px;display:flex;align-items:center;padding-left:16px;color:var(--purple);letter-spacing:.16em}
+
+.module-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.module-tab{border:2px solid #c9d8e7;background:#eef6fd;color:#17324d;border-radius:14px;padding:12px 6px;font-weight:1000;font-size:.92rem;cursor:pointer}
+.module-tab.active{background:#63c73a;color:white;border-color:#4cab2a}
+
+.notebook-wrap{display:flex;justify-content:center;width:100%}
+.notebook-grid{display:grid;grid-auto-rows:52px;justify-items:center;align-items:center;font-family:"Courier New",monospace;font-size:clamp(1.8rem,4vw,3rem);font-weight:800}
+.nb-cell{width:48px;height:52px;display:grid;place-items:center;position:relative}
+.nb-cell.line::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:3px;background:#17324d}
+.nb-cell.op::before{content:"×";position:absolute;left:-22px;top:4px;font-weight:800}
+.nb-cell.plus::before{content:"+";position:absolute;left:-22px;top:4px;font-weight:800}
+.nb-cell.carry{font-size:.48em;color:#8b4be8;align-self:end;padding-bottom:2px}
+.nb-cell.active{background:#e9f8df;border:2px solid #8fd769;border-radius:10px}
+.nb-cell.partial{color:#17324d}
+
+/* --- Tablas Quest --- */
+.block{background:#f8fbfe;border:2px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
+.block h3{margin-bottom:10px}
+.profile-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.profile-row select{border:2px solid #c9d8e7;border-radius:10px;padding:10px;font-weight:800;flex:1;min-width:120px}
+.profile-row input{border:2px solid #c9d8e7;border-radius:10px;padding:10px;font-weight:800;flex:1;min-width:120px}
+.chiprow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.chip{border:2px solid #c9d8e7;background:#fff;border-radius:20px;padding:6px 12px;font-weight:800;font-size:.8rem;cursor:pointer}
+.tables-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.tbtn{border:2px solid #c9d8e7;background:#fff;border-radius:12px;padding:12px 0;font-weight:1000;font-size:1.05rem;cursor:pointer}
+.tbtn.on{background:var(--blue);color:#fff;border-color:#1f6fd0}
+.tbtn small{display:block;font-weight:700;font-size:.6rem;opacity:.8;margin-top:2px}
+.mode-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mode-card{border:2px solid #c9d8e7;background:#fff;border-radius:16px;padding:14px 10px;cursor:pointer;text-align:center}
+.mode-card .emoji{font-size:1.6rem}
+.mode-card b{display:block;margin:4px 0 2px;font-size:.9rem}
+.mode-card small{font-size:.72rem;color:#4c6a85}
+.mode-card.on{background:#eefaf3;border-color:var(--green)}
+.rowline{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.rowline label{font-weight:800;font-size:.85rem}
+.rowline select{border:2px solid #c9d8e7;border-radius:10px;padding:9px;font-weight:800}
+.qwrap{display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(#dce8f2 1px,transparent 1px),linear-gradient(90deg,#dce8f2 1px,transparent 1px),#fff;background-size:28px 28px;border:2px solid #d6e4f1;border-radius:18px;min-height:230px;padding:28px}
+.sessioninfo{font-weight:900;color:#4c6a85;margin-bottom:6px;font-size:.9rem}
+.question{font-family:"Courier New",monospace;font-weight:900;font-size:clamp(2.2rem,6vw,3.6rem);color:var(--ink);letter-spacing:.03em}
+.timerbar-wrap{width:100%;max-width:420px;height:12px;background:#e3edf6;border-radius:8px;overflow:hidden;margin-top:14px}
+.timerbar{height:100%;background:var(--orange);width:100%;transition:width .25s linear}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.sumcard{background:#f8fbfe;border:2px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.sumcard b{display:block;font-size:1.5rem}
+.sumcard small{font-size:.72rem;color:#4c6a85}
+.weaklist{background:#fff8ed;border:2px solid #ffd49d;border-radius:14px;padding:12px 16px}
+.weaklist li{margin:4px 0}
+.mastery-wrap{overflow:auto}
+.mgrid{display:grid;gap:3px;font-family:"Courier New",monospace}
+.mcell{width:20px;height:20px;border-radius:4px;font-size:.5rem;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+.mcell.head{background:transparent;color:#17324d;font-weight:900}
+.m-untried{background:#dbe6ef;color:#8098ac}
+.m-learning{background:#ffcf6b;color:#7a5100}
+.m-weak{background:#ef6a73}
+.m-mastered{background:#63c73a}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:.7rem;font-weight:800}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+@media(max-width:560px){.tables-grid{grid-template-columns:repeat(4,1fr)}.mode-cards{grid-template-columns:1fr}.summary-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+<button class="back" id="reloadBtn">↻ Reiniciar todo</button>
+<div class="profile-bar">
+  <span style="font-weight:900">👤</span>
+  <select id="profileSelect"><option value="">— elegir perfil —</option></select>
+  <input id="newProfileNameInput" placeholder="Nombre nuevo" style="max-width:110px;border:0;border-radius:8px;padding:6px 8px;font-weight:700">
+  <button class="btn blue" id="newProfileBtn">Crear</button>
+</div>
+<div class="stats">
+<div class="statpill">⭐ <span id="stars">0</span></div>
+<div class="statpill">🔥 <span id="streak">0</span></div>
+<div class="statpill">❤️ <span id="hearts">3</span></div>
+</div>
+</header>
+<div class="layout">
+
+<aside class="card left">
+<div id="profileSummaryPanel">
+<h3>Tu perfil</h3>
+<div id="globalMiniSummary" style="font-size:.82rem;line-height:1.5">Elige o crea un perfil arriba para guardar tu progreso.</div>
+<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+  <button class="btn blue" id="exportProgressBtn" style="flex:1;font-size:.72rem;padding:8px 4px">💾 Guardar copia</button>
+  <button class="btn orange" id="importProgressBtn" style="flex:1;font-size:.72rem;padding:8px 4px">📂 Cargar copia</button>
+</div>
+<input type="file" id="importFileInput" accept="application/json,.json" class="hidden">
+<div class="feedback" id="progressIOFeedback" style="display:none;font-size:.72rem;padding:6px 8px;min-height:0"></div>
+
+<div id="syncBlock" style="margin-top:12px;border-top:1px dashed #cfe0ef;padding-top:10px">
+  <div style="font-weight:900;font-size:.85rem;margin-bottom:6px">☁️ Sincronizar entre dispositivos</div>
+  <div id="syncStatus" style="font-size:.72rem;color:#4c6a85;margin-bottom:8px">Comprobando configuración…</div>
+  <div id="syncSetupBlock" class="hidden">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+      <button class="btn blue" id="createSyncCodeBtn" style="flex:1;font-size:.7rem;padding:7px 4px">Crear código nuevo</button>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <input id="linkSyncCodeInput" placeholder="Código de otro dispositivo" style="flex:1;min-width:0;border:2px solid #c9d8e7;border-radius:8px;padding:6px 8px;font-weight:800;font-size:.75rem;text-transform:uppercase">
+      <button class="btn orange" id="linkSyncCodeBtn" style="font-size:.7rem;padding:7px 8px">Vincular</button>
+    </div>
+  </div>
+  <div id="syncActiveBlock" class="hidden">
+    <div style="font-size:.75rem">Código de este perfil: <b id="syncCodeDisplay" style="letter-spacing:.1em"></b></div>
+    <div style="font-size:.68rem;color:#4c6a85;margin:4px 0 8px">Usa este código en tus otros dispositivos para que se sincronicen solos.</div>
+    <button class="btn grey" id="unlinkSyncBtn" style="width:100%;font-size:.7rem;padding:7px 4px">Dejar de sincronizar este dispositivo</button>
+  </div>
+</div>
+</div>
+<div id="stepsPanel">
+<h3>Pasos</h3><div class="steps" id="steps"></div>
+<div class="tip"><b>💡 Consejo</b><br>Empieza por el grupo más pequeño que sea igual o mayor que el divisor.</div>
+</div>
+<div id="tqLeftPanel" class="hidden">
+<div class="tip"><b>💡 Consejo</b><br>Practica un poco cada día: 10 minutos son mejores que una hora de golpe.</div>
+</div>
+<div class="fox">🦊</div><div class="speech" id="speech">Vamos paso a paso. No hay prisa.</div>
+</aside>
+
+<main class="card main">
+<div class="module-tabs">
+  <button class="module-tab active" id="divisionTab">➗ Divisiones</button>
+  <button class="module-tab" id="multiplicationTab">✖️ Multiplicaciones</button>
+  <button class="module-tab" id="tablasTab">🔢 Tablas</button>
+</div>
+
+<div id="divisionModule">
+<div class="title">Crea una división y empieza</div>
+<div id="setupPanel" class="controls" style="margin-top:0;margin-bottom:14px">
+  <div class="prompt">Crea tu división</div>
+  <div class="inputrow" style="flex-wrap:wrap">
+    <input id="customDividend" class="answerinput" type="number" step="any" placeholder="Dividendo">
+    <input id="customDivisor" class="answerinput" type="number" step="any" placeholder="Divisor">
+    <select id="decimalPlaces" class="answerinput" style="max-width:180px">
+      <option value="0">Sin decimales</option>
+      <option value="1">1 decimal</option>
+      <option value="2">2 decimales</option>
+      <option value="3">3 decimales</option>
+    </select>
+    <button class="btn green" id="startCustomBtn">Empezar</button><button class="btn orange" id="randomBtn">Aleatoria</button>
+  </div>
+  <div class="feedback" id="setupFeedback"></div>
+</div>
+<div class="instruction hidden" id="instruction">Paso 1: elige el primer grupo.</div>
+<div class="board hidden" id="board"><div class="division-sheet"><div class="left-grid" id="leftGrid"></div><div class="right-side"><div class="divisor-display" id="divisorDisplay">12</div><div class="quotient" id="quotientDisplay"></div></div></div></div>
+<div class="controls hidden" id="gameControls">
+<div class="prompt" id="prompt">¿Qué grupo debemos coger primero?</div>
+<div id="optionControls" class="options"></div>
+<div id="inputControls" class="inputrow hidden"><input id="answerInput" class="answerinput" type="number" inputmode="numeric"><button class="btn green" id="checkBtn">Comprobar</button><button class="btn orange" id="hintBtn">Pista</button></div>
+<div class="feedback" id="feedback"></div>
+</div>
+</div>
+
+<div id="multiplicationModule" class="hidden">
+<div class="title">Crea una multiplicación y empieza</div>
+<div class="controls" style="margin-top:0;margin-bottom:14px">
+  <div class="prompt">Multiplicación personalizada</div>
+  <div class="inputrow" style="flex-wrap:wrap">
+    <input id="multA" class="answerinput" type="number" min="0" step="1" placeholder="Primer número">
+    <input id="multB" class="answerinput" type="number" min="0" step="1" placeholder="Segundo número">
+    <button class="btn green" id="startMultBtn">Empezar</button>
+    <button class="btn orange" id="randomMultBtn">Aleatoria</button>
+  </div>
+  <div class="feedback" id="multSetupFeedback"></div>
+</div>
+<div class="instruction hidden" id="multInstruction"></div>
+<div class="board hidden" id="multBoard"><div class="notebook-wrap"><div class="notebook-grid" id="notebookGrid"></div></div></div>
+<div class="controls hidden" id="multControls">
+  <div class="prompt" id="multPrompt"></div>
+  <div class="inputrow">
+    <input id="multAnswer" class="answerinput" type="number" inputmode="numeric" autocomplete="off">
+    <button class="btn green" id="multCheckBtn">Comprobar</button>
+    <button class="btn orange" id="multHintBtn">Pista</button>
+  </div>
+  <div class="feedback" id="multFeedback"></div>
+</div>
+</div>
+
+<div id="tablasModule" class="hidden">
+<div id="tqSetupScreen">
+<div class="title">Tablas Quest</div>
+<div class="block">
+<h3>1. ¿Qué tablas quieres practicar?</h3>
+<div class="chiprow">
+  <button class="chip" id="tqAllTablesBtn">Todas (1–10)</button>
+  <button class="chip" id="tqNoTablesBtn">Ninguna</button>
+  <button class="chip" id="tqEvenTablesBtn">Pares</button>
+  <button class="chip" id="tqOddTablesBtn">Impares</button>
+  <button class="chip" id="tqWeakTablesBtn">Mis puntos débiles 🔍</button>
+</div>
+<div class="tables-grid" id="tqTablesGrid"></div>
+</div>
+<div class="block">
+<h3>2. Modo de juego</h3>
+<div class="mode-cards" id="tqModeCards">
+  <div class="mode-card on" data-mode="random"><div class="emoji">🎲</div><b>Aleatorio</b><small>Preguntas al azar de las tablas elegidas</small></div>
+  <div class="mode-card" data-mode="weak"><div class="emoji">🎯</div><b>Puntos débiles</b><small>Repite más las que peor dominas</small></div>
+  <div class="mode-card" data-mode="timed"><div class="emoji">⏱️</div><b>Contrarreloj</b><small>60 segundos, las que puedas</small></div>
+</div>
+</div>
+<div class="block" id="tqLengthBlock">
+<h3>3. Duración</h3>
+<div class="rowline"><label for="tqQuestionCount">Número de preguntas:</label>
+<select id="tqQuestionCount"><option value="10">10</option><option value="15" selected>15</option><option value="20">20</option><option value="30">30</option></select>
+</div>
+</div>
+<button class="btn green" id="tqStartBtn" style="width:100%;padding:16px;font-size:1.05rem">Empezar a practicar</button>
+<div class="feedback" id="tqSetupFeedback"></div>
+</div>
+
+<div id="tqGameScreen" class="hidden">
+<div class="qwrap">
+  <div class="sessioninfo" id="tqSessionInfo">Pregunta 1/15</div>
+  <div class="question" id="tqQuestionText">7 × 8 = ?</div>
+  <div class="timerbar-wrap hidden" id="tqTimerWrap"><div class="timerbar" id="tqTimerBar"></div></div>
+</div>
+<div class="controls">
+  <div class="inputrow">
+    <input id="tqAnswerInput" class="answerinput" type="number" inputmode="numeric" autocomplete="off">
+    <button class="btn green" id="tqCheckBtn">Comprobar</button>
+    <button class="btn orange" id="tqHintBtn">Pista</button>
+  </div>
+  <div class="feedback" id="tqGameFeedback"></div>
+</div>
+</div>
+
+<div id="tqSummaryScreen" class="hidden">
+<div class="title">¡Ronda completada!</div>
+<div class="summary-grid">
+  <div class="sumcard"><b id="tqSumCorrect">0</b><small>Aciertos</small></div>
+  <div class="sumcard"><b id="tqSumAccuracy">0%</b><small>Precisión</small></div>
+  <div class="sumcard"><b id="tqSumBestStreak">0</b><small>Mejor racha</small></div>
+  <div class="sumcard"><b id="tqSumStars">0</b><small>⭐ ganadas</small></div>
+</div>
+<div class="weaklist" id="tqWeakList"></div>
+<div style="display:flex;gap:10px;margin-top:16px">
+  <button class="btn green" id="tqRetryBtn" style="flex:1">Otra ronda igual</button>
+  <button class="btn grey" id="tqChangeBtn" style="flex:1">Cambiar configuración</button>
+</div>
+</div>
+</div>
+
+</main>
+
+<aside class="card right">
+<div id="rightDefault">
+<h3>Así quedará al final</h3>
+<div class="finalbox" id="finalPreview">Introduce una división para comenzar.</div>
+<div class="rulebox" id="ruleBox"><h3>Reglas rápidas</h3><ol><li>Elige el primer grupo.</li><li>Piensa cuántas veces cabe.</li><li>Multiplica.</li><li>Resta.</li><li>Baja la siguiente cifra.</li></ol></div>
+</div>
+<div id="rightTablas" class="hidden">
+<h3>Tu mapa de tablas</h3>
+<div class="mastery-wrap"><div class="mgrid" id="masteryGrid"></div></div>
+<div class="legend">
+  <span><i style="background:#dbe6ef"></i>Sin probar</span>
+  <span><i style="background:#ffcf6b"></i>Aprendiendo</span>
+  <span><i style="background:#ef6a73"></i>Floja</span>
+  <span><i style="background:#63c73a"></i>Dominada</span>
+</div>
+<div class="rulebox" style="margin-top:12px;font-size:.85rem"><h3 style="font-size:1rem">¿Cómo se calcula?</h3>Cada casilla combina la tabla A y la B. Si aciertas casi siempre esa combinación, se pone verde. Si fallas más de la mitad, se pone roja: esa es tu pista de qué repasar.</div>
+</div>
+</aside>
+
+</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+
+/* =========================================================================
+   CONFIGURACIÓN DE FIREBASE (para sincronizar entre dispositivos)
+   Si no rellenas esto, la app funciona igual mas no sincroniza entre
+   dispositivos (todo se guarda solo en este navegador).
+   Instrucciones completas en INSTRUCCIONES.md
+   ========================================================================= */
+const FIREBASE_CONFIG = null;
+/* Ejemplo de cómo debe quedar una vez configurado (borra el "null" de arriba):
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSy...",
+  authDomain: "tu-proyecto.firebaseapp.com",
+  projectId: "tu-proyecto",
+  storageBucket: "tu-proyecto.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef123456"
+};
+*/
+
+/* ======================= DIVISION MODULE ======================= */
+let state;
+const stepsData=[["Primer grupo","Elige las primeras cifras"],["Cociente","¿Cuántas veces cabe?"],["Multiplica","Divisor × cociente"],["Resta","Haz la resta"],["Baja cifra","Baja la siguiente cifra"],["Resultado","Termina la división"]];
+function countDecimals(n){const s=String(n);return s.includes('.')?s.split('.')[1].length:0}
+function newState(dividend,divisor,decimals){const f=10**countDecimals(divisor);const D=Math.round(dividend*f),d=Math.round(divisor*f);return{originalDividend:dividend,originalDivisor:divisor,dividend:D,divisor:d,digits:String(Math.abs(D)).split('').map(Number),pos:0,currentValue:0,currentEndCol:0,quotient:[],rows:[],hearts:3,stars:0,decimalsWanted:decimals,decimalStarted:false,decimalCount:0}}
+function renderSteps(a){$('steps').innerHTML='';stepsData.forEach((s,i)=>{const d=document.createElement('div');d.className='step'+(i===a?' active':'')+(i<a?' done':'');d.innerHTML=`<div class="num">${i+1}</div><div><b>${s[0]}</b><br><small>${s[1]}</small></div>`;$('steps').appendChild(d)})}
+function feedback(t,type=''){const f=$('feedback');f.textContent=t;f.className='feedback'+(type?' '+type:'')}
+function stats(){$('hearts').textContent=state.hearts;$('stars').textContent=state.stars}
+function fail(t){state.hearts=Math.max(0,state.hearts-1);stats();feedback(t,'bad');$('speech').textContent='No pasa nada. Mira la pista y prueba otra vez.'}
+function ok(t){state.stars++;stats();feedback(t,'ok');$('speech').textContent='¡Muy bien! Seguimos.';const profile=currentProfile();if(profile){profile.stars++;saveDB()}}
+function qtext(){let q=state.quotient.join('');if(state.decimalStarted){const p=q.length-state.decimalCount;q=q.slice(0,p)+'.'+q.slice(p)}return q}
+function cell(grid,ch,row,col,cls=''){const c=document.createElement('div');c.className='grid-cell '+cls;c.style.gridRow=row+1;c.style.gridColumn=col+1;c.textContent=ch;grid.appendChild(c);return c}
+function placeText(grid,text,row,end,cls=''){const a=String(text).split(''),start=end-a.length+1;a.forEach((ch,i)=>cell(grid,ch,row,start+i,cls));return start}
+function renderDivision(){const g=$('leftGrid'),cols=Math.max(state.digits.length,4);g.style.gridTemplateColumns=`repeat(${cols},48px)`;g.innerHTML='';state.digits.forEach((d,i)=>cell(g,d,0,i));let r=1;for(const it of state.rows){if(it.type==='product'){const s=placeText(g,it.value,r,it.endCol,'product');const first=[...g.children].find(x=>x.style.gridRow==String(r+1)&&x.style.gridColumn==String(s+1));if(first)first.classList.add('minus')}else if(it.type==='line'){for(let c=it.startCol;c<=it.endCol;c++)cell(g,'',r,c,'line')}else placeText(g,it.value,r,it.endCol,'remainder');r++}$('quotientDisplay').textContent=qtext()}
+function options(vals,fn){$('optionControls').classList.remove('hidden');$('inputControls').classList.add('hidden');$('optionControls').innerHTML='';vals.forEach(v=>{const b=document.createElement('button');b.className='option';b.textContent=v;b.onclick=()=>fn(b,v);$('optionControls').appendChild(b)})}
+function input(expected,fn,hint){$('optionControls').classList.add('hidden');$('inputControls').classList.remove('hidden');$('answerInput').value='';$('answerInput').focus();$('checkBtn').onclick=()=>fn(Number($('answerInput').value),expected);$('hintBtn').onclick=()=>feedback(hint,'ok');$('answerInput').onkeydown=e=>{if(e.key==='Enter')$('checkBtn').click()}}
+function startGroup(){renderSteps(0);$('instruction').textContent='Paso 1: elige el primer grupo.';$('prompt').textContent='¿Qué grupo debemos coger primero?';const groups=[];for(let i=1;i<=state.digits.length;i++)groups.push(Number(state.digits.slice(0,i).join('')));const correct=groups.find(x=>x>=state.divisor)??Number(state.digits.join(''));renderDivision();options(groups,(b,v)=>{if(v===correct){b.classList.add('good');state.currentValue=v;state.pos=String(v).length;state.currentEndCol=state.pos-1;ok(`Correcto. ${v} es el primer grupo que ya se puede dividir.`);setTimeout(startQuotient,500)}else{b.classList.add('bad');fail(v<state.divisor?`${v} es menor que ${state.divisor}.`:'Podemos empezar antes.')}})}
+function startQuotient(){renderSteps(1);renderDivision();$('instruction').textContent=`Paso 2: ¿cuántas veces cabe ${state.divisor} en ${state.currentValue}?`;$('prompt').textContent='Elige la cifra del cociente.';options([0,1,2,3,4,5,6,7,8,9],(b,v)=>{const c=Math.floor(state.currentValue/state.divisor);if(v===c){b.classList.add('good');state.quotient.push(v);if(state.decimalStarted)state.decimalCount++;ok(`${state.divisor} cabe ${v} veces.`);setTimeout(()=>startMultiply(v),500)}else{b.classList.add('bad');const p=state.divisor*v;fail(p>state.currentValue?`${state.divisor} × ${v} = ${p}, se pasa.`:'Todavía cabe alguna vez más.')}})}
+function startMultiply(q){renderSteps(2);const e=state.divisor*q;$('instruction').textContent=`Paso 3: multiplica ${state.divisor} × ${q}.`;$('prompt').textContent=`¿Cuánto es ${state.divisor} × ${q}?`;input(e,(v,x)=>{if(v===x){const s=state.currentEndCol-String(x).length+1;state.rows.push({type:'product',value:x,endCol:state.currentEndCol});state.rows.push({type:'line',startCol:Math.max(0,s),endCol:state.currentEndCol});renderDivision();ok('Multiplicación correcta.');setTimeout(()=>startSubtract(x),500)}else fail('Revisa la multiplicación.')},`${state.divisor} × ${q} = ${e}`)}
+function startSubtract(product){renderSteps(3);const e=state.currentValue-product;$('instruction').textContent=`Paso 4: resta ${state.currentValue} − ${product}.`;$('prompt').textContent='¿Cuál es el resultado de la resta?';input(e,(v,x)=>{if(v===x){state.rows.push({type:'remainder',value:x,endCol:state.currentEndCol});renderDivision();ok('Resta correcta.');state.currentValue=x;setTimeout(nextDigit,500)}else fail('La división va bien; revisa solo la resta.')},`${state.currentValue} − ${product} = ${e}`)}
+function nextDigit(){if(state.pos<state.digits.length){renderSteps(4);const digit=state.digits[state.pos];$('instruction').textContent='Paso 5: baja la siguiente cifra.';$('prompt').textContent='¿Qué cifra baja ahora?';options([...new Set(state.digits)],(b,v)=>{if(+v===digit){b.classList.add('good');state.currentValue=Number(String(state.currentValue)+digit);state.pos++;state.currentEndCol=state.pos-1;state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();ok(`Bajamos el ${digit}. Ahora tenemos ${state.currentValue}.`);setTimeout(startQuotient,500)}else{b.classList.add('bad');fail('Esa no es la siguiente cifra.')}});return}if(state.currentValue===0||state.decimalCount>=state.decimalsWanted)return finish();state.decimalStarted=true;state.digits.push(0);state.pos++;state.currentEndCol=state.pos-1;state.currentValue=Number(String(state.currentValue)+0);state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();feedback('Añadimos un cero para continuar con decimales.','ok');setTimeout(startQuotient,500)}
+function finish(){renderSteps(5);$('instruction').textContent='¡División terminada!';$('prompt').textContent=`Resultado: ${state.originalDividend} ÷ ${state.originalDivisor} = ${qtext()}`;$('optionControls').innerHTML='';$('inputControls').classList.add('hidden');feedback('🏆 Has completado toda la división paso a paso.','ok');$('speech').textContent='¡Misión completada!';state.stars+=3;stats();const profile=currentProfile();if(profile){profile.stars+=3;profile.divisionsCompleted=(profile.divisionsCompleted||0)+1;saveDB();refreshProfileSummary()}}
+$('startCustomBtn').onclick=()=>{const sf=$('setupFeedback');if(!db.active){sf.textContent='Elige o crea un perfil arriba antes de empezar.';sf.className='feedback bad';return}const D=Number($('customDividend').value),d=Number($('customDivisor').value),dec=Number($('decimalPlaces').value);if(!Number.isFinite(D)||!Number.isFinite(d)||d===0||D<0||d<0){sf.textContent='Introduce números positivos y un divisor distinto de cero.';sf.className='feedback bad';return}state=newState(D,d,dec);document.querySelector('#divisionModule .title').innerHTML=`Divide <span class="dividend">${D}</span> entre <span class="divisor">${d}</span>`;$('divisorDisplay').textContent=state.divisor;$('finalPreview').innerHTML=`${D} │ ${d}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└────`;$('setupPanel').classList.add('hidden');$('instruction').classList.remove('hidden');$('board').classList.remove('hidden');$('gameControls').classList.remove('hidden');stats();startGroup()};
+$('randomBtn').onclick=()=>{const ds=[2,3,4,5,6,7,8,9,10,11,12,15,20,25],d=ds[Math.floor(Math.random()*ds.length)],q=Math.floor(Math.random()*80)+12,r=Math.random()<.45?Math.floor(Math.random()*d):0;$('customDividend').value=d*q+r;$('customDivisor').value=d;$('decimalPlaces').value=r===0?'0':'2'};
+
+/* ======================= MULTIPLICATION MODULE ======================= */
+let multState=null;
+const multSteps=[["Preparar","Coloca los números"],["Multiplicar","Cifra por cifra"],["Llevadas","Suma la llevada"],["Productos parciales","Desplaza cada fila"],["Suma final","Obtén el resultado"]];
+function renderMultSteps(active){$("steps").innerHTML="";multSteps.forEach((s,i)=>{const d=document.createElement("div");d.className="step"+(i===active?" active":"")+(i<active?" done":"");d.innerHTML=`<div class="num">${i+1}</div><div><b>${s[0]}</b><br><small>${s[1]}</small></div>`;$("steps").appendChild(d)})}
+function multFeedback(text,type=""){const f=$("multFeedback");f.textContent=text;f.className="feedback"+(type?" "+type:"")}
+function putCell(grid,row,col,text,classes=[]){const c=document.createElement("div");c.className="nb-cell "+classes.join(" ");c.style.gridRow=String(row+1);c.style.gridColumn=String(col+1);c.textContent=text;grid.appendChild(c)}
+function putText(grid,row,endCol,text,classes=[],markerClass=null){const chars=String(text).split("");const start=endCol-chars.length+1;chars.forEach((ch,i)=>putCell(grid,row,start+i,ch,i===0&&markerClass?[...classes,markerClass]:classes))}
+function drawLine(grid,row,start,end){for(let c=start;c<=end;c++) putCell(grid,row,c,"",["line"])}
+function renderNotebook(){
+  const g=$("notebookGrid");const cols=multState.cols;g.style.gridTemplateColumns=`repeat(${cols},48px)`;g.innerHTML="";
+  multState.carries.forEach((value,col)=>{if(value!==null&&value!==undefined&&value!=="")putCell(g,0,col,String(value),["carry"])});
+  putText(g,1,cols-1,multState.a);putText(g,2,cols-1,multState.b,[],"op");drawLine(g,3,0,cols-1);
+  multState.partialRows.forEach((rowData,i)=>{const row=4+i;const wantsPlus=i===multState.partialRows.length-1&&multState.partialRows.length>1;const firstCol=rowData.cells.findIndex(v=>v!==null);rowData.cells.forEach((v,col)=>{if(v!==null)putCell(g,row,col,String(v),wantsPlus&&col===firstCol?["partial","plus"]:["partial"])})});
+  if(multState.phase==="sum"||multState.phase==="done"){const lineRow=4+multState.partialRows.length;drawLine(g,lineRow,0,cols-1);if(multState.phase==="done")putText(g,lineRow+1,cols-1,multState.result)}
+  if(multState.phase==="multiply"){const row=4+multState.multiplierIndex;const col=multState.cols-1-multState.multiplierIndex-multState.multiplicandIndex;if(col>=0){const marker=document.createElement("div");marker.className="nb-cell active";marker.style.gridRow=String(row+1);marker.style.gridColumn=String(col+1);g.appendChild(marker)}}
+}
+function startMultiplication(a,b){
+  const aDigits=String(a).split("").reverse().map(Number);const bDigits=String(b).split("").reverse().map(Number);const result=a*b;const cols=Math.max(String(result).length,String(a).length+String(b).length)+1;
+  multState={a,b,aDigits,bDigits,result,cols,multiplierIndex:0,multiplicandIndex:0,carry:0,carries:Array(cols).fill(null),partialRows:bDigits.map(()=>({cells:Array(cols).fill(null)})),phase:"multiply",hearts:3,stars:0};
+  $("hearts").textContent="3";$("stars").textContent="0";$("multSetupFeedback").textContent="";
+  $("multInstruction").classList.remove("hidden");$("multBoard").classList.remove("hidden");$("multControls").classList.remove("hidden");
+  document.querySelector("#multiplicationModule .title").textContent=`Multiplica ${a} × ${b}`;$("finalPreview").innerHTML=`${a}<br>× ${b}<br>────`;
+  renderMultSteps(1);renderNotebook();askDigit();
+}
+function askDigit(){
+  if(multState.multiplierIndex>=multState.bDigits.length)return askFinalSum();
+  const mDigit=multState.bDigits[multState.multiplierIndex];const aDigit=multState.aDigits[multState.multiplicandIndex];
+  if(aDigit===undefined){
+    if(multState.carry>0){const row=multState.partialRows[multState.multiplierIndex];const col=multState.cols-1-multState.multiplierIndex-multState.multiplicandIndex;const chars=String(multState.carry).split("").reverse();chars.forEach((ch,i)=>row.cells[col-i]=Number(ch));multState.carry=0}
+    multState.multiplierIndex++;multState.multiplicandIndex=0;multState.carries=Array(multState.cols).fill(null);renderNotebook();return setTimeout(askDigit,450);
+  }
+  renderMultSteps(multState.carry>0?2:1);const base=aDigit*mDigit;const total=base+multState.carry;
+  $("multInstruction").textContent=multState.carry>0?`Multiplica ${mDigit} × ${aDigit} y suma la llevada ${multState.carry}.`:`Multiplica ${mDigit} × ${aDigit}.`;
+  $("multPrompt").textContent=multState.carry>0?`¿Cuánto es ${mDigit} × ${aDigit} + ${multState.carry}?`:`¿Cuánto es ${mDigit} × ${aDigit}?`;
+  $("multAnswer").value="";$("multAnswer").focus();
+  $("multHintBtn").onclick=()=>multFeedback(`Resultado de este paso: ${total}`,"ok");
+  $("multCheckBtn").onclick=()=>checkDigit(total);
+}
+function checkDigit(expected){
+  const v=Number($("multAnswer").value);
+  if(v!==expected){multState.hearts=Math.max(0,multState.hearts-1);$("hearts").textContent=String(multState.hearts);multFeedback("Revisa esa multiplicación y la llevada.","bad");$("speech").textContent="Haz solo este paso. No mires toda la operación.";return}
+  const units=expected%10;const newCarry=Math.floor(expected/10);const row=multState.partialRows[multState.multiplierIndex];const col=multState.cols-1-multState.multiplierIndex-multState.multiplicandIndex;row.cells[col]=units;
+  multState.carry=newCarry;multState.carries=Array(multState.cols).fill(null);
+  if(newCarry>0&&multState.multiplicandIndex+1<multState.aDigits.length){multState.carries[col-1]=newCarry}
+  multState.multiplicandIndex++;multState.stars++;$("stars").textContent=String(multState.stars);
+  {const profile=currentProfile();if(profile){profile.stars++;saveDB()}}
+  multFeedback(newCarry>0?`Escribimos ${units} y llevamos ${newCarry}.`:`Escribimos ${units}.`,"ok");$("speech").textContent="¡Perfecto! Todo queda en su columna.";
+  renderNotebook();setTimeout(askDigit,500);
+}
+function askFinalSum(){
+  multState.phase="sum";renderMultSteps(multState.partialRows.length>1?3:4);renderNotebook();
+  $("multInstruction").textContent=multState.partialRows.length>1?"Ahora suma los productos parciales.":"Ya solo queda escribir el resultado.";
+  $("multPrompt").textContent="¿Cuál es el resultado final?";$("multAnswer").value="";$("multAnswer").focus();
+  $("multHintBtn").onclick=()=>multFeedback(`Resultado: ${multState.result}`,"ok");
+  $("multCheckBtn").onclick=()=>{
+    const v=Number($("multAnswer").value);
+    if(v!==multState.result){multState.hearts=Math.max(0,multState.hearts-1);$("hearts").textContent=String(multState.hearts);multFeedback("Revisa la suma final.","bad");return}
+    multState.phase="done";multState.stars+=3;$("stars").textContent=String(multState.stars);renderNotebook();renderMultSteps(4);
+    {const profile=currentProfile();if(profile){profile.stars+=3;profile.multiplicationsCompleted=(profile.multiplicationsCompleted||0)+1;saveDB();refreshProfileSummary()}}
+    $("multInstruction").textContent="¡Multiplicación terminada!";$("multPrompt").textContent=`${multState.a} × ${multState.b} = ${multState.result}`;
+    multFeedback("🏆 Multiplicación completada y bien alineada.","ok");$("speech").textContent="¡Misión completada!";
+  };
+}
+$("startMultBtn").onclick=()=>{const fb=$("multSetupFeedback");if(!db.active){fb.textContent="Elige o crea un perfil arriba antes de empezar.";fb.className="feedback bad";return}const a=Number($("multA").value);const b=Number($("multB").value);if(!Number.isInteger(a)||!Number.isInteger(b)||a<=0||b<=0){fb.textContent="Introduce dos números enteros positivos.";fb.className="feedback bad";return}startMultiplication(a,b)};
+$("randomMultBtn").onclick=()=>{const a=Math.floor(Math.random()*890)+110;const b=Math.floor(Math.random()*89)+11;$("multA").value=a;$("multB").value=b};
+$("multAnswer").onkeydown=e=>{if(e.key==="Enter")$("multCheckBtn").click()};
+
+/* ======================= MODULE SWITCHING ======================= */
+function switchModule(mode){
+  const isDiv=mode==="division",isMult=mode==="multiplication",isTablas=mode==="tablas";
+  $("divisionModule").classList.toggle("hidden",!isDiv);
+  $("multiplicationModule").classList.toggle("hidden",!isMult);
+  $("tablasModule").classList.toggle("hidden",!isTablas);
+  $("divisionTab").classList.toggle("active",isDiv);
+  $("multiplicationTab").classList.toggle("active",isMult);
+  $("tablasTab").classList.toggle("active",isTablas);
+  $("stepsPanel").classList.toggle("hidden",isTablas);
+  $("tqLeftPanel").classList.toggle("hidden",!isTablas);
+  $("rightDefault").classList.toggle("hidden",isTablas);
+  $("rightTablas").classList.toggle("hidden",!isTablas);
+
+  if(!isTablas&&session){
+    if(session.timerId)clearInterval(session.timerId);
+    session=null;
+    $('tqGameScreen').classList.add('hidden');
+    $('tqSummaryScreen').classList.add('hidden');
+    $('tqSetupScreen').classList.remove('hidden');
+  }
+
+  refreshProfileSummary();
+
+  if(isDiv){
+    $("speech").textContent="Vamos paso a paso. No hay prisa.";
+    $("finalPreview").innerHTML="Introduce una división para comenzar.";
+    $("ruleBox").innerHTML="<h3>Reglas rápidas</h3><ol><li>Elige el primer grupo.</li><li>Piensa cuántas veces cabe.</li><li>Multiplica.</li><li>Resta.</li><li>Baja la siguiente cifra.</li></ol>";
+    renderSteps(0);
+  }else if(isMult){
+    $("speech").textContent="Multiplicaremos de derecha a izquierda.";
+    $("finalPreview").innerHTML="Introduce una multiplicación para comenzar.";
+    $("ruleBox").innerHTML="<h3>Reglas rápidas</h3><ol><li>Empieza por la cifra de la derecha.</li><li>Escribe las unidades.</li><li>Guarda la llevada.</li><li>Desplaza cada nueva fila una columna.</li><li>Suma los productos parciales.</li></ol>";
+    renderMultSteps(0);
+  }else{
+    $("speech").textContent="¡Hola! ¿Qué tablas practicamos hoy?";
+    renderMasteryGrid();
+  }
+}
+$("divisionTab").onclick=()=>switchModule("division");
+$("multiplicationTab").onclick=()=>switchModule("multiplication");
+$("tablasTab").onclick=()=>switchModule("tablas");
+$("reloadBtn").onclick=()=>location.reload();
+
+/* ======================= PERFIL GLOBAL (usado por los 3 módulos) ======================= */
+const STORAGE_KEY='matesQuestDB_v1';
+function loadDB(){try{const raw=localStorage.getItem(STORAGE_KEY);if(raw)return JSON.parse(raw)}catch(e){}return{profiles:{},active:null}}
+function saveLocalOnly(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db))}catch(e){}}
+function saveDB(){saveLocalOnly();if(typeof scheduleCloudPush==='function')scheduleCloudPush()}
+let db=loadDB();
+function ensureProfile(name){if(!db.profiles[name])db.profiles[name]={facts:{},stars:0,bestStreak:0,sessions:0,divisionsCompleted:0,multiplicationsCompleted:0};return db.profiles[name]}
+function currentProfile(){
+  if(!db.active)return null;
+  const p=ensureProfile(db.active);
+  if(p.divisionsCompleted===undefined)p.divisionsCompleted=0;
+  if(p.multiplicationsCompleted===undefined)p.multiplicationsCompleted=0;
+  return p;
+}
+function factKey(a,b){const x=Math.min(a,b),y=Math.max(a,b);return x+'x'+y}
+function getFact(profile,key){return profile.facts[key]||{att:0,ok:0}}
+function updateFact(profile,key,correct){const f=getFact(profile,key);f.att++;if(correct)f.ok++;profile.facts[key]=f}
+function masteryLevel(f){if(!f||f.att===0)return'untried';const acc=f.ok/f.att;if(f.att>=3&&acc>=0.8)return'mastered';if(f.att>=2&&acc<0.5)return'weak';return'learning'}
+
+function renderProfileSelect(){
+  const sel=$('profileSelect');sel.innerHTML='<option value="">— elegir perfil —</option>';
+  Object.keys(db.profiles).forEach(name=>{const o=document.createElement('option');o.value=name;o.textContent=name;if(name===db.active)o.selected=true;sel.appendChild(o)});
+}
+function createProfileFromInput(){
+  const input=$('newProfileNameInput');
+  const name=input.value.trim();
+  if(!name){input.style.outline='2px solid #e8525d';setTimeout(()=>{input.style.outline='';},900);return}
+  ensureProfile(name);db.active=name;saveDB();
+  input.value='';
+  renderProfileSelect();refreshProfileSummary();
+  if(typeof renderMasteryGrid==='function')renderMasteryGrid();
+}
+$('newProfileBtn').onclick=createProfileFromInput;
+$('newProfileNameInput').onkeydown=e=>{if(e.key==='Enter')createProfileFromInput()};
+$('profileSelect').onchange=e=>{
+  db.active=e.target.value||null;saveDB();refreshProfileSummary();
+  if(typeof renderMasteryGrid==='function')renderMasteryGrid();
+};
+
+function refreshProfileSummary(){
+  const p=currentProfile();
+  $('stars').textContent=p?p.stars:0;$('hearts').textContent='3';$('streak').textContent='0';
+  const ms=$('globalMiniSummary');
+  if(!p){ms.textContent='Elige o crea un perfil arriba para guardar tu progreso.';return}
+  const keys=Object.keys(p.facts);
+  const mastered=keys.filter(k=>masteryLevel(p.facts[k])==='mastered').length;
+  const weak=keys.filter(k=>masteryLevel(p.facts[k])==='weak').length;
+  ms.innerHTML=`⭐ <b>${p.stars}</b> estrellas totales<br>➗ <b>${p.divisionsCompleted||0}</b> divisiones completadas<br>✖️ <b>${p.multiplicationsCompleted||0}</b> multiplicaciones completadas<br>✅ <b>${mastered}</b> tablas dominadas<br>🔍 <b>${weak}</b> tablas flojas`;
+}
+
+function progressIOMsg(t,type){const f=$('progressIOFeedback');f.style.display='block';f.textContent=t;f.className='feedback'+(type?' '+type:'')}
+$('exportProgressBtn').onclick=()=>{
+  try{
+    const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    const today=new Date().toISOString().slice(0,10);
+    a.href=url;a.download=`mates-quest-progreso-${today}.json`;
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    progressIOMsg('✅ Copia descargada. Guárdala en un sitio seguro.','ok');
+  }catch(err){
+    progressIOMsg('No se pudo generar la copia en este navegador.','bad');
+  }
+};
+$('importProgressBtn').onclick=()=>{$('importFileInput').click()};
+$('importFileInput').onchange=(e)=>{
+  const file=e.target.files&&e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const parsed=JSON.parse(reader.result);
+      if(!parsed||typeof parsed!=='object'||typeof parsed.profiles!=='object')throw new Error('formato no válido');
+      db.profiles=Object.assign({},db.profiles||{},parsed.profiles);
+      if(parsed.active&&db.profiles[parsed.active])db.active=parsed.active;
+      saveDB();
+      renderProfileSelect();refreshProfileSummary();
+      if(typeof renderMasteryGrid==='function')renderMasteryGrid();
+      progressIOMsg('✅ Progreso importado correctamente.','ok');
+    }catch(err){
+      progressIOMsg('Ese archivo no es una copia de progreso válida.','bad');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value='';
+};
+
+let selectedTables=new Set([1,2,3,4,5,6,7,8,9,10]);
+function renderTablesGrid(){
+  const g=$('tqTablesGrid');g.innerHTML='';const max=10;
+  for(let i=1;i<=max;i++){
+    const b=document.createElement('button');b.className='tbtn'+(selectedTables.has(i)?' on':'');b.innerHTML=`${i}<small>tabla</small>`;
+    b.onclick=()=>{if(selectedTables.has(i))selectedTables.delete(i);else selectedTables.add(i);renderTablesGrid()};
+    g.appendChild(b);
+  }
+}
+$('tqAllTablesBtn').onclick=()=>{selectedTables=new Set(Array.from({length:10},(_,i)=>i+1));renderTablesGrid()};
+$('tqNoTablesBtn').onclick=()=>{selectedTables=new Set();renderTablesGrid()};
+$('tqEvenTablesBtn').onclick=()=>{selectedTables=new Set(Array.from({length:10},(_,i)=>i+1).filter(n=>n%2===0));renderTablesGrid()};
+$('tqOddTablesBtn').onclick=()=>{selectedTables=new Set(Array.from({length:10},(_,i)=>i+1).filter(n=>n%2!==0));renderTablesGrid()};
+$('tqWeakTablesBtn').onclick=()=>{
+  const p=currentProfile();
+  if(!p){tqMsg('Primero elige un perfil para detectar tus puntos débiles.','bad');return}
+  const max=10;const weakTables=new Set();
+  Object.keys(p.facts).forEach(k=>{if(masteryLevel(p.facts[k])==='weak'){const[a,bnum]=k.split('x').map(Number);if(a<=max)weakTables.add(a);if(bnum<=max)weakTables.add(bnum)}});
+  if(weakTables.size===0){tqMsg('Todavía no tienes suficientes datos de puntos débiles: juega alguna ronda primero.','bad');return}
+  selectedTables=weakTables;renderTablesGrid();setMode('weak');tqMsg('Seleccionadas tus tablas con más fallos, en modo Puntos débiles.','ok');
+};
+
+let mode='random';
+function setMode(m){mode=m;document.querySelectorAll('.mode-card').forEach(c=>c.classList.toggle('on',c.dataset.mode===m));$('tqLengthBlock').classList.toggle('hidden',m==='timed')}
+document.querySelectorAll('.mode-card').forEach(c=>c.onclick=()=>setMode(c.dataset.mode));
+function tqMsg(t,type){const f=$('tqSetupFeedback');f.textContent=t;f.className='feedback'+(type?' '+type:'')}
+
+let session=null;
+function buildPool(){
+  const secondMax=10;const pool=[];const seen=new Set();
+  selectedTables.forEach(t=>{for(let b=1;b<=secondMax;b++){const key=t+'|'+b;if(seen.has(key))return;seen.add(key);pool.push({a:t,b})}});
+  return pool;
+}
+function weightFor(profile,pair){const key=factKey(pair.a,pair.b);const f=getFact(profile,key);if(f.att===0)return 4;const acc=f.ok/f.att;return Math.max(1,Math.round((1-acc)*8)+1)}
+function pickQuestion(){
+  const pool=session.pool;
+  const avoid=new Set(session.recentKeys);
+  let pair;
+  if(mode==='weak'&&db.active){
+    const p=currentProfile();let weighted=[];
+    pool.forEach(pair0=>{if(avoid.has(factKey(pair0.a,pair0.b)))return;const w=weightFor(p,pair0);for(let i=0;i<w;i++)weighted.push(pair0)});
+    if(weighted.length===0)pool.forEach(pair0=>{const w=weightFor(p,pair0);for(let i=0;i<w;i++)weighted.push(pair0)});
+    pair=weighted[Math.floor(Math.random()*weighted.length)];
+  }else{
+    let candidates=pool.filter(p0=>!avoid.has(factKey(p0.a,p0.b)));
+    if(candidates.length===0)candidates=pool;
+    pair=candidates[Math.floor(Math.random()*candidates.length)];
+  }
+  const key=factKey(pair.a,pair.b);
+  session.recentKeys.push(key);
+  const maxRecent=Math.max(1,Math.min(5,pool.length-1));
+  while(session.recentKeys.length>maxRecent)session.recentKeys.shift();
+  const[a,b]=Math.random()<0.5?[pair.a,pair.b]:[pair.b,pair.a];
+  return{a,b};
+}
+function startSession(){
+  if(!db.active){tqMsg('Elige o crea un perfil antes de empezar.','bad');return}
+  if(selectedTables.size===0){tqMsg('Elige al menos una tabla para practicar.','bad');return}
+  const pool=buildPool();
+  session={pool,mode,total:mode==='timed'?Infinity:Number($('tqQuestionCount').value),index:0,correct:0,hearts:3,stars:0,streak:0,bestStreak:0,wrongFacts:{},current:null,timeLeft:60,timerId:null,recentKeys:[]};
+  $('tqSetupScreen').classList.add('hidden');$('tqSummaryScreen').classList.add('hidden');$('tqGameScreen').classList.remove('hidden');
+  $('tqTimerWrap').classList.toggle('hidden',mode!=='timed');
+  updateHeaderDuringGame();
+  if(mode==='timed'){session.timeLeft=60;$('tqTimerBar').style.width='100%';session.timerId=setInterval(tick,250)}
+  nextQuestion();
+}
+function tick(){session.timeLeft-=0.25;const pct=Math.max(0,(session.timeLeft/60)*100);$('tqTimerBar').style.width=pct+'%';if(session.timeLeft<=0){clearInterval(session.timerId);endSession()}}
+function updateHeaderDuringGame(){$('stars').textContent=session.stars;$('hearts').textContent=session.hearts;$('streak').textContent=session.streak}
+function nextQuestion(){
+  if(mode!=='timed'&&session.index>=session.total)return endSession();
+  session.index++;session.current=pickQuestion();
+  $('tqSessionInfo').textContent=mode==='timed'?`⏱️ Tiempo restante`:`Pregunta ${session.index}/${session.total}`;
+  $('tqQuestionText').textContent=`${session.current.a} × ${session.current.b} = ?`;
+  $('tqAnswerInput').value='';$('tqAnswerInput').focus();$('tqGameFeedback').textContent='';$('tqGameFeedback').className='feedback';
+}
+function decompositionHint(a,b){if(b===1)return`Cualquier número × 1 es él mismo: ${a}×1 = ${a}.`;return`${a} × ${b} = ${a} × ${b-1} + ${a} = ${a*(b-1)} + ${a} = ${a*b}`}
+$('tqHintBtn').onclick=()=>{const{a,b}=session.current;$('tqGameFeedback').textContent='💡 '+decompositionHint(a,b);$('tqGameFeedback').className='feedback ok'};
+$('tqCheckBtn').onclick=checkAnswer;
+$('tqAnswerInput').onkeydown=e=>{if(e.key==='Enter')checkAnswer()};
+function checkAnswer(){
+  if(!session.current)return;
+  const{a,b}=session.current;const expected=a*b;const v=Number($('tqAnswerInput').value);const key=factKey(a,b);const profile=currentProfile();const correct=v===expected;
+  if(profile)updateFact(profile,key,correct);
+  if(correct){
+    session.correct++;session.streak++;session.bestStreak=Math.max(session.bestStreak,session.streak);session.stars++;
+    $('tqGameFeedback').textContent=`✅ ¡Correcto! ${a} × ${b} = ${expected}`;$('tqGameFeedback').className='feedback ok';
+    $('speech').textContent=session.streak>=5?`¡Racha de ${session.streak}! Imparable 🔥`:'¡Muy bien! Sigue así.';
+  }else{
+    session.hearts=Math.max(0,session.hearts-1);session.streak=0;session.wrongFacts[key]=(session.wrongFacts[key]||0)+1;
+    $('tqGameFeedback').textContent=`❌ Casi. ${a} × ${b} = ${expected} (pusiste ${Number.isFinite(v)?v:'—'})`;$('tqGameFeedback').className='feedback bad';
+    $('speech').textContent='No pasa nada, sigamos. Mira la pista si quieres.';
+  }
+  updateHeaderDuringGame();if(profile)saveDB();renderMasteryGrid();
+  setTimeout(()=>{if(session)nextQuestion()},650);
+}
+function endSession(){
+  if(session.timerId)clearInterval(session.timerId);
+  const profile=currentProfile();
+  if(profile){profile.stars+=session.stars;profile.bestStreak=Math.max(profile.bestStreak||0,session.bestStreak);profile.sessions=(profile.sessions||0)+1;saveDB()}
+  const answered=mode==='timed'?(session.correct+Object.values(session.wrongFacts).reduce((a,b)=>a+b,0)):session.total;
+  const accuracy=answered>0?Math.round((session.correct/answered)*100):0;
+  $('tqGameScreen').classList.add('hidden');$('tqSummaryScreen').classList.remove('hidden');
+  $('tqSumCorrect').textContent=session.correct;$('tqSumAccuracy').textContent=accuracy+'%';$('tqSumBestStreak').textContent=session.bestStreak;$('tqSumStars').textContent=session.stars;
+  const weakList=$('tqWeakList');const entries=Object.entries(session.wrongFacts).sort((a,b)=>b[1]-a[1]);
+  if(entries.length===0){weakList.innerHTML='<b>🏆 ¡Ronda perfecta!</b> No has fallado ninguna combinación.'}
+  else{weakList.innerHTML='<b>Para repasar:</b><ul>'+entries.map(([k,n])=>{const[a,b]=k.split('x');return`<li>${a} × ${b} = ${Number(a)*Number(b)} — fallada ${n} vez${n>1?'es':''}</li>`}).join('')+'</ul>'}
+  refreshProfileSummary();renderMasteryGrid();session=null;
+}
+$('tqRetryBtn').onclick=()=>{startSession()};
+$('tqChangeBtn').onclick=()=>{$('tqSummaryScreen').classList.add('hidden');$('tqSetupScreen').classList.remove('hidden')};
+$('tqStartBtn').onclick=startSession;
+
+function renderMasteryGrid(){
+  const g=$('masteryGrid');const N=10;g.style.gridTemplateColumns=`repeat(${N+1},20px)`;g.innerHTML='';
+  const profile=currentProfile();
+  const corner=document.createElement('div');corner.className='mcell head';corner.textContent='×';g.appendChild(corner);
+  for(let c=1;c<=N;c++){const h=document.createElement('div');h.className='mcell head';h.textContent=c;g.appendChild(h)}
+  for(let r=1;r<=N;r++){
+    const rh=document.createElement('div');rh.className='mcell head';rh.textContent=r;g.appendChild(rh);
+    for(let c=1;c<=N;c++){
+      const cellEl=document.createElement('div');const key=factKey(r,c);const f=profile?profile.facts[key]:null;const level=masteryLevel(f);
+      cellEl.className='mcell m-'+level;cellEl.title=`${r}×${c}=${r*c}`+(f?` · ${f.ok}/${f.att} aciertos`:'');
+      g.appendChild(cellEl);
+    }
+  }
+}
+
+/* ======================= SINCRONIZACIÓN EN LA NUBE (Firebase, opcional) ======================= */
+const SYNC_CODE_KEY='matesQuestSyncCode';
+let firestoreDB=null;
+let syncUnsubscribe=null;
+let cloudPushTimer=null;
+let applyingRemoteChange=false;
+
+function genSyncCode(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code='';
+  for(let i=0;i<6;i++)code+=chars[Math.floor(Math.random()*chars.length)];
+  return code;
+}
+function loadFirebaseScripts(){
+  return new Promise((resolve,reject)=>{
+    if(window.firebase){resolve();return}
+    const s1=document.createElement('script');
+    s1.src='https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js';
+    s1.onload=()=>{
+      const s2=document.createElement('script');
+      s2.src='https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js';
+      s2.onload=()=>resolve();
+      s2.onerror=()=>reject(new Error('No se pudo cargar Firestore'));
+      document.head.appendChild(s2);
+    };
+    s1.onerror=()=>reject(new Error('No se pudo cargar Firebase'));
+    document.head.appendChild(s1);
+  });
+}
+function setSyncStatus(text){const el=$('syncStatus');if(el)el.textContent=text}
+function showSyncSetupUI(){$('syncSetupBlock').classList.remove('hidden');$('syncActiveBlock').classList.add('hidden')}
+function showSyncActiveUI(code){$('syncSetupBlock').classList.add('hidden');$('syncActiveBlock').classList.remove('hidden');$('syncCodeDisplay').textContent=code}
+
+async function initCloudSync(){
+  if(!FIREBASE_CONFIG){
+    setSyncStatus('No configurado todavía. Mira INSTRUCCIONES.md para activarlo (gratis).');
+    return;
+  }
+  try{
+    setSyncStatus('Conectando…');
+    await loadFirebaseScripts();
+    if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
+    firestoreDB=firebase.firestore();
+    const existingCode=localStorage.getItem(SYNC_CODE_KEY);
+    if(existingCode){attachSyncListener(existingCode)}
+    else{setSyncStatus('Listo. Crea un código o vincula uno de otro dispositivo.');showSyncSetupUI()}
+  }catch(err){
+    setSyncStatus('No se pudo conectar con la sincronización (revisa tu conexión).');
+    showSyncSetupUI();
+  }
+}
+function attachSyncListener(code){
+  if(syncUnsubscribe)syncUnsubscribe();
+  setSyncStatus('Sincronizando…');
+  showSyncActiveUI(code);
+  syncUnsubscribe=firestoreDB.collection('syncs').doc(code).onSnapshot((docSnap)=>{
+    if(!docSnap.exists)return;
+    const remote=docSnap.data();
+    if(!remote||typeof remote.profiles!=='object')return;
+    applyingRemoteChange=true;
+    db.profiles=Object.assign({},db.profiles||{},remote.profiles);
+    if(remote.active&&db.profiles[remote.active]&&!db.active)db.active=remote.active;
+    saveLocalOnly();
+    renderProfileSelect();refreshProfileSummary();
+    if(typeof renderMasteryGrid==='function')renderMasteryGrid();
+    applyingRemoteChange=false;
+    setSyncStatus('✅ Sincronizado (código '+code+')');
+  },()=>{setSyncStatus('Se perdió la conexión con la sincronización.')});
+}
+function scheduleCloudPush(){
+  if(!firestoreDB||applyingRemoteChange)return;
+  const code=localStorage.getItem(SYNC_CODE_KEY);
+  if(!code)return;
+  clearTimeout(cloudPushTimer);
+  cloudPushTimer=setTimeout(()=>{
+    firestoreDB.collection('syncs').doc(code).set(db).catch(()=>{setSyncStatus('No se pudo guardar en la nube (revisa tu conexión).')});
+  },800);
+}
+$('createSyncCodeBtn').onclick=async()=>{
+  if(!firestoreDB){setSyncStatus('Todavía no está listo, espera un momento.');return}
+  const code=genSyncCode();
+  try{
+    await firestoreDB.collection('syncs').doc(code).set(db);
+    localStorage.setItem(SYNC_CODE_KEY,code);
+    attachSyncListener(code);
+  }catch(err){setSyncStatus('No se pudo crear el código. Revisa tu conexión o la configuración.')}
+};
+$('linkSyncCodeBtn').onclick=async()=>{
+  if(!firestoreDB){setSyncStatus('Todavía no está listo, espera un momento.');return}
+  const code=$('linkSyncCodeInput').value.trim().toUpperCase();
+  if(!code){setSyncStatus('Escribe un código válido.');return}
+  try{
+    const docSnap=await firestoreDB.collection('syncs').doc(code).get();
+    if(!docSnap.exists){setSyncStatus('Ese código no existe. Revísalo.');return}
+    const remote=docSnap.data();
+    db.profiles=Object.assign({},db.profiles||{},remote.profiles||{});
+    saveLocalOnly();
+    localStorage.setItem(SYNC_CODE_KEY,code);
+    renderProfileSelect();refreshProfileSummary();
+    if(typeof renderMasteryGrid==='function')renderMasteryGrid();
+    await firestoreDB.collection('syncs').doc(code).set(db);
+    attachSyncListener(code);
+  }catch(err){setSyncStatus('No se pudo vincular. Revisa el código y tu conexión.')}
+};
+$('unlinkSyncBtn').onclick=()=>{
+  if(syncUnsubscribe){syncUnsubscribe();syncUnsubscribe=null}
+  localStorage.removeItem(SYNC_CODE_KEY);
+  setSyncStatus('Sincronización desactivada en este dispositivo. Tus datos locales se mantienen.');
+  showSyncSetupUI();
+};
+initCloudSync();
+
+/* ======================= INIT ======================= */
+renderSteps(0);
+renderProfileSelect();
+renderTablesGrid();
+refreshProfileSummary();
+renderMasteryGrid();
+
+if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
