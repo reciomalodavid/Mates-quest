@@ -37,8 +37,8 @@ button,input,select{font:inherit}.app{width:min(1220px,calc(100% - 20px));margin
 .division-sheet{display:flex;align-items:flex-start;justify-content:center;font-family:"Courier New",monospace;font-weight:800;font-size:clamp(1.7rem,4vw,2.8rem)}
 .left-grid{display:grid;grid-auto-rows:52px;align-items:center;justify-items:center}.grid-cell{width:48px;height:52px;display:grid;place-items:center;position:relative}.grid-cell.line:after{content:"";position:absolute;left:2px;right:2px;bottom:3px;height:2px;background:#17324d}.grid-cell.minus:before{content:"−";position:absolute;left:-13px;top:8px;font-size:.8em}.right-side{min-width:145px;border-left:3px solid #111}.right-side .divisor-display{min-height:52px;display:flex;align-items:center;padding-left:16px;border-bottom:3px solid #111;color:var(--purple);letter-spacing:.08em}.right-side .quotient{min-height:52px;display:flex;align-items:center;padding-left:16px;color:var(--purple);letter-spacing:.16em}
 
-.module-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.module-tab{border:2px solid #c9d8e7;background:#eef6fd;color:#17324d;border-radius:14px;padding:12px 6px;font-weight:1000;font-size:.92rem;cursor:pointer}
+.module-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.module-tab{border:2px solid #c9d8e7;background:#eef6fd;color:#17324d;border-radius:14px;padding:12px 4px;font-weight:1000;font-size:.82rem;cursor:pointer}
 .module-tab.active{background:#63c73a;color:white;border-color:#4cab2a}
 
 .notebook-wrap{display:flex;justify-content:center;width:100%}
@@ -47,6 +47,7 @@ button,input,select{font:inherit}.app{width:min(1220px,calc(100% - 20px));margin
 .nb-cell.line::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:3px;background:#17324d}
 .nb-cell.op::before{content:"×";position:absolute;left:-22px;top:4px;font-weight:800}
 .nb-cell.plus::before{content:"+";position:absolute;left:-22px;top:4px;font-weight:800}
+.nb-cell.minus::before{content:"−";position:absolute;left:-22px;top:4px;font-weight:800}
 .nb-cell.carry{font-size:.48em;color:#8b4be8;align-self:end;padding-bottom:2px}
 .nb-cell.active{background:#e9f8df;border:2px solid #8fd769;border-radius:10px}
 .nb-cell.partial{color:#17324d}
@@ -94,7 +95,7 @@ button,input,select{font:inherit}.app{width:min(1220px,calc(100% - 20px));margin
 .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:.7rem;font-weight:800}
 .legend span{display:inline-flex;align-items:center;gap:5px}
 .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
-@media(max-width:560px){.tables-grid{grid-template-columns:repeat(4,1fr)}.mode-cards{grid-template-columns:1fr}.summary-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.tables-grid{grid-template-columns:repeat(4,1fr)}.mode-cards{grid-template-columns:1fr}.summary-grid{grid-template-columns:repeat(2,1fr)}.module-tabs{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -157,8 +158,9 @@ button,input,select{font:inherit}.app{width:min(1220px,calc(100% - 20px));margin
 
 <main class="card main">
 <div class="module-tabs">
-  <button class="module-tab active" id="divisionTab">➗ Divisiones</button>
-  <button class="module-tab" id="multiplicationTab">✖️ Multiplicaciones</button>
+  <button class="module-tab active" id="divisionTab">➗ División</button>
+  <button class="module-tab" id="multiplicationTab">✖️ Multiplic.</button>
+  <button class="module-tab" id="sumarestaTab">➕➖ Suma/Resta</button>
   <button class="module-tab" id="tablasTab">🔢 Tablas</button>
 </div>
 
@@ -211,6 +213,36 @@ button,input,select{font:inherit}.app{width:min(1220px,calc(100% - 20px));margin
     <button class="btn orange" id="multHintBtn">Pista</button>
   </div>
   <div class="feedback" id="multFeedback"></div>
+</div>
+</div>
+
+<div id="sumarestaModule" class="hidden">
+<div class="title">Elige suma o resta y empieza</div>
+<div class="controls" style="margin-top:0;margin-bottom:14px" id="srSetupPanel">
+  <div class="mode-cards" style="margin-bottom:14px">
+    <div class="mode-card on" id="srOpSuma" data-op="suma"><div class="emoji">➕</div><b>Suma</b><small>Con llevadas</small></div>
+    <div class="mode-card" id="srOpResta" data-op="resta"><div class="emoji">➖</div><b>Resta</b><small>Con préstamo</small></div>
+  </div>
+  <div class="prompt" id="srSetupPrompt">Suma personalizada</div>
+  <div class="inputrow" style="flex-wrap:wrap">
+    <input id="srA" class="answerinput" type="number" min="0" step="1" placeholder="Primer número">
+    <input id="srB" class="answerinput" type="number" min="0" step="1" placeholder="Segundo número">
+    <button class="btn green" id="srStartBtn">Empezar</button>
+    <button class="btn orange" id="srRandomBtn">Aleatoria</button>
+  </div>
+  <div class="feedback" id="srSetupFeedback"></div>
+</div>
+<div class="instruction hidden" id="srInstruction"></div>
+<div class="board hidden" id="srBoard"><div class="notebook-wrap"><div class="notebook-grid" id="srGrid"></div></div></div>
+<div class="controls hidden" id="srControls">
+  <div class="prompt" id="srPrompt"></div>
+  <div id="srOptionControls" class="options hidden"></div>
+  <div id="srInputControls" class="inputrow hidden">
+    <input id="srAnswer" class="answerinput" type="number" inputmode="numeric" autocomplete="off">
+    <button class="btn green" id="srCheckBtn">Comprobar</button>
+    <button class="btn orange" id="srHintBtn">Pista</button>
+  </div>
+  <div class="feedback" id="srFeedback"></div>
 </div>
 </div>
 
@@ -422,14 +454,223 @@ $("startMultBtn").onclick=()=>{const fb=$("multSetupFeedback");if(!db.active){fb
 $("randomMultBtn").onclick=()=>{const a=Math.floor(Math.random()*890)+110;const b=Math.floor(Math.random()*89)+11;$("multA").value=a;$("multB").value=b};
 $("multAnswer").onkeydown=e=>{if(e.key==="Enter")$("multCheckBtn").click()};
 
+/* ======================= SUMA / RESTA MODULE ======================= */
+let srState=null;
+let srOp='suma';
+const srAddSteps=[["Preparar","Coloca los números"],["Sumar columna","Suma cifra a cifra"],["Llevada","Anota si hay llevada"],["Resultado","Comprueba el resultado"]];
+const srSubSteps=[["Preparar","Coloca los números"],["¿Prestamos?","Decide si hace falta pedir prestado"],["Restar columna","Resta esa columna"],["Resultado","Comprueba el resultado"]];
+
+function renderSrSteps(active){
+  const stepsData = srState&&srState.mode==='resta' ? srSubSteps : srAddSteps;
+  $("steps").innerHTML="";
+  stepsData.forEach((s,i)=>{const d=document.createElement("div");d.className="step"+(i===active?" active":"")+(i<active?" done":"");d.innerHTML=`<div class="num">${i+1}</div><div><b>${s[0]}</b><br><small>${s[1]}</small></div>`;$("steps").appendChild(d)});
+}
+function srStats(){$("hearts").textContent=srState.hearts;$("stars").textContent=srState.stars}
+function srFeedback(t,type){const f=$("srFeedback");f.textContent=t;f.className="feedback"+(type?" "+type:"")}
+function srOk(t){srState.stars++;srStats();srFeedback(t,"ok");$("speech").textContent="¡Muy bien! Seguimos.";const profile=currentProfile();if(profile){profile.stars++;saveDB()}}
+function srFail(t){srState.hearts=Math.max(0,srState.hearts-1);srStats();srFeedback(t,"bad");$("speech").textContent="No pasa nada. Repasa y prueba otra vez."}
+function srOptions(vals,fn){
+  $("srOptionControls").classList.remove("hidden");$("srInputControls").classList.add("hidden");$("srOptionControls").innerHTML="";
+  vals.forEach(v=>{const b=document.createElement("button");b.className="option";b.textContent=v;b.onclick=()=>fn(b,v);$("srOptionControls").appendChild(b)});
+}
+function srInput(expected,fn,hint){
+  $("srOptionControls").classList.add("hidden");$("srInputControls").classList.remove("hidden");
+  $("srAnswer").value="";$("srAnswer").focus();
+  $("srCheckBtn").onclick=()=>fn(Number($("srAnswer").value),expected);
+  $("srHintBtn").onclick=()=>srFeedback(hint,"ok");
+  $("srAnswer").onkeydown=e=>{if(e.key==="Enter")$("srCheckBtn").click()};
+}
+function commonSrSetup(a,b){
+  $("srSetupFeedback").textContent="";
+  $("srSetupPanel").classList.add("hidden");
+  $("srInstruction").classList.remove("hidden");
+  $("srBoard").classList.remove("hidden");
+  $("srControls").classList.remove("hidden");
+  document.querySelector("#sumarestaModule .title").textContent = srOp==="suma" ? `Suma ${a} + ${b}` : `Resta ${a} − ${b}`;
+  $("finalPreview").innerHTML = srOp==="suma" ? `${a}<br>+ ${b}<br>────` : `${a}<br>− ${b}<br>────`;
+}
+function renderSrGrid(){
+  const g=$("srGrid");
+  const cols=srState.cols;
+  g.style.gridTemplateColumns=`repeat(${cols},48px)`;
+  g.innerHTML="";
+  const gridCol=(i)=>cols-1-i;
+  if(srState.mode==="suma"){
+    srState.carries.forEach((v,i)=>{if(v!==null)putCell(g,0,gridCol(i),String(v),["carry"])});
+    for(let i=0;i<srState.aDigits.length;i++)putCell(g,1,gridCol(i),String(srState.aDigits[i]));
+    for(let i=0;i<srState.bDigits.length;i++){const cls=i===srState.bDigits.length-1?["plus"]:[];putCell(g,2,gridCol(i),String(srState.bDigits[i]),cls)}
+    drawLine(g,3,0,cols-1);
+    for(let i=0;i<cols;i++){if(srState.resultDigits[i]!==null&&srState.resultDigits[i]!==undefined)putCell(g,4,gridCol(i),String(srState.resultDigits[i]))}
+  }else{
+    srState.borrowMark.forEach((v,i)=>{if(v)putCell(g,0,gridCol(i),"+10",["carry"])});
+    for(let i=0;i<srState.displayTop.length;i++)putCell(g,1,gridCol(i),String(srState.displayTop[i]));
+    for(let i=0;i<srState.bDigits.length;i++){const cls=i===srState.bDigits.length-1?["minus"]:[];putCell(g,2,gridCol(i),String(srState.bDigits[i]),cls)}
+    drawLine(g,3,0,cols-1);
+    for(let i=0;i<cols;i++){if(srState.resultDigits[i]!==null&&srState.resultDigits[i]!==undefined)putCell(g,4,gridCol(i),String(srState.resultDigits[i]))}
+  }
+}
+
+/* ---- Suma ---- */
+function startAddition(a,b){
+  const aDigits=String(a).split("").reverse().map(Number);
+  const bDigits=String(b).split("").reverse().map(Number);
+  const result=a+b;
+  const maxLen=Math.max(aDigits.length,bDigits.length);
+  const cols=Math.max(String(result).length,maxLen)+1;
+  srState={mode:"suma",a,b,aDigits,bDigits,result,cols,maxLen,colIndex:0,carry:0,carries:Array(cols).fill(null),resultDigits:Array(cols).fill(null),hearts:3,stars:0};
+  commonSrSetup(a,b);
+  $("hearts").textContent="3";$("stars").textContent="0";
+  renderSrSteps(1);
+  renderSrGrid();
+  askAddColumn();
+}
+function askAddColumn(){
+  const maxLen=Math.max(srState.aDigits.length,srState.bDigits.length);
+  if(srState.colIndex>=maxLen){
+    if(srState.carry>0){
+      srState.resultDigits[srState.colIndex]=srState.carry;
+      srState.colIndex++;srState.carry=0;
+      renderSrGrid();
+      srFeedback("Bajamos la última llevada.","ok");
+      return setTimeout(finishAddition,500);
+    }
+    return finishAddition();
+  }
+  renderSrSteps(srState.carry>0?2:1);
+  const aDigit=srState.aDigits[srState.colIndex]||0;
+  const bDigit=srState.bDigits[srState.colIndex]||0;
+  const total=aDigit+bDigit+srState.carry;
+  $("srInstruction").textContent=srState.carry>0?`Suma ${aDigit} + ${bDigit} y la llevada ${srState.carry}.`:`Suma ${aDigit} + ${bDigit}.`;
+  $("srPrompt").textContent=srState.carry>0?`¿Cuánto es ${aDigit} + ${bDigit} + ${srState.carry}?`:`¿Cuánto es ${aDigit} + ${bDigit}?`;
+  srInput(total,(v,x)=>{
+    if(v===x){
+      const units=x%10,newCarry=Math.floor(x/10);
+      srState.resultDigits[srState.colIndex]=units;
+      if(newCarry>0)srState.carries[srState.colIndex+1]=newCarry;
+      srState.carry=newCarry;srState.colIndex++;
+      renderSrGrid();
+      srOk(newCarry>0?`Escribimos ${units} y llevamos ${newCarry}.`:`Escribimos ${units}.`);
+      setTimeout(askAddColumn,500);
+    }else srFail("Revisa esa suma de columna.");
+  },`${aDigit} + ${bDigit}${srState.carry>0?` + ${srState.carry}`:""} = ${total}`);
+}
+function finishAddition(){
+  renderSrSteps(3);
+  $("srInstruction").textContent="¡Suma terminada!";
+  $("srPrompt").textContent=`Resultado: ${srState.a} + ${srState.b} = ${srState.result}`;
+  $("srOptionControls").classList.add("hidden");$("srInputControls").classList.add("hidden");
+  srFeedback("🏆 Has completado toda la suma paso a paso.","ok");
+  $("speech").textContent="¡Misión completada!";
+  srState.stars+=3;srStats();
+  const profile=currentProfile();
+  if(profile){profile.stars+=3;profile.sumasCompleted=(profile.sumasCompleted||0)+1;saveDB();refreshProfileSummary()}
+}
+
+/* ---- Resta ---- */
+function startSubtraction(a,b){
+  const aDigits=String(a).split("").reverse().map(Number);
+  const bDigits=String(b).split("").reverse().map(Number);
+  const cols=Math.max(aDigits.length,bDigits.length);
+  srState={mode:"resta",a,b,result:a-b,cols,displayTop:aDigits.slice(),bDigits,colIndex:0,resultDigits:Array(cols).fill(null),borrowMark:Array(cols).fill(null),hearts:3,stars:0};
+  commonSrSetup(a,b);
+  $("hearts").textContent="3";$("stars").textContent="0";
+  renderSrSteps(1);
+  renderSrGrid();
+  askBorrowCheck();
+}
+function askBorrowCheck(){
+  if(srState.colIndex>=srState.cols)return finishSubtraction();
+  const top=srState.displayTop[srState.colIndex]||0;
+  const bottom=srState.bDigits[srState.colIndex]||0;
+  const needsBorrow=top<bottom;
+  renderSrSteps(1);
+  srState.borrowMark=Array(srState.cols).fill(null);
+  renderSrGrid();
+  $("srInstruction").textContent=`Columna ${srState.colIndex+1}: arriba tienes ${top}, abajo ${bottom}.`;
+  $("srPrompt").textContent="¿Necesitamos pedir prestado en esta columna?";
+  srOptions(["Sí","No"],(btn,label)=>{
+    const answeredYes=label==="Sí";
+    if(answeredYes===needsBorrow){
+      btn.classList.add("good");
+      srOk(needsBorrow?"Sí, hace falta pedir prestado.":"No hace falta, arriba ya es suficiente.");
+      if(needsBorrow)doBorrow();
+      setTimeout(askSubtractColumn,500);
+    }else{
+      btn.classList.add("bad");
+      srFail(needsBorrow?`Fíjate: arriba (${top}) es menor que abajo (${bottom}), sí hace falta.`:`Arriba (${top}) ya es mayor o igual que abajo (${bottom}), no hace falta.`);
+    }
+  });
+}
+function doBorrow(){
+  srState.borrowMark[srState.colIndex]=true;
+  let idx=srState.colIndex+1;
+  while(srState.displayTop[idx]===0){srState.displayTop[idx]=9;idx++}
+  if(srState.displayTop[idx]!==undefined)srState.displayTop[idx]-=1;
+  renderSrGrid();
+}
+function askSubtractColumn(){
+  renderSrSteps(2);
+  const top=srState.displayTop[srState.colIndex]+(srState.borrowMark[srState.colIndex]?10:0);
+  const bottom=srState.bDigits[srState.colIndex]||0;
+  const expected=top-bottom;
+  $("srInstruction").textContent=`Resta esta columna: ${top} − ${bottom}.`;
+  $("srPrompt").textContent=`¿Cuánto es ${top} − ${bottom}?`;
+  srInput(expected,(v,x)=>{
+    if(v===x){
+      srState.resultDigits[srState.colIndex]=x;
+      srState.colIndex++;
+      renderSrGrid();
+      srOk("Resta de columna correcta.");
+      setTimeout(askBorrowCheck,500);
+    }else srFail("Revisa esa resta de columna.");
+  },`${top} − ${bottom} = ${expected}`);
+}
+function finishSubtraction(){
+  renderSrSteps(3);
+  $("srInstruction").textContent="¡Resta terminada!";
+  $("srPrompt").textContent=`Resultado: ${srState.a} − ${srState.b} = ${srState.result}`;
+  $("srOptionControls").classList.add("hidden");$("srInputControls").classList.add("hidden");
+  srFeedback("🏆 Has completado toda la resta paso a paso.","ok");
+  $("speech").textContent="¡Misión completada!";
+  srState.stars+=3;srStats();
+  const profile=currentProfile();
+  if(profile){profile.stars+=3;profile.restasCompleted=(profile.restasCompleted||0)+1;saveDB();refreshProfileSummary()}
+}
+
+/* ---- Setup UI ---- */
+$("srOpSuma").onclick=()=>{srOp="suma";$("srOpSuma").classList.add("on");$("srOpResta").classList.remove("on");$("srSetupPrompt").textContent="Suma personalizada"};
+$("srOpResta").onclick=()=>{srOp="resta";$("srOpResta").classList.add("on");$("srOpSuma").classList.remove("on");$("srSetupPrompt").textContent="Resta personalizada"};
+$("srStartBtn").onclick=()=>{
+  const fb=$("srSetupFeedback");
+  if(!db.active){fb.textContent="Elige o crea un perfil arriba antes de empezar.";fb.className="feedback bad";return}
+  const a=Number($("srA").value),b=Number($("srB").value);
+  if(!Number.isInteger(a)||!Number.isInteger(b)||a<0||b<0){fb.textContent="Introduce números enteros positivos.";fb.className="feedback bad";return}
+  if(srOp==="resta"&&b>a){fb.textContent="En la resta, el primer número debe ser mayor o igual que el segundo.";fb.className="feedback bad";return}
+  if(srOp==="suma")startAddition(a,b);else startSubtraction(a,b);
+};
+$("srRandomBtn").onclick=()=>{
+  if(srOp==="suma"){
+    const a=Math.floor(Math.random()*8900)+100;
+    const b=Math.floor(Math.random()*8900)+100;
+    $("srA").value=a;$("srB").value=b;
+  }else{
+    let a=Math.floor(Math.random()*8900)+1000;
+    let b=Math.floor(Math.random()*(a-100))+100;
+    if(b>a){const t=a;a=b;b=t}
+    $("srA").value=a;$("srB").value=b;
+  }
+};
+
 /* ======================= MODULE SWITCHING ======================= */
 function switchModule(mode){
-  const isDiv=mode==="division",isMult=mode==="multiplication",isTablas=mode==="tablas";
+  const isDiv=mode==="division",isMult=mode==="multiplication",isSumaResta=mode==="sumaresta",isTablas=mode==="tablas";
   $("divisionModule").classList.toggle("hidden",!isDiv);
   $("multiplicationModule").classList.toggle("hidden",!isMult);
+  $("sumarestaModule").classList.toggle("hidden",!isSumaResta);
   $("tablasModule").classList.toggle("hidden",!isTablas);
   $("divisionTab").classList.toggle("active",isDiv);
   $("multiplicationTab").classList.toggle("active",isMult);
+  $("sumarestaTab").classList.toggle("active",isSumaResta);
   $("tablasTab").classList.toggle("active",isTablas);
   $("stepsPanel").classList.toggle("hidden",isTablas);
   $("tqLeftPanel").classList.toggle("hidden",!isTablas);
@@ -456,6 +697,11 @@ function switchModule(mode){
     $("finalPreview").innerHTML="Introduce una multiplicación para comenzar.";
     $("ruleBox").innerHTML="<h3>Reglas rápidas</h3><ol><li>Empieza por la cifra de la derecha.</li><li>Escribe las unidades.</li><li>Guarda la llevada.</li><li>Desplaza cada nueva fila una columna.</li><li>Suma los productos parciales.</li></ol>";
     renderMultSteps(0);
+  }else if(isSumaResta){
+    $("speech").textContent="Empezamos por la derecha, columna a columna.";
+    $("finalPreview").innerHTML="Elige suma o resta para comenzar.";
+    $("ruleBox").innerHTML="<h3>Reglas rápidas</h3><ol><li>Empieza por la cifra de la derecha.</li><li>Suma o resta esa columna.</li><li>En la suma: si pasa de 9, anota la llevada.</li><li>En la resta: si arriba es menor, pide prestado.</li><li>Sigue columna a columna hacia la izquierda.</li></ol>";
+    renderSrSteps(0);
   }else{
     $("speech").textContent="¡Hola! ¿Qué tablas practicamos hoy?";
     renderMasteryGrid();
@@ -463,6 +709,7 @@ function switchModule(mode){
 }
 $("divisionTab").onclick=()=>switchModule("division");
 $("multiplicationTab").onclick=()=>switchModule("multiplication");
+$("sumarestaTab").onclick=()=>switchModule("sumaresta");
 $("tablasTab").onclick=()=>switchModule("tablas");
 $("reloadBtn").onclick=()=>location.reload();
 
@@ -472,12 +719,14 @@ function loadDB(){try{const raw=localStorage.getItem(STORAGE_KEY);if(raw)return 
 function saveLocalOnly(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db))}catch(e){}}
 function saveDB(){saveLocalOnly();if(typeof scheduleCloudPush==='function')scheduleCloudPush()}
 let db=loadDB();
-function ensureProfile(name){if(!db.profiles[name])db.profiles[name]={facts:{},stars:0,bestStreak:0,sessions:0,divisionsCompleted:0,multiplicationsCompleted:0};return db.profiles[name]}
+function ensureProfile(name){if(!db.profiles[name])db.profiles[name]={facts:{},stars:0,bestStreak:0,sessions:0,divisionsCompleted:0,multiplicationsCompleted:0,sumasCompleted:0,restasCompleted:0};return db.profiles[name]}
 function currentProfile(){
   if(!db.active)return null;
   const p=ensureProfile(db.active);
   if(p.divisionsCompleted===undefined)p.divisionsCompleted=0;
   if(p.multiplicationsCompleted===undefined)p.multiplicationsCompleted=0;
+  if(p.sumasCompleted===undefined)p.sumasCompleted=0;
+  if(p.restasCompleted===undefined)p.restasCompleted=0;
   return p;
 }
 function factKey(a,b){const x=Math.min(a,b),y=Math.max(a,b);return x+'x'+y}
@@ -513,7 +762,7 @@ function refreshProfileSummary(){
   const keys=Object.keys(p.facts);
   const mastered=keys.filter(k=>masteryLevel(p.facts[k])==='mastered').length;
   const weak=keys.filter(k=>masteryLevel(p.facts[k])==='weak').length;
-  ms.innerHTML=`⭐ <b>${p.stars}</b> estrellas totales<br>➗ <b>${p.divisionsCompleted||0}</b> divisiones completadas<br>✖️ <b>${p.multiplicationsCompleted||0}</b> multiplicaciones completadas<br>✅ <b>${mastered}</b> tablas dominadas<br>🔍 <b>${weak}</b> tablas flojas`;
+  ms.innerHTML=`⭐ <b>${p.stars}</b> estrellas totales<br>➗ <b>${p.divisionsCompleted||0}</b> divisiones completadas<br>✖️ <b>${p.multiplicationsCompleted||0}</b> multiplicaciones completadas<br>➕ <b>${p.sumasCompleted||0}</b> sumas completadas<br>➖ <b>${p.restasCompleted||0}</b> restas completadas<br>✅ <b>${mastered}</b> tablas dominadas<br>🔍 <b>${weak}</b> tablas flojas`;
 }
 
 function progressIOMsg(t,type){const f=$('progressIOFeedback');f.style.display='block';f.textContent=t;f.className='feedback'+(type?' '+type:'')}
@@ -577,8 +826,8 @@ $('tqWeakTablesBtn').onclick=()=>{
 };
 
 let mode='random';
-function setMode(m){mode=m;document.querySelectorAll('.mode-card').forEach(c=>c.classList.toggle('on',c.dataset.mode===m));$('tqLengthBlock').classList.toggle('hidden',m==='timed')}
-document.querySelectorAll('.mode-card').forEach(c=>c.onclick=()=>setMode(c.dataset.mode));
+function setMode(m){mode=m;document.querySelectorAll('#tablasModule .mode-card').forEach(c=>c.classList.toggle('on',c.dataset.mode===m));$('tqLengthBlock').classList.toggle('hidden',m==='timed')}
+document.querySelectorAll('#tablasModule .mode-card').forEach(c=>c.onclick=()=>setMode(c.dataset.mode));
 function tqMsg(t,type){const f=$('tqSetupFeedback');f.textContent=t;f.className='feedback'+(type?' '+type:'')}
 
 let session=null;
