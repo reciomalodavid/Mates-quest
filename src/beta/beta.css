@@ -1,0 +1,7 @@
+.beta-badge{display:inline-flex;align-items:center;border-radius:999px;background:#5b36c8;color:#fff;padding:7px 11px;font-size:.74rem;font-weight:1000;letter-spacing:.06em;box-shadow:0 5px 0 rgba(42,22,105,.35)}
+.about-trigger{border:1px solid rgba(255,255,255,.65);background:rgba(255,255,255,.14);color:#fff;border-radius:10px;padding:8px 11px;font-weight:900;cursor:pointer}
+.about-dialog{width:min(480px,calc(100% - 28px));border:0;border-radius:20px;padding:0;box-shadow:0 28px 80px rgba(15,38,72,.35);color:var(--ink)}
+.about-dialog::backdrop{background:rgba(12,32,59,.56);backdrop-filter:blur(3px)}
+.about-card{padding:22px;background:#fff}.about-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px}.about-head h2{margin:0}.about-close{border:0;background:#edf2f8;color:#29445e;width:38px;height:38px;border-radius:10px;font-size:1.25rem;cursor:pointer}
+.about-grid{display:grid;grid-template-columns:140px minmax(0,1fr);gap:10px 14px;font-size:.9rem}.about-grid dt{font-weight:900;color:#54708a}.about-grid dd{margin:0;overflow-wrap:anywhere}.about-note{margin-top:16px;padding:12px;border-radius:12px;background:#f3efff;border:1px solid #d8ccff;font-size:.82rem;line-height:1.45}
+@media(max-width:560px){.about-grid{grid-template-columns:1fr;gap:3px}.about-grid dd{margin-bottom:8px}.beta-badge{font-size:.68rem;padding:6px 9px}}
