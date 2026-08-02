@@ -1,0 +1,12 @@
+{
+  "appName": "Mates Quest Beta",
+  "shortName": "MQ Beta",
+  "environment": "beta",
+  "version": "1.0.0-beta.1",
+  "storagePrefix": "matesQuestBeta",
+  "indexedDbName": "matesQuestBeta",
+  "cachePrefix": "mates-quest-beta",
+  "firebaseNamespace": "beta",
+  "themeColor": "#6d5dfc",
+  "backgroundColor": "#20184f"
+}
