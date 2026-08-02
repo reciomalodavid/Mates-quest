@@ -23,6 +23,8 @@ let html = await read('index.html');
 html = requiredReplace(html, '<title>Mates Quest</title>', '<title>Mates Quest Beta</title>', 'document title');
 html = requiredReplace(html, '<meta name="application-name" content="Mates Quest"/>', '<meta name="application-name" content="Mates Quest Beta"/>', 'application name');
 html = requiredReplace(html, '<meta name="mates-quest-build" content="7.1-auditada"/>', `<meta name="mates-quest-environment" content="${config.environment}"/>\n<script>window.MATES_QUEST_CONFIG=Object.freeze(${JSON.stringify(buildConfig)});</script>`, 'build metadata');
+html = requiredReplace(html, '<link href="icon-192.png" rel="icon"/>', '<link href="icon-beta-192.png" rel="icon"/>', 'browser icon');
+html = requiredReplace(html, '<link href="icon-192.png" rel="apple-touch-icon"/>', '<link href="icon-beta-192.png" rel="apple-touch-icon"/>', 'Apple touch icon');
 html = requiredReplace(html, '<meta content="Mates Quest" name="apple-mobile-web-app-title"/>', '<meta content="MQ Beta" name="apple-mobile-web-app-title"/>', 'Apple application title');
 html = requiredReplace(html, '</head>', `<style>\n${betaCss}\n</style>\n</head>`, 'head closing tag');
 html = requiredReplace(
@@ -68,6 +70,7 @@ const checks = [
   ['Beta sync documents', html.includes('betaSyncDocument(code)')],
   ['About screen', html.includes('id="aboutDialog"')],
   ['Visible version', html.includes('id="betaVersionBadge"')],
+  ['Beta icon', html.includes('icon-beta-192.png')],
   ['No MutationObserver patch', !betaRuntime.includes('MutationObserver')],
   ['Isolated cache prefix', serviceWorker.includes(config.cachePrefix)]
 ];
@@ -80,8 +83,8 @@ if (!checkOnly) {
   await writeFile(resolve(dist, 'index.html'), html);
   await writeFile(resolve(dist, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   await writeFile(resolve(dist, 'service-worker.js'), serviceWorker);
-  await cp(resolve(root, 'icon-192.png'), resolve(dist, 'icon-beta-192.png'));
-  await cp(resolve(root, 'icon-512.png'), resolve(dist, 'icon-beta-512.png'));
+  await cp(resolve(root, 'icon-beta-192.png'), resolve(dist, 'icon-beta-192.png'));
+  await cp(resolve(root, 'icon-beta-512.png'), resolve(dist, 'icon-beta-512.png'));
 }
 
 console.log(`Mates Quest ${config.version}: ${checkOnly ? 'comprobación correcta' : 'build creado en dist/'}`);
