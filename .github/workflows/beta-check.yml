@@ -1,0 +1,29 @@
+name: Beta architecture check
+
+on:
+  push:
+    branches: [beta]
+  pull_request:
+    branches: [beta]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build isolated Beta
+        run: npm run build
+      - name: Verify generated files
+        run: |
+          test -f dist/index.html
+          test -f dist/manifest.json
+          test -f dist/service-worker.js
+          grep -q "Mates Quest Beta" dist/index.html
+          grep -q "matesQuestBeta:db:v1" dist/index.html
+          grep -q "mates-quest-beta" dist/service-worker.js
