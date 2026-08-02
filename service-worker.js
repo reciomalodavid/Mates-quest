@@ -1,3 +1,4 @@
+const CACHE_PREFIX = 'mates-quest-v';
 const CACHE_NAME = 'mates-quest-v7-1';
 const APP_SHELL = [
   './index.html',
@@ -14,7 +15,11 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
+      Promise.all(
+        keys
+          .filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME)
+          .map((key) => caches.delete(key))
+      )
     )
   );
   self.clients.claim();
@@ -22,8 +27,15 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
+
+  // La Beta vive en /beta/ y tiene su propio Service Worker.
+  // Producción no intercepta ni almacena ninguna petición de esa ruta.
+  const scopePath = new URL(self.registration.scope).pathname;
+  const betaPath = `${scopePath.replace(/\/$/, '')}/beta/`;
+  if (url.pathname.startsWith(betaPath)) return;
 
   // Always try to refresh the app document first. This prevents an installed
   // iPad/iPhone PWA from remaining stuck on an older index.html.
