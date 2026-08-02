@@ -1,0 +1,13 @@
+{
+  "name": "mates-quest-beta",
+  "private": true,
+  "version": "1.0.0-beta.1",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-beta.mjs",
+    "check": "node scripts/build-beta.mjs --check"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
