@@ -1,13 +1,14 @@
 {
-  "name": "Mates Quest",
-  "short_name": "Mates Quest",
-  "description": "Práctica guiada de matemáticas paso a paso",
-  "start_url": "./index.html",
+  "id": "/mates-quest-beta/",
+  "name": "Mates Quest Beta",
+  "short_name": "MQ Beta",
+  "description": "Entorno Beta de Mates Quest para probar nuevas funciones",
+  "start_url": "./index.html?source=pwa-beta",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#f1f8ff",
-  "theme_color": "#3f8cff",
+  "background_color": "#20184f",
+  "theme_color": "#6d5dfc",
   "icons": [
     {
       "src": "icon-192.png",
