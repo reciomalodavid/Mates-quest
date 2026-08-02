@@ -16,7 +16,7 @@ const betaCss = await read('src/beta/beta.css');
 const betaUi = await read('src/beta/beta-ui.html');
 const betaRuntime = await read('src/beta/beta-runtime.js');
 const buildDate = new Date().toISOString();
-const gitCommit = process.env.CF_PAGES_COMMIT_SHA || process.env.GITHUB_SHA || 'local-build';
+const gitCommit = process.env.GITHUB_SHA || 'local-build';
 const buildConfig = Object.freeze({ ...config, buildDate, gitCommit });
 
 let html = await read('index.html');
@@ -45,7 +45,7 @@ html = html.replaceAll("firestoreDB.collection('syncs').doc(code)", 'betaSyncDoc
 html = requiredReplace(html, '</body>', `${betaUi}\n<script>\n${betaRuntime}\n</script>\n</body>`, 'body closing tag');
 
 const manifest = {
-  id: '/mates-quest-beta/',
+  id: './',
   name: config.appName,
   short_name: config.shortName,
   description: 'Entorno Beta de Mates Quest para probar nuevas funciones',
@@ -71,6 +71,7 @@ const checks = [
   ['About screen', html.includes('id="aboutDialog"')],
   ['Visible version', html.includes('id="betaVersionBadge"')],
   ['Beta icon', html.includes('icon-beta-192.png')],
+  ['Relative manifest identity', manifest.id === './' && manifest.scope === './'],
   ['No MutationObserver patch', !betaRuntime.includes('MutationObserver')],
   ['Isolated cache prefix', serviceWorker.includes(config.cachePrefix)]
 ];
