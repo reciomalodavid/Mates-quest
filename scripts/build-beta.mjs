@@ -66,7 +66,7 @@ const serviceWorker = `const CACHE_PREFIX=${JSON.stringify(`${config.cachePrefix
 
 const checks = [
   ['Beta title', html.includes('<title>Mates Quest Beta</title>')],
-  ['Beta storage', html.includes(`${config.storagePrefix}:db:v1`)],
+  ['Beta storage', html.includes('window.MATES_QUEST_CONFIG.storagePrefix}:db:v1')],
   ['Beta sync documents', html.includes('betaSyncDocument(code)')],
   ['About screen', html.includes('id="aboutDialog"')],
   ['Visible version', html.includes('id="betaVersionBadge"')],
