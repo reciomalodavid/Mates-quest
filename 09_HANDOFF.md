@@ -5,35 +5,31 @@
 ## Estado exacto
 
 - Repo: `reciomalodavid/Mates-quest`.
-- Producción: `main`, HEAD previo a auditoría `31a224d`, GitHub Pages raíz, build `7.1-auditada`.
-- Beta: `beta`, HEAD previo `87c339b`, publicada en `/beta/`, build `1.0.0-beta.1`.
-- Producción no fue modificada ni desplegada durante esta auditoría.
+- Producción: `main`, GitHub Pages raíz, build `7.1-auditada`, Firebase `mates-quest`.
+- Beta: rama `beta`, publicada en `/beta/`, build `1.0.0-beta.1`.
+- Nuevo destino comunicado: `mates-quest-beta`.
+- La Beta publicada todavía usa `mates-quest`; no hubo cambio de cliente, Rules ni datos.
+- Ningún documento Firestore fue modificado, copiado o eliminado.
 
-## Firebase
+## Último trabajo
 
-- Proyecto compartido actual: `mates-quest`.
-- Cliente: Firestore compat 10.12.2, sin Auth.
-- Colección: `syncs`; Beta usa documentos `beta-<CODE>`.
-- Rules activas no recuperadas y anteriormente no versionadas.
-- Archivos Firebase añadidos a `beta` son declarativos y todavía no desplegados.
-
-## Trabajo realizado
-
-- Auditoría completa de fuentes, repo, ramas, builds, URLs, Actions y cliente Firebase.
-- Documentación 00–13 creada.
-- Config Firebase/Rules/indexes preparada en `beta`.
-- CI de validación Firebase preparado.
-- Check Beta corregido para validar la clave generada real.
+- `cda8a67`: alias Firebase `beta` registrado en `.firebaserc`.
+- `bf4ac97`: procedimiento de copia no destructiva y rollback documentado.
+- `96266ba`: decisión de separar por copia registrada.
+- `281a07c`: estado Firebase Beta actualizado.
+- `4c4d447`: publicación Beta limitada a cambios de runtime; los cambios documentales ya no regeneran `main:/beta/`.
+- Documentos `syncs/beta-*` pendientes de inventario y backup administrativo.
 
 ## Riesgos / no tocar
 
-- No desplegar `firestore.rules` sobre `mates-quest` sin inventario, backup y rollback.
-- No promover a `main` sin prueba y aprobación explícita.
-- No borrar claves locales, documentos `syncs` ni cachés como solución rutinaria.
+- No desplegar Rules sobre `mates-quest`.
+- No cambiar los archivos raíz de `main`.
+- No cambiar el cliente Beta hasta comparar origen y destino por IDs, recuento y hashes.
+- No registrar datos de usuario ni credenciales en Actions logs o en Git.
 
 ## Próximo paso
 
-David crea una vez el proyecto Firebase Beta indicado. Después: asociarlo al alias `beta`, configurar identidad de Actions y activar deploy Beta; Producción quedará manual/protegida.
+Configurar una identidad segura de GitHub Actions con permisos mínimos sobre origen y destino. Después: verificar `mates-quest-beta`, crear/configurar Firestore Beta, inventariar y respaldar `syncs/beta-*`, copiar, validar y solo entonces cambiar la configuración pública del cliente Beta.
 
 ## Leer primero
 
@@ -41,6 +37,4 @@ David crea una vez el proyecto Firebase Beta indicado. Después: asociarlo al al
 2. `07_DECISION_LOG.md`
 3. `09_HANDOFF.md`
 4. `10_PROJECT_INSTRUCTIONS.md`
-5. `12_TECHNICAL_AUDIT.md`
-6. `13_SYNC_BACKUP_RECOVERY.md`
-
+5. `13_SYNC_BACKUP_RECOVERY.md`
