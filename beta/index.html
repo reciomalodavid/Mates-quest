@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.1","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#6d5dfc","backgroundColor":"#20184f","buildDate":"2026-08-11T19:23:08.771Z","gitCommit":"23902e5281bbf83c3f46f14f0a670db49efb19cc"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.1","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#6d5dfc","backgroundColor":"#20184f","buildDate":"2026-08-11T19:46:30.269Z","gitCommit":"6a2def0d55157a6ab1d30f142a05ef4ef5eeb9c8"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-192.png" rel="icon"/>
 <link href="icon-beta-192.png" rel="apple-touch-icon"/>
@@ -4544,6 +4544,12 @@ body{
 .about-grid{display:grid;grid-template-columns:140px minmax(0,1fr);gap:10px 14px;font-size:.9rem}.about-grid dt{font-weight:900;color:#54708a}.about-grid dd{margin:0;overflow-wrap:anywhere}.about-note{margin-top:16px;padding:12px;border-radius:12px;background:#f3efff;border:1px solid #d8ccff;font-size:.82rem;line-height:1.45}
 .topbar{background:linear-gradient(135deg,#d96a12 0%,#f28c28 56%,#ffb347 100%)!important;box-shadow:0 24px 55px rgba(166,79,11,.25)!important}
 @media(max-width:560px){.about-grid{grid-template-columns:1fr;gap:3px}.about-grid dd{margin-bottom:8px}.beta-badge{font-size:.68rem;padding:6px 9px}.about-trigger{padding:4px 7px;font-size:.61rem}}
+.beta-tools{display:flex;align-items:center;gap:7px;margin-left:auto}
+.language-picker select{border:1px solid rgba(255,255,255,.65);border-radius:999px;background:rgba(255,255,255,.94);color:#31506c;padding:5px 25px 5px 9px;font-size:.72rem;font-weight:900;cursor:pointer}
+.beta-badge,.about-trigger{font-size:.67rem!important;padding:5px 8px!important;min-height:0!important;opacity:.78}
+.about-trigger{background:rgba(255,255,255,.14)!important;border:1px solid rgba(255,255,255,.35)!important;box-shadow:none!important}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:620px){.beta-tools{width:100%;justify-content:flex-end}.beta-badge{display:none}.language-picker select{font-size:.7rem}}
 
 </style>
 </head>
@@ -4552,8 +4558,7 @@ body{
 <header class="topbar">
 <div class="brand-actions">
 <div class="app-brand"><b id="appDisplayName">Mates Quest Beta</b><span>Práctica guiada de matemáticas</span></div>
-<span class="beta-badge" id="betaVersionBadge">BETA</span>
-<button class="about-trigger" id="aboutOpenBtn" type="button">Acerca de</button>
+<div class="beta-tools"><label class="language-picker"><span class="sr-only">Idioma</span><select id="languageSelect" aria-label="Idioma"><option value="es">Castellano</option><option value="ca">Català</option></select></label><span class="beta-badge" id="betaVersionBadge">BETA</span><button class="about-trigger" id="aboutOpenBtn" type="button">Acerca de</button></div>
 <button class="back home-button" id="reloadBtn" title="Volver a la selección de actividades" type="button">⌂ Inicio</button>
 </div>
 <div class="profile-hub">
@@ -9796,6 +9801,45 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
 
 <script>
 (() => {
+  const STORAGE_KEY = 'mates-quest-beta:language';
+  const exact = new Map(Object.entries({
+    'Práctica guiada de matemáticas':'Pràctica guiada de matemàtiques','Perfil':'Perfil','Elegir perfil':'Tria un perfil','+ Nuevo perfil':'+ Perfil nou','Crear perfil nuevo':'Crea un perfil nou','Energía':'Energia','Valoración':'Valoració','Tu perfil':'El teu perfil','Elige o crea un perfil arriba para guardar tu progreso.':'Tria o crea un perfil a dalt per desar el teu progrés.','Sincronización entre dispositivos':'Sincronització entre dispositius','Comprobando configuración…':'Comprovant la configuració…','Crear código nuevo':'Crea un codi nou','Código de este perfil:':'Codi d’aquest perfil:','Usa este código en tus otros dispositivos para que se sincronicen solos.':'Fes servir aquest codi als altres dispositius perquè se sincronitzin automàticament.','Dejar de sincronizar este dispositivo':'Deixa de sincronitzar aquest dispositiu','Vamos paso a paso.':'Anem pas a pas.','¿Qué quieres practicar?':'Què vols practicar?','Elige libremente una materia':'Tria lliurement una matèria','Suma y resta':'Suma i resta','Tablas de multiplicar':'Taules de multiplicar','Multiplicación':'Multiplicació','División':'Divisió','Raíces cuadradas':'Arrels quadrades','Raíces':'Arrels','Jerarquía':'Jerarquia','Aprende':'Aprèn','Columnas, llevadas y préstamos':'Columnes, portades i préstecs','Productos parciales paso a paso':'Productes parcials pas a pas','Exactas, estimación y simplificación':'Exactes, estimació i simplificació','El orden correcto de las operaciones':'L’ordre correcte de les operacions','Crea tu división':'Crea la teva divisió','Sin decimales':'Sense decimals','Paso 1: elige el primer grupo.':'Pas 1: tria el primer grup.','¿Qué grupo debemos coger primero?':'Quin grup hem d’agafar primer?','↶ Paso atrás':'↶ Pas enrere','Multiplicación personalizada':'Multiplicació personalitzada','Suma':'Suma','Con llevadas':'Amb portades','Resta':'Resta','Con préstamo':'Amb préstec','Suma personalizada':'Suma personalitzada','Número de cifras:':'Nombre de xifres:','Sin llevadas':'Sense portades','1. Elige el tipo de ejercicio':'1. Tria el tipus d’exercici','2. Escribe el número que irá dentro de la raíz':'2. Escriu el nombre que anirà dins de l’arrel','1. Elige la operación':'1. Tria l’operació','Número de fracciones:':'Nombre de fraccions:','Estamos aquí':'Som aquí','Sí, se puede reducir':'Sí, es pot simplificar','Puedes responder con un entero o una fracción:':'Pots respondre amb un enter o una fracció:','Jerarquía de operaciones':'Jerarquia d’operacions','Elige el nivel':'Tria el nivell','Básico':'Bàsic','Sin paréntesis ni potencias':'Sense parèntesis ni potències','Paréntesis':'Parèntesis','Primero lo de dentro':'Primer el que hi ha dins','Paréntesis y potencias combinados':'Parèntesis i potències combinats','Sí, permitir negativos':'Sí, permet negatius','Nueva operación':'Operació nova','Ecuaciones de primer grado':'Equacions de primer grau','Una operación':'Una operació','Más opciones':'Més opcions','Tamaño de los números':'Mida dels nombres','Generar ecuación':'Genera una equació','Nueva lección completa':'Lliçó completa nova','Siguiente':'Següent','Comprobar':'Comprova','Continuar':'Continua','Empezar':'Comença','Volver':'Torna','Correcto':'Correcte','¡Correcto!':'Correcte!','Inténtalo de nuevo':'Torna-ho a provar','Resultado':'Resultat','Puntos':'Punts','Aciertos':'Encerts','Errores':'Errors','Tiempo':'Temps','Nivel':'Nivell','Fácil':'Fàcil','Medio':'Mitjà','Difícil':'Difícil','Sí':'Sí','No':'No','Cancelar':'Cancel·la','Guardar':'Desa','Cerrar':'Tanca','Acerca de':'Informació','Versión':'Versió','Entorno':'Entorn','Compilación':'Compilació','Almacenamiento':'Emmagatzematge','No utilizado actualmente':'No s’utilitza actualment','Comprobando…':'Comprovant…','Activo':'Actiu','Pendiente de instalación':'Pendent d’instal·lació','No disponible':'No disponible','No compatible':'No compatible','Información técnica de esta instalación':'Informació tècnica d’aquesta instal·lació','Esta Beta utiliza almacenamiento, caché y documentos de sincronización separados de Producción.':'Aquesta Beta utilitza emmagatzematge, memòria cau i documents de sincronització separats de Producció.','Castellano':'Castellà','Idioma':'Idioma'
+  }));
+  const phrases = [
+    [/¿Cuánto es/g,'Quant és'],[/¿Cuántas veces cabe/g,'Quantes vegades hi cap'],[/¿Qué cifra/g,'Quina xifra'],[/¿Qué número/g,'Quin nombre'],[/¿Hay que pedir prestado/g,'Cal demanar prestat'],[/Pide prestado/g,'Demana prestat'],[/pedir prestado/g,'demanar prestat'],[/préstamo/g,'préstec'],[/llevada/g,'portada'],[/cifra/g,'xifra'],[/número/g,'nombre'],[/resultado/g,'resultat'],[/respuesta/g,'resposta'],[/operación/g,'operació'],[/ejercicio/g,'exercici'],[/columna/g,'columna'],[/unidades/g,'unitats'],[/decenas/g,'desenes'],[/centenas/g,'centenes'],[/millares/g,'milers'],[/dividendo/g,'dividend'],[/divisor/g,'divisor'],[/cociente/g,'quocient'],[/resto/g,'residu'],[/multiplica/g,'multiplica'],[/divide/g,'divideix'],[/resta/g,'resta'],[/suma/g,'suma'],[/baja la siguiente/g,'baixa la següent'],[/siguiente cifra/g,'xifra següent'],[/paso a paso/g,'pas a pas'],[/Paso/g,'Pas'],[/Elige/g,'Tria'],[/elige/g,'tria'],[/Escribe/g,'Escriu'],[/escribe/g,'escriu'],[/Comprueba/g,'Comprova'],[/comprueba/g,'comprova'],[/Inténtalo/g,'Prova-ho'],[/Vamos/g,'Anem'],[/Ahora/g,'Ara'],[/Primero/g,'Primer'],[/Después/g,'Després'],[/Siguiente/g,'Següent'],[/Anterior/g,'Anterior'],[/Nuevo/g,'Nou'],[/Nueva/g,'Nova'],[/Tu /g,'El teu '],[/tus /g,'els teus '],[/para /g,'per '],[/con /g,'amb '],[/sin /g,'sense '],[/¿Qué /g,'Què '],[/¿Cuál /g,'Quin '],[/¿Por qué/g,'Per què'],[/más /g,'més '],[/también/g,'també'],[/aquí/g,'aquí'],[/arriba/g,'a dalt'],[/abajo/g,'a baix'],[/derecha/g,'dreta'],[/izquierda/g,'esquerra'],[/grande/g,'gran'],[/pequeño/g,'petit'],[/correcta/g,'correcta'],[/correcto/g,'correcte'],[/incorrecta/g,'incorrecta'],[/incorrecto/g,'incorrecte'],[/veces/g,'vegades'],[/queda/g,'queda'],[/tenemos/g,'tenim'],[/puedes/g,'pots'],[/debes/g,'has de'],[/necesitamos/g,'necessitem'],[/porque/g,'perquè'],[/cuando/g,'quan'],[/cada/g,'cada'],[/del /g,'del '],[/los /g,'els '],[/las /g,'les ']
+  ];
+  let language = 'es';
+  let applying = false;
+  const originals = new WeakMap();
+  const attrs = ['placeholder','title','aria-label'];
+  function translate(text){
+    if(language === 'es' || !text.trim()) return text;
+    const lead=text.match(/^\s*/)?.[0]||'', tail=text.match(/\s*$/)?.[0]||'', core=text.trim();
+    if(exact.has(core)) return lead+exact.get(core)+tail;
+    let out=core; for(const [pattern,replacement] of phrases) out=out.replace(pattern,replacement);
+    return lead+out+tail;
+  }
+  function translateNode(node){
+    if(node.nodeType===Node.TEXT_NODE){
+      if(!originals.has(node)) originals.set(node,node.nodeValue);
+      const source=originals.get(node); const next=language==='es'?source:translate(source);
+      if(node.nodeValue!==next) node.nodeValue=next;
+      return;
+    }
+    if(node.nodeType!==Node.ELEMENT_NODE || ['SCRIPT','STYLE','CODE'].includes(node.tagName)) return;
+    for(const attr of attrs){if(node.hasAttribute(attr)){const key=`@${attr}`;let data=originals.get(node)||{};if(typeof data!=='object')data={};if(!(key in data))data[key]=node.getAttribute(attr);originals.set(node,data);node.setAttribute(attr,language==='es'?data[key]:translate(data[key]));}}
+    for(const child of node.childNodes) translateNode(child);
+  }
+  function apply(root=document.body){applying=true;translateNode(root);document.documentElement.lang=language;const select=document.getElementById('languageSelect');if(select)select.value=language;applying=false;}
+  const observer=new MutationObserver(records=>{if(applying||language==='es')return;for(const record of records)for(const node of record.addedNodes)translateNode(node);});
+  function setLanguage(next){language=next==='ca'?'ca':'es';localStorage.setItem(STORAGE_KEY,language);apply();}
+  function start(){language=localStorage.getItem(STORAGE_KEY)==='ca'?'ca':'es';const select=document.getElementById('languageSelect');select?.addEventListener('change',event=>setLanguage(event.target.value));apply();observer.observe(document.body,{subtree:true,childList:true});}
+  window.MatesQuestI18n={start,setLanguage,getLanguage:()=>language,translate};
+})();
+
+</script>
+<script>
+(() => {
   const config = window.MATES_QUEST_CONFIG;
   if (!config) throw new Error('Falta la configuración de Mates Quest Beta');
 
@@ -9812,6 +9856,8 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
   byId('aboutBuildDate').textContent = new Date(config.buildDate).toLocaleString('es-ES');
   byId('aboutGitCommit').textContent = config.gitCommit;
   byId('aboutStorage').textContent = config.storagePrefix;
+
+  window.MatesQuestI18n?.start();
 
   byId('aboutOpenBtn').addEventListener('click', () => byId('aboutDialog').showModal());
   byId('aboutCloseBtn').addEventListener('click', () => byId('aboutDialog').close());
