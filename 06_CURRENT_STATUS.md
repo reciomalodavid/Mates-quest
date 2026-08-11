@@ -19,6 +19,7 @@
 - No se usan Auth, Storage, Functions, Hosting Firebase, App Check ni Messaging actualmente; no se añaden configuraciones innecesarias.
 - Validación CI: compilación de Rules en Firestore Emulator y ensayo no destructivo de rollback.
 - Deploy CI: workflow exclusivo de `beta`, destino explícito `mates-quest-beta`, autenticación OIDC/WIF de corta duración y sin claves en el repo.
+- Evidencia real: GitHub Actions run `31518939693` completado con éxito el 2026-08-11; autenticación WIF, validación y deploy de Rules/índices Beta superados.
 
 ## Rollback
 
