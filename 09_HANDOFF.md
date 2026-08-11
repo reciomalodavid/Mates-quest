@@ -2,44 +2,34 @@
 
 **Fecha:** 2026-08-11
 
-## Estado exacto
+## Estado cerrado
 
 - Repo: `reciomalodavid/Mates-quest`.
-- Producción: `main`, raíz GitHub Pages, build `7.1-auditada`, Firebase `mates-quest`; intacta.
-- Beta: rama `beta`, HEAD funcional `30517b3`, publicada en `/beta/`.
-- Firebase Beta: `mates-quest-beta`, Firestore Native en `eur3`.
-- Rules Beta compiladas y desplegadas.
-- El build publicado apunta a `mates-quest-beta` y usa documentos `syncs/beta-{CODE}`.
+- Producción: `main` + Firebase `mates-quest`; intacta.
+- Beta: `beta` + Firebase `mates-quest-beta`; separación funcional validada.
+- Infraestructura Firestore Beta versionada y desplegable automáticamente.
+- Autenticación del workflow: GitHub OIDC → Google Workload Identity Federation → cuenta de servicio Beta de mínimo privilegio; sin claves persistentes.
+- Workflows pasan el destino explícito `mates-quest-beta`; no dependen del proyecto por defecto.
 
-## Datos copiados
+## Datos y recuperación
 
-- Origen: `mates-quest/syncs/BJTJAG`.
-- Destino usado por Beta: `mates-quest-beta/syncs/beta-BJTJAG`.
-- Hash canónico de `fields` en origen y destino: `592f3be4af6054d5f17948384dcbcfaad1576901b7ff0a712589cb3bb980ea7e`.
-- Existe además `mates-quest-beta/syncs/BJTJAG` como copia conservadora; no se usa y no debe eliminarse sin autorización.
-- Backup administrativo temporal creado en Cloud Shell: `$HOME/mates-quest-backup/BJTJAG.json`.
-- No se borró ni modificó el documento de origen.
+- Destino usado: `mates-quest-beta/syncs/beta-BJTJAG`.
+- Hash canónico verificado: `592f3be4af6054d5f17948384dcbcfaad1576901b7ff0a712589cb3bb980ea7e`.
+- Copia conservadora `mates-quest-beta/syncs/BJTJAG` no usada; no borrar sin autorización.
+- Origen `mates-quest/syncs/BJTJAG` no modificado.
+- Backup privado existente: `$HOME/mates-quest-backup/BJTJAG.json`.
+- Runbook completo y ensayo no destructivo: `13_SYNC_BACKUP_RECOVERY.md`.
 
-## Commits clave
+## Automatización
 
-- `30517b3`: conecta el build Beta al Firebase aislado.
-- `febbce0`: publicación automática de ese build en `main:/beta/`.
-- Punto de rollback anterior a la conexión: `7c86c6a` o el ancestro funcional documentado `cda8a67`.
+- `beta-check.yml`: build y aislamiento de la aplicación.
+- `publish-beta-subfolder.yml`: publica únicamente `/beta/`.
+- `firebase-validate.yml`: Emulator + ensayo de rollback sin proyectos reales.
+- `firebase-beta-deploy.yml`: Rules e índices únicamente en `mates-quest-beta` con WIF.
 
-## Validación pendiente
+## Límites
 
-1. Abrir `https://reciomalodavid.github.io/Mates-quest/beta/`.
-2. Vincular/confirmar el código `BJTJAG`.
-3. Verificar que aparecen los perfiles correctos.
-4. Hacer un cambio pequeño y comprobar sincronización.
-
-## Automatización pendiente
-
-Configurar identidad de GitHub Actions con permisos mínimos sobre `mates-quest-beta` para desplegar Rules sin Cloud Shell. No es necesaria para usar ni seguir desarrollando Beta.
-
-## Riesgos / no tocar
-
-- No desplegar estas Rules sobre `mates-quest`.
-- No modificar la raíz de Producción.
-- No borrar ninguna de las copias Firestore ni el backup.
-- La autorización sigue basada en un código de seis caracteres; separar proyectos mejora el aislamiento, pero Auth/ownership continúa pendiente.
+- No promover a `main` sin autorización explícita.
+- No desplegar configuración Beta sobre `mates-quest`.
+- No almacenar backups, tokens, JSON de cuenta de servicio ni claves en Git.
+- Auth/ownership sigue siendo una mejora futura; no forma parte de la separación de entornos.
