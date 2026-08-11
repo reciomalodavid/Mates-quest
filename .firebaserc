@@ -1,6 +1,6 @@
 {
   "projects": {
-    "production": "mates-quest"
+    "production": "mates-quest",
+    "beta": "mates-quest-beta"
   }
 }
-
