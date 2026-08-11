@@ -5,36 +5,41 @@
 ## Estado exacto
 
 - Repo: `reciomalodavid/Mates-quest`.
-- Producción: `main`, GitHub Pages raíz, build `7.1-auditada`, Firebase `mates-quest`.
-- Beta: rama `beta`, publicada en `/beta/`, build `1.0.0-beta.1`.
-- Nuevo destino comunicado: `mates-quest-beta`.
-- La Beta publicada todavía usa `mates-quest`; no hubo cambio de cliente, Rules ni datos.
-- Ningún documento Firestore fue modificado, copiado o eliminado.
+- Producción: `main`, raíz GitHub Pages, build `7.1-auditada`, Firebase `mates-quest`; intacta.
+- Beta: rama `beta`, HEAD funcional `30517b3`, publicada en `/beta/`.
+- Firebase Beta: `mates-quest-beta`, Firestore Native en `eur3`.
+- Rules Beta compiladas y desplegadas.
+- El build publicado apunta a `mates-quest-beta` y usa documentos `syncs/beta-{CODE}`.
 
-## Último trabajo
+## Datos copiados
 
-- `cda8a67`: alias Firebase `beta` registrado en `.firebaserc`.
-- `bf4ac97`: procedimiento de copia no destructiva y rollback documentado.
-- `96266ba`: decisión de separar por copia registrada.
-- `281a07c`: estado Firebase Beta actualizado.
-- `4c4d447`: publicación Beta limitada a cambios de runtime; los cambios documentales ya no regeneran `main:/beta/`.
-- Documentos `syncs/beta-*` pendientes de inventario y backup administrativo.
+- Origen: `mates-quest/syncs/BJTJAG`.
+- Destino usado por Beta: `mates-quest-beta/syncs/beta-BJTJAG`.
+- Hash canónico de `fields` en origen y destino: `592f3be4af6054d5f17948384dcbcfaad1576901b7ff0a712589cb3bb980ea7e`.
+- Existe además `mates-quest-beta/syncs/BJTJAG` como copia conservadora; no se usa y no debe eliminarse sin autorización.
+- Backup administrativo temporal creado en Cloud Shell: `$HOME/mates-quest-backup/BJTJAG.json`.
+- No se borró ni modificó el documento de origen.
+
+## Commits clave
+
+- `30517b3`: conecta el build Beta al Firebase aislado.
+- `febbce0`: publicación automática de ese build en `main:/beta/`.
+- Punto de rollback anterior a la conexión: `7c86c6a` o el ancestro funcional documentado `cda8a67`.
+
+## Validación pendiente
+
+1. Abrir `https://reciomalodavid.github.io/Mates-quest/beta/`.
+2. Vincular/confirmar el código `BJTJAG`.
+3. Verificar que aparecen los perfiles correctos.
+4. Hacer un cambio pequeño y comprobar sincronización.
+
+## Automatización pendiente
+
+Configurar identidad de GitHub Actions con permisos mínimos sobre `mates-quest-beta` para desplegar Rules sin Cloud Shell. No es necesaria para usar ni seguir desarrollando Beta.
 
 ## Riesgos / no tocar
 
-- No desplegar Rules sobre `mates-quest`.
-- No cambiar los archivos raíz de `main`.
-- No cambiar el cliente Beta hasta comparar origen y destino por IDs, recuento y hashes.
-- No registrar datos de usuario ni credenciales en Actions logs o en Git.
-
-## Próximo paso
-
-Configurar una identidad segura de GitHub Actions con permisos mínimos sobre origen y destino. Después: verificar `mates-quest-beta`, crear/configurar Firestore Beta, inventariar y respaldar `syncs/beta-*`, copiar, validar y solo entonces cambiar la configuración pública del cliente Beta.
-
-## Leer primero
-
-1. `06_CURRENT_STATUS.md`
-2. `07_DECISION_LOG.md`
-3. `09_HANDOFF.md`
-4. `10_PROJECT_INSTRUCTIONS.md`
-5. `13_SYNC_BACKUP_RECOVERY.md`
+- No desplegar estas Rules sobre `mates-quest`.
+- No modificar la raíz de Producción.
+- No borrar ninguna de las copias Firestore ni el backup.
+- La autorización sigue basada en un código de seis caracteres; separar proyectos mejora el aislamiento, pero Auth/ownership continúa pendiente.
