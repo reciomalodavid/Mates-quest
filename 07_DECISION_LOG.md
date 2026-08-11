@@ -29,3 +29,9 @@
 - Decisión: documentar que el código de sincronización es actualmente un secreto compartido, no una identidad.
 - Consecuencia: Auth/autorización y migración compatible quedan como deuda prioritaria; no se endurecerán Rules sin inventario y rollback.
 
+## 2026-08-11 — Separación por copia, nunca por movimiento
+
+- Decisión: `mates-quest` permanece como Producción; `mates-quest-beta` será el destino exclusivo de una copia de los documentos `syncs/beta-*`.
+- Motivo: separar entornos sin perder ni alterar el estado actual.
+- Alternativas descartadas: mover documentos, borrar el origen, cambiar ambos clientes a la vez o transformar el schema durante la copia.
+- Consecuencia: antes del cambio de cliente son obligatorios inventario, backup verificable, comparación de IDs/hashes y rollback. Solo `beta` cambiará de configuración.
