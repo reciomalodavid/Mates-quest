@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build-beta.mjs",
-    "check": "node scripts/build-beta.mjs --check",
+    "check": "node scripts/audit-i18n-static.mjs && node scripts/build-beta.mjs --check",
     "check:firebase-rollback": "node scripts/validate-firebase-rollback.mjs"
   },
   "engines": {
