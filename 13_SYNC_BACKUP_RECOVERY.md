@@ -1,87 +1,65 @@
-# Mates Quest — Sync, Backup and Recovery
+# Mates Quest — Firebase Beta backup and rollback
 
-## Capas de datos
+## Scope and safety boundary
 
-1. Memoria JS: objeto `db` activo.
-2. LocalStorage: persistencia inmediata por instalación/entorno.
-3. Firestore: réplica opcional compartida mediante código.
-4. Service Worker/Cache Storage: solo assets; no contiene progreso autoritativo.
+- Beta project: `mates-quest-beta`.
+- Production project: `mates-quest`; never target it from this procedure.
+- Beta source branch: `beta`.
+- Infrastructure as code: `.firebaserc`, `firebase.json`, `firestore.rules` and `firestore.indexes.json`.
+- Real Firestore exports/backups must never be committed.
 
-## Sincronización actual
+## Known recovery points
 
-- El usuario crea un código de seis caracteres o introduce uno existente.
-- Producción usa `/syncs/{CODE}`; Beta usa `/syncs/beta-{CODE}`.
-- Un listener recibe documentos completos.
-- La recepción fusiona `profiles` por nombre y conserva el perfil activo local salvo que esté vacío.
-- La escritura envía el objeto `db` completo después de 800 ms.
+- Code before Firebase separation: commit `7c86c6a` (fallback documented: `cda8a67`).
+- Original source document remains untouched at `mates-quest/syncs/BJTJAG`.
+- Verified Beta document: `mates-quest-beta/syncs/beta-BJTJAG`.
+- Canonical hash of copied `fields`: `592f3be4af6054d5f17948384dcbcfaad1576901b7ff0a712589cb3bb980ea7e`.
+- Administrative backup created outside GitHub: `$HOME/mates-quest-backup/BJTJAG.json` in the owner's Cloud Shell.
 
-## Conflictos
+## Routine rollback preparation
 
-- No hay versión, reloj lógico, timestamp de servidor ni merge por campo.
-- Dos dispositivos simultáneos pueden sobrescribirse.
-- Un cliente antiguo puede eliminar campos que no conoce al escribir el documento completo.
+Before any Firebase/data migration:
 
-## Auth y autorización
+1. Download affected Beta documents to a dated private backup outside GitHub.
+2. Hash canonical fields with `jq -S '.fields' FILE | sha256sum`.
+3. Record the current `beta` commit and successful Firebase workflow run.
+4. Never use `mates-quest` as a deploy/restore target.
 
-- No se usa Firebase Auth.
-- El código es actualmente el único secreto de acceso de aplicación.
-- Las Rules activas no están verificadas; el acceso anónimo de lectura parece permitido.
-- El aislamiento `beta-` es namespace, no frontera de seguridad dentro del proyecto compartido.
+## Code rollback
 
-## Backup y restore
+1. Create a revert commit on `beta`; do not rewrite branch history.
+2. Push `beta` and wait for the architecture check and Beta publication.
+3. Verify `/beta/` only. Production root must remain unchanged.
 
-- Firestore no debe considerarse backup: forma parte del mismo flujo de sync y acepta sobrescrituras.
-- No existe exportación de usuario, backup periódico verificado ni restore probado.
-- Desvincular conserva la copia local, pero perder almacenamiento del navegador puede perder datos no sincronizados.
+## Rules and indexes rollback
 
-## Separación segura de Beta
+1. Restore the four Firebase configuration files from the last known-good `beta` commit.
+2. Commit them to `beta`.
+3. The deploy workflow uses a short-lived WIF token and explicitly targets `mates-quest-beta`.
+4. Confirm the successful Firebase release before functional testing.
 
-Proyecto destino comunicado por David: `mates-quest-beta`. Su existencia y servicios activos siguen pendientes de verificación administrativa.
+Emergency manual form (Beta only):
 
-Reglas obligatorias:
+```bash
+npx --yes firebase-tools@14.12.0 deploy \
+  --only firestore:rules,firestore:indexes \
+  --project mates-quest-beta \
+  --config firebase.json
+```
 
-- El proyecto `mates-quest`, sus Rules y sus documentos no se modifican ni se eliminan.
-- Solo se copian documentos actuales de Beta: `/syncs/beta-{CODE}`.
-- No se cambia el cliente Beta hasta verificar inventario, backup, copia y recuentos.
-- Los identificadores y contenidos se conservan exactamente; no se transforma el schema durante la separación.
-- Producción continúa apuntando a `mates-quest`.
+## Data recovery
 
-### Plan previo a la copia
+1. Stop writes from Beta clients while restoring.
+2. Confirm the backup hash.
+3. Strip response metadata and retain only `{fields: .fields}`.
+4. Restore only to `mates-quest-beta/syncs/beta-BJTJAG` with PATCH.
+5. Read it back and compare canonical `.fields` hashes.
+6. Re-enable clients and perform one read/write/read test.
 
-1. Obtener acceso administrativo seguro a origen y destino mediante GitHub Actions; nunca guardar credenciales en el repo ni en el chat.
-2. Inventariar todos los documentos `syncs` cuyo ID empiece por `beta-`: ID, tamaño y hash/canonicalización, sin publicar datos en logs.
-3. Crear un export/backup fechado del subconjunto Beta en almacenamiento privado con retención definida.
-4. Verificar que el backup contiene el mismo número de documentos y hashes que el inventario.
-5. Crear Firestore `(default)` en `mates-quest-beta`, desplegar allí únicamente las Rules e índices versionados y probarlos.
-6. Copiar el subconjunto Beta sin borrar ni sobrescribir el origen.
-7. Comparar origen y destino por recuento, IDs y hashes.
-8. Cambiar solo el build de la rama `beta` a la configuración pública del nuevo proyecto.
-9. Probar lectura, escritura y sincronización en Beta con un código copiado y con uno nuevo.
-10. Mantener el origen intacto durante un periodo de observación antes de plantear cualquier limpieza, que requerirá autorización aparte.
+Production may be read as a last-resort independent source, but this rollback never writes to it.
 
-### Rollback
+## Validation performed
 
-Si falla cualquier validación:
-
-1. volver a publicar el último commit Beta que apuntaba a `mates-quest`;
-2. no tocar ni restaurar Producción, porque nunca habrá cambiado;
-3. conservar los documentos de origen intactos;
-4. tratar el proyecto Beta nuevo como copia fallida y no eliminarlo hasta revisar la causa;
-5. documentar recuentos, hashes y error antes de reintentar.
-
-El punto de retorno de código anterior a la conexión con el nuevo Firebase es `cda8a67` o su ancestro funcional inmediato; este commit solo registra el alias y no cambia el cliente.
-
-## Rollback general
-
-- Código: volver a un commit conocido y reconstruir Beta.
-- Rules: conservar cada versión en Git y desplegar explícitamente el commit anterior.
-- Datos: no hay rollback operativo hasta implantar backup/export.
-- Schema: cualquier cambio debe aceptar documentos v1, escribir una versión nueva y permitir marcha atrás.
-
-## Plan recomendado
-
-1. Aislar Firebase Beta con el procedimiento anterior.
-2. Añadir tests Emulator de lectura/escritura autorizada y denegada.
-3. Incorporar `schemaVersion`, `updatedAt` de servidor y estrategia de conflicto.
-4. Introducir identidad/ownership compatible con códigos existentes.
-5. Añadir exportación local y backup administrado antes de migraciones.
+- `npm run check:firebase-rollback` validates aliases, file wiring, the Rules boundary and a synthetic backup/restore rehearsal.
+- Firestore Emulator compiles the versioned Rules with `demo-mates-quest`; no real Firebase project is contacted.
+- A real restore is intentionally not performed unless recovery is required.
