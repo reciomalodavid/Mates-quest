@@ -1,0 +1,51 @@
+name: Deploy Firebase Beta infrastructure
+
+on:
+  push:
+    branches: [beta]
+    paths:
+      - firebase.json
+      - firestore.rules
+      - firestore.indexes.json
+      - .firebaserc
+      - .github/workflows/firebase-beta-deploy.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: firebase-infrastructure-mates-quest-beta
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: firebase-beta
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Authenticate to Google Cloud with a short-lived token
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_FIREBASE_BETA_SERVICE_ACCOUNT }}
+
+      - name: Validate target and configuration
+        run: |
+          test "$(node -p "require('./.firebaserc').projects.beta")" = "mates-quest-beta"
+          node -e "JSON.parse(require('fs').readFileSync('firebase.json'))"
+          node -e "JSON.parse(require('fs').readFileSync('firestore.indexes.json'))"
+
+      - name: Deploy Firestore Rules and indexes to Beta only
+        run: >-
+          npx --yes firebase-tools@14.12.0 deploy
+          --only firestore:rules,firestore:indexes
+          --project mates-quest-beta
+          --config firebase.json
+          --non-interactive
