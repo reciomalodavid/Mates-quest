@@ -34,4 +34,5 @@ jobs:
           java-version: '21'
       - name: Validate Firestore configuration with Emulator
         run: npx --yes firebase-tools@14.12.0 emulators:exec --only firestore --project demo-mates-quest "node -e \"console.log('Firestore rules loaded')\""
-
+      - name: Rehearse configuration and data rollback without real projects
+        run: npm run check:firebase-rollback
