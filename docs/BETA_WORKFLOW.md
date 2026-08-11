@@ -46,8 +46,31 @@ Beta uses:
 - cache names beginning with `mates-quest-beta-`;
 - browser storage keys beginning with `matesQuestBeta`;
 - a separate IndexedDB database name if IndexedDB is introduced;
-- Firebase documents prefixed with the Beta namespace;
-- a deployment URL with a different origin from Production.
+- a dedicated Firebase project, `mates-quest-beta`;
+- Firestore documents prefixed with `beta-` as an additional client namespace;
+- deployment under `/beta/`, with Beta-only cache and browser-storage names.
+
+## Firebase infrastructure as code
+
+- `.firebaserc` records the explicit `beta` alias; workflows still pass
+  `--project mates-quest-beta` so the target cannot depend on a local default.
+- `firebase.json` wires the versioned Rules and indexes.
+- `firestore.rules` and `firestore.indexes.json` are the deployable contract.
+- `Firebase configuration validation` compiles Rules in the Emulator and runs
+  the non-destructive rollback rehearsal.
+- `Deploy Firebase Beta infrastructure` runs only from `beta`, targets only
+  `mates-quest-beta`, and authenticates through GitHub OIDC + Google Workload
+  Identity Federation. No service-account key is stored in GitHub or the repo.
+
+The GitHub environment `firebase-beta` contains only these identifiers:
+
+- `GCP_WIF_PROVIDER`: Workload Identity Provider resource name.
+- `GCP_FIREBASE_BETA_SERVICE_ACCOUNT`: deployer service-account email.
+
+They are configuration identifiers, not private keys. The Google trust policy
+restricts impersonation to `reciomalodavid/Mates-quest` on `refs/heads/beta`.
+
+Rollback and data-recovery procedure: `13_SYNC_BACKUP_RECOVERY.md`.
 
 ## Prohibited implementation patterns
 
