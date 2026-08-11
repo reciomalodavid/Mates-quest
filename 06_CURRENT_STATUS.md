@@ -1,48 +1,33 @@
 # Mates Quest — Current Status
 
-**Fecha de corte:** 2026-08-11 19:15 CEST  
-**Fuente de verdad:** repositorio GitHub, build publicado y verificaciones administrativas ejecutadas en Google Cloud/Firebase.
+**Fecha de corte:** 2026-08-11 20:45 CEST
+**Fuente de verdad:** rama `beta`, workflows de GitHub y verificaciones administrativas Firebase.
 
-## Repositorio
+## Separación Beta / Producción
 
-- Repo: `reciomalodavid/Mates-quest`.
-- Producción: rama `main`; raíz publicada en build `7.1-auditada`.
-- Trabajo: rama `beta`, HEAD funcional `30517b3`.
-- El commit automático `febbce0` actualizó únicamente `main:/beta/`.
+- Producción: rama `main`, raíz GitHub Pages, Firebase `mates-quest`; no modificada.
+- Beta: rama `beta`, URL `/Mates-quest/beta/`, Firebase exclusivo `mates-quest-beta`.
+- Firestore Beta Native `(default)` en `eur3`; Web App Beta operativa.
+- El cliente Beta usa `/syncs/beta-{CODE}` y configuración pública de `mates-quest-beta`.
+- Documento `beta-BJTJAG` copiado y verificado; hash canónico de `fields`: `592f3be4af6054d5f17948384dcbcfaad1576901b7ff0a712589cb3bb980ea7e`.
+- Prueba funcional confirmada por el propietario: perfiles cargados correctamente en Beta.
 
-## Producción
+## Firebase como código
 
-- URL: `https://reciomalodavid.github.io/Mates-quest/`.
-- Build: `7.1-auditada`.
-- Firebase: `mates-quest`.
-- Código raíz, Rules y datos de Producción: intactos.
+- Versionados en `beta`: `.firebaserc`, `firebase.json`, `firestore.rules` y `firestore.indexes.json`.
+- Rules desplegadas en `mates-quest-beta` y compiladas correctamente.
+- No se usan Auth, Storage, Functions, Hosting Firebase, App Check ni Messaging actualmente; no se añaden configuraciones innecesarias.
+- Validación CI: compilación de Rules en Firestore Emulator y ensayo no destructivo de rollback.
+- Deploy CI: workflow exclusivo de `beta`, destino explícito `mates-quest-beta`, autenticación OIDC/WIF de corta duración y sin claves en el repo.
 
-## Beta
+## Rollback
 
-- URL: `https://reciomalodavid.github.io/Mates-quest/beta/`.
-- Build: `1.0.0-beta.1`.
-- Firebase cliente publicado: `mates-quest-beta`.
-- Namespace Firestore: `/syncs/beta-{CODE}`.
-- Build publicado verificado en GitHub: contiene `projectId: mates-quest-beta` y no la configuración de Producción.
+- Código: revert en `beta` y republicación exclusiva de `/beta/`.
+- Rules/índices/config: restauración desde un commit conocido y deploy automático exclusivo a Beta.
+- Datos: backup privado, hash previo/posterior y restore PATCH exclusivo a `mates-quest-beta`.
+- Procedimiento completo: `13_SYNC_BACKUP_RECOVERY.md`.
+- Validación: build Beta, validación estática y ensayo de backup/restore con datos sintéticos; no contacta proyectos reales.
 
-## Firebase Beta
+## Riesgo conocido fuera de este cierre
 
-- Proyecto: `mates-quest-beta`.
-- Firestore Native `(default)`: creado en `eur3`.
-- Web App: `Mates Quest Beta Web`.
-- Documento de datos Beta: `/syncs/beta-BJTJAG`.
-- Integridad de copia verificada: hash origen/destino `592f3be4af6054d5f17948384dcbcfaad1576901b7ff0a712589cb3bb980ea7e`.
-- Copia adicional conservadora `/syncs/BJTJAG`: no usada por el build y no eliminada.
-- Rules Beta: compiladas y desplegadas correctamente el 2026-08-11.
-- Origen `mates-quest`: no modificado ni eliminado.
-
-## Automatización
-
-- Build y publicación de Beta: GitHub Actions.
-- Validación de arquitectura: GitHub Actions.
-- Validación de Rules con Emulator: GitHub Actions.
-- Deploy real de Rules: realizado manualmente; falta una identidad de GitHub Actions con permisos mínimos para automatizar futuros despliegues.
-
-## Validación pendiente
-
-Abrir Beta, comprobar que el código `BJTJAG` recupera los perfiles esperados y hacer una modificación pequeña para confirmar lectura y escritura. Si falla, rollback de código al commit anterior a `30517b3`; el origen permanece intacto.
+La app aún no usa Firebase Auth. Los códigos de seis caracteres siguen siendo el control de acceso funcional. Mejorar Auth/ownership será una fase posterior y requiere migración compatible.
