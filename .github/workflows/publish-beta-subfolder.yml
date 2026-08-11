@@ -3,6 +3,17 @@ name: Publish Beta to GitHub Pages subfolder
 on:
   push:
     branches: [beta]
+    paths:
+      - index.html
+      - manifest.json
+      - service-worker.js
+      - icon-beta-192.png
+      - icon-beta-512.png
+      - package.json
+      - scripts/build-beta.mjs
+      - src/beta/**
+      - src/config/app-config.json
+      - .github/workflows/publish-beta-subfolder.yml
   workflow_dispatch:
 
 permissions:
