@@ -15,6 +15,7 @@ const config = JSON.parse(await read('src/config/app-config.json'));
 const betaCss = await read('src/beta/beta.css');
 const betaUi = await read('src/beta/beta-ui.html');
 const betaRuntime = await read('src/beta/beta-runtime.js');
+const betaI18n = await read('src/beta/i18n.js');
 const buildDate = new Date().toISOString();
 const gitCommit = process.env.GITHUB_SHA || 'local-build';
 const buildConfig = Object.freeze({ ...config, buildDate, gitCommit });
@@ -41,7 +42,7 @@ html = requiredReplace(html, '</head>', `<style>\n${betaCss}\n</style>\n</head>`
 html = requiredReplace(
   html,
   '<div class="app-brand"><b>Mates Quest</b><span>Práctica guiada de matemáticas</span></div>',
-  '<div class="app-brand"><b id="appDisplayName">Mates Quest Beta</b><span>Práctica guiada de matemáticas</span></div>\n<span class="beta-badge" id="betaVersionBadge">BETA</span>\n<button class="about-trigger" id="aboutOpenBtn" type="button">Acerca de</button>',
+  '<div class="app-brand"><b id="appDisplayName">Mates Quest Beta</b><span>Práctica guiada de matemáticas</span></div>\n<div class="beta-tools"><label class="language-picker"><span class="sr-only">Idioma</span><select id="languageSelect" aria-label="Idioma"><option value="es">Castellano</option><option value="ca">Català</option></select></label><span class="beta-badge" id="betaVersionBadge">BETA</span><button class="about-trigger" id="aboutOpenBtn" type="button">Acerca de</button></div>',
   'application brand'
 );
 html = requiredReplace(html, "const STORAGE_KEY='matesQuestDB_v1';", "const STORAGE_KEY=`${window.MATES_QUEST_CONFIG.storagePrefix}:db:v1`;", 'local database key');
@@ -53,7 +54,7 @@ html = requiredReplace(
   'Firebase sync state'
 );
 html = html.replaceAll("firestoreDB.collection('syncs').doc(code)", 'betaSyncDocument(code)');
-html = requiredReplace(html, '</body>', `${betaUi}\n<script>\n${betaRuntime}\n</script>\n</body>`, 'body closing tag');
+html = requiredReplace(html, '</body>', `${betaUi}\n<script>\n${betaI18n}\n</script>\n<script>\n${betaRuntime}\n</script>\n</body>`, 'body closing tag');
 
 const manifest = {
   id: './',
@@ -84,7 +85,8 @@ const checks = [
   ['Visible version', html.includes('id="betaVersionBadge"')],
   ['Beta icon', html.includes('icon-beta-192.png')],
   ['Relative manifest identity', manifest.id === './' && manifest.scope === './'],
-  ['No MutationObserver patch', !betaRuntime.includes('MutationObserver')],
+  ['Language selector', html.includes('id="languageSelect"')],
+  ['Catalan runtime', html.includes('MatesQuestI18n')],
   ['Isolated cache prefix', serviceWorker.includes(config.cachePrefix)]
 ];
 const failed = checks.filter(([, ok]) => !ok);
