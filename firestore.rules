@@ -1,0 +1,17 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Transitional contract required by the current client, which has no Auth.
+    // DO NOT deploy to Production until existing documents and clients are
+    // inventoried and a tested Auth/ownership migration with rollback exists.
+    match /syncs/{syncId} {
+      allow read, write: if syncId.matches('^(beta-)?[A-HJ-NP-Z2-9]{6}$');
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

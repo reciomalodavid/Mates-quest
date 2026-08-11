@@ -1,0 +1,37 @@
+name: Firebase configuration validation
+
+on:
+  push:
+    branches: [beta]
+    paths:
+      - firebase.json
+      - firestore.rules
+      - firestore.indexes.json
+      - .github/workflows/firebase-validate.yml
+  pull_request:
+    branches: [beta]
+    paths:
+      - firebase.json
+      - firestore.rules
+      - firestore.indexes.json
+      - .github/workflows/firebase-validate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Validate Firestore configuration with Emulator
+        run: npx --yes firebase-tools@14.12.0 emulators:exec --only firestore --project demo-mates-quest "node -e \"console.log('Firestore rules loaded')\""
+

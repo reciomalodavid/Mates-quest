@@ -25,5 +25,6 @@ jobs:
           test -f dist/manifest.json
           test -f dist/service-worker.js
           grep -q "Mates Quest Beta" dist/index.html
-          grep -q "matesQuestBeta:db:v1" dist/index.html
+          grep -q '"storagePrefix":"matesQuestBeta"' dist/index.html
+          grep -q 'storagePrefix}:db:v1' dist/index.html
           grep -q "mates-quest-beta" dist/service-worker.js
