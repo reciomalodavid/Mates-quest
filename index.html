@@ -4483,6 +4483,53 @@ body{
   .new-profile-popover{width:100%}
 }
 
+/* === Responsive 7.1: usar cada pantalla sin estirar el contenido === */
+.app{
+  width:calc(100% - clamp(16px,3vw,56px))!important;
+  max-width:1780px!important;
+  padding:clamp(8px,1.4vw,20px) 0 28px!important;
+}
+
+@media(min-width:1500px){
+  .layout{
+    grid-template-columns:minmax(240px,270px) minmax(0,1fr) minmax(250px,290px)!important;
+    gap:clamp(18px,1.4vw,26px)!important;
+  }
+  .main{padding:clamp(22px,1.7vw,30px)!important}
+  .topbar{
+    grid-template-columns:minmax(280px,1fr) minmax(380px,1.15fr) minmax(440px,1.35fr)!important;
+  }
+  .module-navigation.expanded .module-tabs{
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  }
+}
+
+@media(min-width:901px) and (max-width:1499px){
+  .layout{
+    grid-template-columns:minmax(205px,230px) minmax(0,1fr) minmax(220px,250px)!important;
+  }
+}
+
+@media(min-width:901px) and (max-width:1180px){
+  .topbar{grid-template-columns:minmax(230px,.9fr) minmax(320px,1.1fr)!important}
+  .game-hud{grid-column:1/-1!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .layout{grid-template-columns:minmax(210px,230px) minmax(0,1fr)!important}
+  .right{
+    display:block!important;
+    position:static!important;
+    grid-column:1/-1!important;
+  }
+}
+
+@media(max-width:900px){
+  .app{width:calc(100% - 20px)!important;padding:10px 0 24px!important}
+  .left,.right{position:static!important}
+}
+
+@media(max-width:620px){
+  .app{width:calc(100% - 12px)!important;padding:6px 0 18px!important}
+}
+
 </style>
 </head>
 <body>
