@@ -16,6 +16,8 @@
   byId('aboutGitCommit').textContent = config.gitCommit;
   byId('aboutStorage').textContent = config.storagePrefix;
 
+  window.MatesQuestI18n?.start();
+
   byId('aboutOpenBtn').addEventListener('click', () => byId('aboutDialog').showModal());
   byId('aboutCloseBtn').addEventListener('click', () => byId('aboutDialog').close());
   byId('aboutDialog').addEventListener('click', (event) => {
