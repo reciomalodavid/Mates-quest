@@ -62,13 +62,11 @@ Beta uses:
   `mates-quest-beta`, and authenticates through GitHub OIDC + Google Workload
   Identity Federation. No service-account key is stored in GitHub or the repo.
 
-The GitHub environment `firebase-beta` contains only these identifiers:
-
-- `GCP_WIF_PROVIDER`: Workload Identity Provider resource name.
-- `GCP_FIREBASE_BETA_SERVICE_ACCOUNT`: deployer service-account email.
-
-They are configuration identifiers, not private keys. The Google trust policy
-restricts impersonation to `reciomalodavid/Mates-quest` on `refs/heads/beta`.
+The workflow contains only the Workload Identity Provider resource name and
+deployer account email. These are public identifiers, not credentials. No
+GitHub secret or service-account JSON is required: GitHub requests a fresh,
+short-lived Google token for each run. The Google trust policy restricts
+impersonation to `reciomalodavid/Mates-quest` on `refs/heads/beta`.
 
 Rollback and data-recovery procedure: `13_SYNC_BACKUP_RECOVERY.md`.
 
