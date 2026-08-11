@@ -7,6 +7,14 @@
   "indexedDbName": "matesQuestBeta",
   "cachePrefix": "mates-quest-beta",
   "firebaseNamespace": "beta",
+  "firebaseConfig": {
+    "apiKey": "AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro",
+    "authDomain": "mates-quest-beta.firebaseapp.com",
+    "projectId": "mates-quest-beta",
+    "storageBucket": "mates-quest-beta.firebasestorage.app",
+    "messagingSenderId": "250230905666",
+    "appId": "1:250230905666:web:06e89df4689dcacc17c6db"
+  },
   "themeColor": "#6d5dfc",
   "backgroundColor": "#20184f"
 }
