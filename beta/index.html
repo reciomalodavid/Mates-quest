@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.1","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#6d5dfc","backgroundColor":"#20184f","buildDate":"2026-08-11T19:10:03.177Z","gitCommit":"bc3a727f46701220954c690511118e9ca0f8bad9"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.1","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#6d5dfc","backgroundColor":"#20184f","buildDate":"2026-08-11T19:23:08.771Z","gitCommit":"23902e5281bbf83c3f46f14f0a670db49efb19cc"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-192.png" rel="icon"/>
 <link href="icon-beta-192.png" rel="apple-touch-icon"/>
@@ -4175,6 +4175,8 @@ select:focus,
 #divisionBackBtn.hidden{display:none!important}
 .product-building .minus{display:none!important}
 .grid-cell.division-carry{font-size:.48em;color:#7c54ef;font-weight:1000;align-self:start;padding-top:2px;text-shadow:0 1px 0 rgba(255,255,255,.95);background:rgba(143,99,255,.12);border-radius:8px;box-shadow:inset 0 0 0 1px rgba(143,99,255,.18)}
+.grid-cell.division-borrow{font-size:.48em;color:#c56616;font-weight:1000;align-self:start;padding-top:2px;text-shadow:0 1px 0 rgba(255,255,255,.95);background:rgba(244,162,97,.18);border-radius:8px;box-shadow:inset 0 0 0 1px rgba(197,102,22,.2)}
+.grid-cell.subtraction-building{color:#c56616!important;background:rgba(244,162,97,.12);border-radius:8px;box-shadow:inset 0 0 0 1px rgba(197,102,22,.18)}
 
 
 /* ======================= 6.6 — MORE COLOR + IPAD HEATMAP ======================= */
@@ -4534,13 +4536,14 @@ body{
 </style>
 <style>
 .beta-badge{display:inline-flex;align-items:center;border-radius:999px;background:#5b36c8;color:#fff;padding:7px 11px;font-size:.74rem;font-weight:1000;letter-spacing:.06em;box-shadow:0 5px 0 rgba(42,22,105,.35)}
-.about-trigger{border:1px solid rgba(255,255,255,.65);background:rgba(255,255,255,.14);color:#fff;border-radius:10px;padding:8px 11px;font-weight:900;cursor:pointer}
+.about-trigger{border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:5px 8px;font-size:.66rem;font-weight:800;opacity:.7;cursor:pointer;box-shadow:none}
+.about-trigger:hover,.about-trigger:focus-visible{opacity:1;background:rgba(255,255,255,.16)}
 .about-dialog{width:min(480px,calc(100% - 28px));border:0;border-radius:20px;padding:0;box-shadow:0 28px 80px rgba(15,38,72,.35);color:var(--ink)}
 .about-dialog::backdrop{background:rgba(12,32,59,.56);backdrop-filter:blur(3px)}
 .about-card{padding:22px;background:#fff}.about-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px}.about-head h2{margin:0}.about-close{border:0;background:#edf2f8;color:#29445e;width:38px;height:38px;border-radius:10px;font-size:1.25rem;cursor:pointer}
 .about-grid{display:grid;grid-template-columns:140px minmax(0,1fr);gap:10px 14px;font-size:.9rem}.about-grid dt{font-weight:900;color:#54708a}.about-grid dd{margin:0;overflow-wrap:anywhere}.about-note{margin-top:16px;padding:12px;border-radius:12px;background:#f3efff;border:1px solid #d8ccff;font-size:.82rem;line-height:1.45}
 .topbar{background:linear-gradient(135deg,#d96a12 0%,#f28c28 56%,#ffb347 100%)!important;box-shadow:0 24px 55px rgba(166,79,11,.25)!important}
-@media(max-width:560px){.about-grid{grid-template-columns:1fr;gap:3px}.about-grid dd{margin-bottom:8px}.beta-badge{font-size:.68rem;padding:6px 9px}}
+@media(max-width:560px){.about-grid{grid-template-columns:1fr;gap:3px}.about-grid dd{margin-bottom:8px}.beta-badge{font-size:.68rem;padding:6px 9px}.about-trigger{padding:4px 7px;font-size:.61rem}}
 
 </style>
 </head>
@@ -6150,6 +6153,22 @@ function renderDivision(){
     placeText(g,partial,r,state.currentEndCol,'product product-building');
   }
 
+  // Durante la resta mostramos cada cifra resuelta y los préstamos encima
+  // del grupo de trabajo, sin esperar al resultado completo.
+  if(state.divisionSubtract){
+    const sub=state.divisionSubtract;
+    sub.resultDigits.forEach((digit,index)=>{
+      if(digit!==null)cell(g,digit,r,sub.endCol-index,'remainder subtraction-building');
+    });
+    const topRow=Math.max(0,r-3);
+    sub.displayTop.forEach((digit,index)=>{
+      if(sub.changedTop[index])cell(g,digit,topRow,sub.endCol-index,'division-borrow');
+    });
+    sub.borrowMark.forEach((borrowed,index)=>{
+      if(borrowed)cell(g,sub.displayTop[index]+10,topRow,sub.endCol-index,'division-borrow');
+    });
+  }
+
   const divisorStr=String(state.divisor);
   let divisorHtml='';
   if(state.divisionProduct&&state.divisionProduct.carry>0&&state.divisionProduct.index<state.divisionProduct.digits.length){
@@ -6187,6 +6206,15 @@ function cloneDivisionProductSnapshot(m){
     carry:m.carry,
     resultDigits:[...m.resultDigits],
     snapshots:(m.snapshots||[]).map(s=>({index:s.index,carry:s.carry,resultDigits:[...s.resultDigits]}))
+  };
+}
+function cloneDivisionSubtractSnapshot(m){
+  return {
+    index:m.index,
+    displayTop:[...m.displayTop],
+    resultDigits:[...m.resultDigits],
+    borrowMark:[...m.borrowMark],
+    changedTop:[...m.changedTop]
   };
 }
 function startGroup(){hideDivisionBack();$('helpContext').innerHTML='<b>Paso actual</b><br>Elige el primer grupo de cifras que sea igual o mayor que el divisor.';renderSteps(0);$('instruction').textContent='Paso 1: elige el primer grupo.';$('prompt').textContent='¿Qué grupo debemos coger primero?';const groups=[];for(let i=1;i<=state.digits.length;i++)groups.push(Number(state.digits.slice(0,i).join('')));const correct=groups.find(x=>x>=state.divisor)??Number(state.digits.join(''));renderDivision();options(groups,(b,v)=>{if(v===correct){b.classList.add('good');state.currentValue=v;state.pos=String(v).length;state.currentEndCol=state.pos-1;ok(`Correcto. ${v} es el primer grupo que ya se puede dividir.`);setTimeout(startQuotient,500)}else{b.classList.add('bad');fail(v<state.divisor?`${v} es menor que ${state.divisor}.`:'Podemos empezar antes.')}})}
@@ -6344,18 +6372,110 @@ function startSubtract(product){
     });
   }else hideDivisionBack();
 
-  $('helpContext').innerHTML='<b>Paso actual</b><br>Resta el producto al grupo que estabas dividiendo.';
+  const topDigits=String(state.currentValue).split('').reverse().map(Number);
+  const bottomDigits=String(product).split('').reverse().map(Number);
+  const cols=Math.max(topDigits.length,bottomDigits.length);
+  while(topDigits.length<cols)topDigits.push(0);
+  while(bottomDigits.length<cols)bottomDigits.push(0);
+  state.divisionSubtract={
+    top:state.currentValue,
+    bottom:product,
+    expected:state.currentValue-product,
+    endCol:state.currentEndCol,
+    cols,
+    index:0,
+    displayTop:[...topDigits],
+    bottomDigits,
+    resultDigits:Array(cols).fill(null),
+    borrowMark:Array(cols).fill(false),
+    changedTop:Array(cols).fill(false),
+    snapshots:[]
+  };
+  askDivisionBorrow();
+}
+function askDivisionBorrow(){
+  const m=state.divisionSubtract;
+  if(m.index>=m.cols)return finishDivisionSubtract();
+  $('helpContext').innerHTML='<b>Paso actual</b><br>Resuelve la resta de derecha a izquierda, una columna cada vez.';
   renderSteps(3);
-  const e=state.currentValue-product;
-  $('instruction').textContent=`Paso 4: resta ${state.currentValue} − ${product}.`;
-  $('prompt').textContent='¿Cuál es el resultado de la resta?';
-  input(e,(v,x)=>{
-    if(v===x){
-      hideDivisionBack();
-      state.rows.push({type:'remainder',value:x,endCol:state.currentEndCol});
-      renderDivision();ok('Resta correcta.');state.currentValue=x;setTimeout(nextDigit,500)
-    }else fail('La división va bien; revisa solo la resta.')
-  },`${state.currentValue} − ${product} = ${e}`)
+  renderDivision();
+  const top=m.displayTop[m.index]||0;
+  const bottom=m.bottomDigits[m.index]||0;
+  const needsBorrow=top<bottom;
+  const position=m.index===0?'unidades':m.index===1?'decenas':m.index===2?'centenas':`posición ${m.index+1}`;
+  $('instruction').textContent=`Paso 4: resta las ${position}: ${top} − ${bottom}.`;
+  $('prompt').textContent='¿Necesitamos pedir prestado en esta columna?';
+  options(['Sí','No'],(btn,label)=>{
+    const saysYes=label==='Sí';
+    if(saysYes!==needsBorrow){
+      btn.classList.add('bad');
+      fail(needsBorrow?`${top} es menor que ${bottom}: necesitamos pedir prestado.`:`${top} ya es mayor o igual que ${bottom}: no hace falta préstamo.`);
+      return;
+    }
+    btn.classList.add('good');
+    m.snapshots.push(cloneDivisionSubtractSnapshot(m));
+    if(needsBorrow)applyDivisionBorrow(m);
+    renderDivision();
+    ok(needsBorrow?'Correcto. Cambiamos una unidad de la columna izquierda por 10 de esta columna.':'Correcto. Podemos restar directamente.');
+    setTimeout(askDivisionSubtractDigit,500);
+  });
+}
+function applyDivisionBorrow(m){
+  m.borrowMark[m.index]=true;
+  let lender=m.index+1;
+  while(lender<m.cols&&m.displayTop[lender]===0){
+    m.displayTop[lender]=9;
+    m.changedTop[lender]=true;
+    lender++;
+  }
+  if(lender<m.cols){
+    m.displayTop[lender]-=1;
+    m.changedTop[lender]=true;
+  }
+}
+function askDivisionSubtractDigit(){
+  const m=state.divisionSubtract;
+  const top=(m.displayTop[m.index]||0)+(m.borrowMark[m.index]?10:0);
+  const bottom=m.bottomDigits[m.index]||0;
+  const expected=top-bottom;
+  const position=m.index===0?'unidades':m.index===1?'decenas':m.index===2?'centenas':`posición ${m.index+1}`;
+  renderDivision();
+  $('instruction').textContent=`Paso 4: resta las ${position}.`;
+  $('prompt').textContent=`¿Cuánto es ${top} − ${bottom}?`;
+  showDivisionBack(()=>{
+    const snap=m.snapshots.pop();
+    Object.assign(m,{index:snap.index,displayTop:[...snap.displayTop],resultDigits:[...snap.resultDigits],borrowMark:[...snap.borrowMark],changedTop:[...snap.changedTop]});
+    renderDivision();
+    feedback('Volvemos a decidir el préstamo de esta columna.','ok');
+    askDivisionBorrow();
+  });
+  input(expected,(value,answer)=>{
+    if(value!==answer){
+      fail(`Revisa solo esta columna: ${top} − ${bottom}.`);
+      return;
+    }
+    m.resultDigits[m.index]=answer;
+    m.index++;
+    renderDivision();
+    ok(`Escribimos ${answer} y seguimos una columna a la izquierda.`);
+    setTimeout(askDivisionBorrow,500);
+  },`${top} − ${bottom} = ${expected}`);
+}
+function finishDivisionSubtract(){
+  const m=state.divisionSubtract;
+  const result=Number([...m.resultDigits].reverse().join(''));
+  if(result!==m.expected){
+    feedback('La resta por columnas no coincide. Vamos a revisarla.','bad');
+    m.index=0;
+    return askDivisionBorrow();
+  }
+  hideDivisionBack();
+  state.divisionSubtract=null;
+  state.rows.push({type:'remainder',value:result,endCol:state.currentEndCol});
+  state.currentValue=result;
+  renderDivision();
+  ok(`Resta terminada: ${m.top} − ${m.bottom} = ${result}.`);
+  setTimeout(nextDigit,500);
 }
 function nextDigit(){hideDivisionBack();$('quotientDisplay').classList.remove('quotient-active');if(state.pos<state.digits.length){renderSteps(4);const digit=state.digits[state.pos];$('instruction').textContent='Paso 5: baja la siguiente cifra.';$('prompt').textContent='¿Qué cifra baja ahora?';options([...new Set(state.digits)],(b,v)=>{if(+v===digit){b.classList.add('good');state.currentValue=Number(String(state.currentValue)+digit);state.pos++;state.currentEndCol=state.pos-1;state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();ok(`Bajamos el ${digit}. Ahora tenemos ${state.currentValue}.`);setTimeout(startQuotient,500)}else{b.classList.add('bad');fail('Esa no es la siguiente cifra.')}});return}if(state.currentValue===0||state.decimalCount>=state.decimalsWanted)return finish();state.decimalStarted=true;state.digits.push(0);state.pos++;state.currentEndCol=state.pos-1;state.currentValue=Number(String(state.currentValue)+0);state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();feedback('Añadimos un cero para continuar con decimales.','ok');setTimeout(startQuotient,500)}
 function finish(){
