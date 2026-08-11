@@ -17,6 +17,7 @@ on:
       - .github/workflows/firebase-validate.yml
   workflow_dispatch:
 
+# Runs entirely against the local demo emulator; no real Firebase data is changed.
 permissions:
   contents: read
 
