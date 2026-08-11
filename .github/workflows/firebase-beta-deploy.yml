@@ -11,6 +11,7 @@ on:
       - .github/workflows/firebase-beta-deploy.yml
   workflow_dispatch:
 
+# Authentication: GitHub OIDC -> Google WIF; no stored credentials.
 permissions:
   contents: read
   id-token: write
