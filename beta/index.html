@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.1","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#6d5dfc","backgroundColor":"#20184f","buildDate":"2026-08-11T19:01:42.831Z","gitCommit":"37f42180d28c069276c1b9f548c45bad19f1dcfb"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.1","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#6d5dfc","backgroundColor":"#20184f","buildDate":"2026-08-11T19:10:03.177Z","gitCommit":"bc3a727f46701220954c690511118e9ca0f8bad9"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-192.png" rel="icon"/>
 <link href="icon-beta-192.png" rel="apple-touch-icon"/>
@@ -4482,6 +4482,53 @@ body{
   .profile-bar.compact{width:100%;justify-content:space-between}
   .profile-bar.compact select{flex:1;max-width:none}
   .new-profile-popover{width:100%}
+}
+
+/* === Responsive 7.1: usar cada pantalla sin estirar el contenido === */
+.app{
+  width:calc(100% - clamp(16px,3vw,56px))!important;
+  max-width:1780px!important;
+  padding:clamp(8px,1.4vw,20px) 0 28px!important;
+}
+
+@media(min-width:1500px){
+  .layout{
+    grid-template-columns:minmax(240px,270px) minmax(0,1fr) minmax(250px,290px)!important;
+    gap:clamp(18px,1.4vw,26px)!important;
+  }
+  .main{padding:clamp(22px,1.7vw,30px)!important}
+  .topbar{
+    grid-template-columns:minmax(280px,1fr) minmax(380px,1.15fr) minmax(440px,1.35fr)!important;
+  }
+  .module-navigation.expanded .module-tabs{
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  }
+}
+
+@media(min-width:901px) and (max-width:1499px){
+  .layout{
+    grid-template-columns:minmax(205px,230px) minmax(0,1fr) minmax(220px,250px)!important;
+  }
+}
+
+@media(min-width:901px) and (max-width:1180px){
+  .topbar{grid-template-columns:minmax(230px,.9fr) minmax(320px,1.1fr)!important}
+  .game-hud{grid-column:1/-1!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .layout{grid-template-columns:minmax(210px,230px) minmax(0,1fr)!important}
+  .right{
+    display:block!important;
+    position:static!important;
+    grid-column:1/-1!important;
+  }
+}
+
+@media(max-width:900px){
+  .app{width:calc(100% - 20px)!important;padding:10px 0 24px!important}
+  .left,.right{position:static!important}
+}
+
+@media(max-width:620px){
+  .app{width:calc(100% - 12px)!important;padding:6px 0 18px!important}
 }
 
 </style>
