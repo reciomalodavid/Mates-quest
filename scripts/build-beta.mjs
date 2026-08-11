@@ -23,6 +23,17 @@ let html = await read('index.html');
 html = requiredReplace(html, '<title>Mates Quest</title>', '<title>Mates Quest Beta</title>', 'document title');
 html = requiredReplace(html, '<meta name="application-name" content="Mates Quest"/>', '<meta name="application-name" content="Mates Quest Beta"/>', 'application name');
 html = requiredReplace(html, '<meta name="mates-quest-build" content="7.1-auditada"/>', `<meta name="mates-quest-environment" content="${config.environment}"/>\n<script>window.MATES_QUEST_CONFIG=Object.freeze(${JSON.stringify(buildConfig)});</script>`, 'build metadata');
+const productionFirebaseConfig = `const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAMgDIyGA9EdzktM3Eij97xI-9tyPCWD4Y",
+  authDomain: "mates-quest.firebaseapp.com",
+  projectId: "mates-quest",
+  storageBucket: "mates-quest.firebasestorage.app",
+  messagingSenderId: "523832660463",
+  appId: "1:523832660463:web:b357d0f443a8e9f6f0261a",
+  measurementId: "G-F2NKZHHC4K"
+};`;
+const betaFirebaseConfig = `const FIREBASE_CONFIG = ${JSON.stringify(config.firebaseConfig, null, 2)};`;
+html = requiredReplace(html, productionFirebaseConfig, betaFirebaseConfig, 'Beta Firebase client configuration');
 html = requiredReplace(html, '<link href="icon-192.png" rel="icon"/>', '<link href="icon-beta-192.png" rel="icon"/>', 'browser icon');
 html = requiredReplace(html, '<link href="icon-192.png" rel="apple-touch-icon"/>', '<link href="icon-beta-192.png" rel="apple-touch-icon"/>', 'Apple touch icon');
 html = requiredReplace(html, '<meta content="Mates Quest" name="apple-mobile-web-app-title"/>', '<meta content="MQ Beta" name="apple-mobile-web-app-title"/>', 'Apple application title');
@@ -68,6 +79,7 @@ const checks = [
   ['Beta title', html.includes('<title>Mates Quest Beta</title>')],
   ['Beta storage', html.includes('window.MATES_QUEST_CONFIG.storagePrefix}:db:v1')],
   ['Beta sync documents', html.includes('betaSyncDocument(code)')],
+  ['Beta Firebase project', html.includes('"projectId": "mates-quest-beta"') && !html.includes('"projectId": "mates-quest",')],
   ['About screen', html.includes('id="aboutDialog"')],
   ['Visible version', html.includes('id="betaVersionBadge"')],
   ['Beta icon', html.includes('icon-beta-192.png')],
