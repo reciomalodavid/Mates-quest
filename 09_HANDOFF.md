@@ -10,6 +10,7 @@
 - Infraestructura Firestore Beta versionada y desplegable automáticamente.
 - Autenticación del workflow: GitHub OIDC → Google Workload Identity Federation → cuenta de servicio Beta de mínimo privilegio; sin claves persistentes.
 - Workflows pasan el destino explícito `mates-quest-beta`; no dependen del proyecto por defecto.
+- Deploy automático validado en GitHub Actions run `31518939693`: éxito completo sobre Rules e índices de Beta.
 
 ## Datos y recuperación
 
