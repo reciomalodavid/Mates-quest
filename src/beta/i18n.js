@@ -518,6 +518,27 @@
     ,[/^Cualquier número × 1 es él mismo: (.+)\.$/,'Qualsevol nombre × 1 és ell mateix: $1.']
     ,[/^✅ ¡Correcto! (.+)$/,'✅ Correcte! $1']
   ];
+  for (const [source, target] of Object.entries({
+    "El número desconocido. Normalmente lo llamamos":"El nombre desconegut. Normalment l’anomenem",
+    "Es una operación que":"És una operació que",
+    "deshace":"desfà",
+    "otra. La usamos para retirar lo que acompaña a x sin romper el equilibrio.":"una altra. La fem servir per retirar el que acompanya x sense trencar l’equilibri.",
+    ": restamos 5.":": restem 5.",
+    "x − 7":"x − 7",
+    ": sumamos 7.":": sumem 7.",
+    ": dividimos entre 3.":": dividim entre 3.",
+    "x ÷ 4":"x ÷ 4",
+    ": multiplicamos por 4.":": multipliquem per 4.",
+    ", porque restar deshace sumar.":", perquè restar desfà sumar.",
+    "sustituimos x por 7. Como 7 + 5 = 12, la solución es correcta.":"substituïm x per 7. Com que 7 + 5 = 12, la solució és correcta.",
+    "Primero deshacemos el":"Primer desfem el",
+    "restando 5 en ambos lados:":"restant 5 als dos costats:",
+    "3x = 15":"3x = 15",
+    "Después deshacemos el":"Després desfem el",
+    "dividiendo ambos lados entre 3:":"dividint els dos costats entre 3:",
+    "x = 5":"x = 5"
+  })) exact.set(source, target);
+
   const keyedMessages = {
     'beta.environment.beta': { es: 'Beta', ca: 'Beta' },
     'beta.environment.production': { es: 'Producción', ca: 'Producció' },
