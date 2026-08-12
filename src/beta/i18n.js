@@ -672,6 +672,8 @@
     "Primero mira la expresión completa: paréntesis, potencias, multiplicaciones y divisiones, sumas y restas.":"Primer mira l’expressió completa: parèntesis, potències, multiplicacions i divisions, sumes i restes."
   })) exact.set(source, target);
 
+  exact.set("y", "i");
+
   const keyedMessages = {
     'beta.environment.beta': { es: 'Beta', ca: 'Beta' },
     'beta.environment.production': { es: 'Producción', ca: 'Producció' },
