@@ -99,7 +99,28 @@
     'Siguiente salto':'Salt següent',
     'Has completado todos los saltos.':'Has completat tots els salts.',
     'Revisa desde qué número empieza el arco.':'Revisa des de quin nombre comença l’arc.',
-    'Primero saltamos las decenas; después, las unidades.':'Primer saltem les desenes; després, les unitats.'
+    'Primero saltamos las decenas; después, las unidades.':'Primer saltem les desenes; després, les unitats.',
+    'Nivel 1 · Cantidades pequeñas':'Nivell 1 · Quantitats petites',
+    'Nivel 2 · Grupos de 5 y 10':'Nivell 2 · Grups de 5 i 10',
+    'Nivel 3 · Decenas y unidades':'Nivell 3 · Desenes i unitats',
+    'Nivel 4 · Centenas y saltos':'Nivell 4 · Centenes i salts',
+    'Nivel 5 · Estrategias eficientes':'Nivell 5 · Estratègies eficients',
+    'Nivel 6 · Cálculo flexible':'Nivell 6 · Càlcul flexible',
+    'Quitar una centena':'Treu una centena',
+    'Quitar una decena':'Treu una desena',
+    'Quitar una unidad':'Treu una unitat',
+    'Mira la cantidad, construye el número y explica tu estrategia.':'Mira la quantitat, construeix el nombre i explica la teva estratègia.',
+    'Pensar':'Pensa',
+    'Busca grupos de 5 y 10, comprende el valor posicional y descompón los saltos.':'Busca grups de 5 i 10, entén el valor posicional i descompon els salts.',
+    'Ideas útiles':'Idees útils',
+    'Busca estructuras antes de contar.':'Busca estructures abans de comptar.',
+    'Relaciona cada cifra con su valor.':'Relaciona cada xifra amb el seu valor.',
+    'Usa el siguiente múltiplo de 10 como apoyo.':'Fes servir el múltiple de 10 següent com a suport.',
+    'Descompón saltos grandes.':'Descompon els salts grans.',
+    'Recta numérica con saltos':'Recta numèrica amb salts',
+    'Actividades de pensamiento matemático':'Activitats de pensament matemàtic',
+    'Todavía no. Revisa cada salto.':'Encara no. Revisa cada salt.',
+    'Grupo de puntos para reconocer':'Grup de punts per reconèixer'
   })) exact.set(source, target);
 
   const moduleExact = {
