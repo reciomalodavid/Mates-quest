@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T14:44:00.960Z","gitCommit":"d5cedcd138569b5cfae50e3ed823e3e91f6b9ac1"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T14:52:07.633Z","gitCommit":"85e4ab4cda156d4bee540cb070b605a6bfec3200"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-orange-v2-192.png" rel="icon"/>
 <link href="icon-beta-orange-v2-192.png" rel="apple-touch-icon" sizes="192x192"/>
@@ -10704,6 +10704,14 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     "x = 5":"x = 5"
   })) exact.set(source, target);
 
+  for (const [source, target] of Object.entries({
+    "Cociente":"Quocient",
+    "Reconocer cantidades":"Reconeix quantitats",
+    "Usar números amigos":"Fes servir nombres amics",
+    "Saltos en la recta":"Salts a la recta",
+    "tabla":"taula"
+  })) exact.set(source, target);
+
   const keyedMessages = {
     'beta.environment.beta': { es: 'Beta', ca: 'Beta' },
     'beta.environment.production': { es: 'Producción', ca: 'Producció' },
@@ -10774,22 +10782,20 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     return translateSource(binding.source);
   }
   function createTextBinding(source) {
-    return { source, key: sourceKeys.get(source.trim()) || null };
+    return { source, key: sourceKeys.get(source.trim()) || null, rendered: source };
   }
   function translateTextNode(node) {
     let binding = textBindings.get(node);
     if (!binding) {
       binding = createTextBinding(node.nodeValue);
       textBindings.set(node, binding);
-    } else {
-      const expected = renderTextBinding(binding);
-      if (node.nodeValue !== expected) {
-        binding = createTextBinding(node.nodeValue);
-        textBindings.set(node, binding);
-      }
+    } else if (node.nodeValue !== binding.rendered) {
+      binding = createTextBinding(node.nodeValue);
+      textBindings.set(node, binding);
     }
     const next = renderTextBinding(binding);
     if (node.nodeValue !== next) node.nodeValue = next;
+    binding.rendered = next;
   }
   function translateAttribute(element, attr) {
     let bindings = attributeBindings.get(element);
@@ -10802,15 +10808,13 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     if (!binding) {
       binding = createTextBinding(current);
       bindings.set(attr, binding);
-    } else {
-      const expected = renderTextBinding(binding);
-      if (current !== expected) {
-        binding = createTextBinding(current);
-        bindings.set(attr, binding);
-      }
+    } else if (current !== binding.rendered) {
+      binding = createTextBinding(current);
+      bindings.set(attr, binding);
     }
     const next = renderTextBinding(binding);
     if (current !== next) element.setAttribute(attr, next);
+    binding.rendered = next;
   }
   function translateNode(node) {
     if (node.nodeType === Node.TEXT_NODE) {
