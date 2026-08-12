@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T15:10:41.764Z","gitCommit":"af8d249b476236c718c4e5957e72d0970f26039f"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T15:10:58.202Z","gitCommit":"43f03e709724245d5c2dcd8092cbb5d423bccd87"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-orange-v2-192.png" rel="icon"/>
 <link href="icon-beta-orange-v2-192.png" rel="apple-touch-icon" sizes="192x192"/>
@@ -10868,6 +10868,11 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     "Paréntesis → potencias → multiplicación/división → suma/resta.":"Parèntesis → potències → multiplicació/divisió → suma/resta.",
     "Primero eliges la operación inversa; después resuelves el cálculo.":"Primer tries l’operació inversa; després resols el càlcul.",
     "Divide":"Divideix"
+  })) exact.set(source, target);
+
+  for (const [source, target] of Object.entries({
+    "Conseguida":"Aconseguida",
+    "En progreso":"En progrés"
   })) exact.set(source, target);
 
   const keyedMessages = {
