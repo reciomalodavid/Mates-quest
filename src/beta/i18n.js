@@ -40,6 +40,35 @@
     'Correcto.':'Correcte.','Incorrecto.':'Incorrecte.','Pista':'Pista','Objetivo':'Objectiu','A reforzar':'Per reforçar','En progreso':'En progrés','Sin practicar':'Sense practicar','Necesita repaso':'Cal repassar'
   };
   for (const [source, target] of Object.entries(moreExact)) exact.set(source, target);
+  for (const [source, target] of Object.entries({
+    'Pensar':'Pensa',
+    'Sentido numérico y estrategias visuales':'Sentit numèric i estratègies visuals',
+    'LABORATORIO DE NÚMEROS':'LABORATORI DE NOMBRES',
+    'Entiende los números jugando con cantidades':'Entén els nombres jugant amb quantitats',
+    'Aquí no se trata de correr ni memorizar un procedimiento. Mira, construye y encuentra una estrategia.':'Aquí no es tracta de córrer ni memoritzar un procediment. Mira, construeix i troba una estratègia.',
+    'Conteo visual':'Comptatge visual',
+    'Reconoce cantidades sin contar una a una.':'Reconeix quantitats sense comptar-les una a una.',
+    'Formar números':'Forma nombres',
+    'Construye números con decenas y unidades.':'Construeix nombres amb desenes i unitats.',
+    'Completar hasta 10':'Completa fins a 10',
+    'Descubre cuánto falta para llegar a diez.':'Descobreix quant falta per arribar a deu.',
+    'Elige una actividad para empezar.':'Tria una activitat per començar.',
+    '¿Cuántos puntos ves?':'Quants punts veus?',
+    'Nueva cantidad':'Quantitat nova',
+    'Añadir una decena':'Afegeix una desena',
+    'Añadir una unidad':'Afegeix una unitat',
+    'Vaciar':'Buida',
+    'Decenas':'Desenes',
+    'Unidades':'Unitats',
+    '¿Cuánto falta para llegar a 10?':'Quant falta per arribar a 10?',
+    'Otro número':'Un altre nombre',
+    'Exacto. Has reconocido la cantidad.':'Exacte. Has reconegut la quantitat.',
+    'Míralos por grupos y prueba otra vez.':'Mira’ls per grups i torna-ho a provar.',
+    'Exacto. Has construido el número.':'Exacte. Has construït el nombre.',
+    'Todavía no. Revisa las decenas y las unidades.':'Encara no. Revisa les desenes i les unitats.',
+    'Exacto. Ya has completado 10.':'Exacte. Ja has completat 10.',
+    'Piensa qué pareja de números suma 10.':'Pensa quina parella de nombres suma 10.'
+  })) exact.set(source, target);
 
   const moduleExact = {
     // Navegació i estat general
@@ -264,6 +293,8 @@
   // Whole-sentence templates. Never translate isolated words: that produced mixed
   // Spanish/Catalan sentences and made the explanations harder to understand.
   const templates = [
+    [/^Construye el número (.+)$/,'Construeix el nombre $1'],
+    [/^Has formado (.+)$/,'Has format $1'],
     [/^¿Cuánto es (.+)\?$/,'Quant és $1?'],
     [/^¿Cuántas veces cabe (.+) en (.+)\?$/,'Quantes vegades hi cap $1 en $2?'],
     [/^Paso 2: ¿cuántas veces cabe (.+) en (.+)\?$/,'Pas 2: quantes vegades hi cap $1 en $2?'],
