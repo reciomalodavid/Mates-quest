@@ -1,5 +1,5 @@
 const CACHE_PREFIX="mates-quest-beta-";
-const CACHE_NAME="mates-quest-beta-1.0.0-beta.2";
+const CACHE_NAME="mates-quest-beta-1.0.0-beta.2-525469ca1816";
 const APP_SHELL=['./index.html','./manifest.json','./icon-beta-192.png','./icon-beta-512.png'];
 
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)));self.skipWaiting()});
