@@ -4177,7 +4177,10 @@ select:focus,
 #divisionBackBtn.hidden{display:none!important}
 .product-building .minus{display:none!important}
 .grid-cell.division-carry{font-size:.48em;color:#7c54ef;font-weight:1000;align-self:start;padding-top:2px;text-shadow:0 1px 0 rgba(255,255,255,.95);background:rgba(143,99,255,.12);border-radius:8px;box-shadow:inset 0 0 0 1px rgba(143,99,255,.18)}
-.grid-cell.division-borrow{font-size:.48em;color:#c56616;font-weight:1000;align-self:start;padding-top:2px;text-shadow:0 1px 0 rgba(255,255,255,.95);background:rgba(244,162,97,.18);border-radius:8px;box-shadow:inset 0 0 0 1px rgba(197,102,22,.2)}
+.grid-cell.division-borrow-source{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:#a35c22}
+.grid-cell .division-borrow-note{position:absolute;z-index:3;left:50%;top:-19px;transform:translateX(-50%);min-width:31px;padding:2px 5px;border:1px solid #e2a56f;border-radius:8px;background:#fff4e8;color:#a34f13;font-family:Inter,system-ui,sans-serif;font-size:.38em;font-weight:1000;line-height:1.15;text-align:center;text-decoration:none;box-shadow:0 2px 5px rgba(92,54,22,.12)}
+.nb-cell.carry{align-self:end!important;min-width:28px;height:25px!important;margin-bottom:4px;padding:2px 5px!important;border:1px solid #d9c5f5;border-radius:8px!important;background:#f7f0ff!important;color:#7140bd!important;font-family:Inter,system-ui,sans-serif;font-size:.48em!important;line-height:1!important;text-align:center}
+.nb-cell.sum-carry{background:#fff7e7!important;border-color:#edcf8f!important;color:#9a5a00!important}
 .grid-cell.subtraction-building{color:#c56616!important;background:rgba(244,162,97,.12);border-radius:8px;box-shadow:inset 0 0 0 1px rgba(197,102,22,.18)}
 
 
@@ -6286,13 +6289,15 @@ function placeText(grid,text,row,end,cls=''){const a=String(text).split(''),star
 function renderDivision(){
   const g=$('leftGrid'),cols=Math.max(state.digits.length,4);
   g.style.gridTemplateColumns=`repeat(${cols},48px)`;
+  g.style.gridAutoRows=state.divisionSubtract?'68px':'52px';
   g.innerHTML='';
   state.digits.forEach((d,i)=>cell(g,d,0,i));
   let r=1;
 
   for(const it of state.rows){
     if(it.type==='product'){
-      const s=placeText(g,it.value,r,it.endCol,'product');
+      const productText=String(it.value).padStart(it.displayWidth||String(it.value).length,'0');
+      const s=placeText(g,productText,r,it.endCol,'product');
       const first=[...g.children].find(x=>x.style.gridRow==String(r+1)&&x.style.gridColumn==String(s+1));
       if(first&&it.showMinus)first.classList.add('minus');
     }else if(it.type==='line'){
@@ -6318,12 +6323,17 @@ function renderDivision(){
       if(digit!==null)cell(g,digit,r,sub.endCol-index,'remainder subtraction-building');
     });
     const topRow=Math.max(0,r-3);
-    sub.displayTop.forEach((digit,index)=>{
-      if(sub.changedTop[index])cell(g,digit,topRow,sub.endCol-index,'division-borrow');
-    });
-    sub.borrowMark.forEach((borrowed,index)=>{
-      if(borrowed)cell(g,sub.displayTop[index]+10,topRow,sub.endCol-index,'division-borrow');
-    });
+    const annotateBorrow=(index,value)=>{
+      const col=sub.endCol-index;
+      let base=[...g.children].find(node=>node.style.gridRow===String(topRow+1)&&node.style.gridColumn===String(col+1));
+      if(!base)base=cell(g,'',topRow,col,'remainder');
+      base.classList.add('division-borrow-source');
+      let note=base.querySelector('.division-borrow-note');
+      if(!note){note=document.createElement('span');note.className='division-borrow-note';base.appendChild(note)}
+      note.textContent=String(value);
+    };
+    sub.displayTop.forEach((digit,index)=>{if(sub.changedTop[index])annotateBorrow(index,digit)});
+    sub.borrowMark.forEach((borrowed,index)=>{if(borrowed)annotateBorrow(index,sub.displayTop[index]+10)});
   }
 
   const divisorStr=String(state.divisor);
@@ -6433,9 +6443,10 @@ function askDivisionProductDigit(){
 
     const product=Number([...m.resultDigits].reverse().join(''));
     const quotientDigit=m.q;
-    const startCol=state.currentEndCol-String(product).length+1;
+    const displayWidth=Math.max(String(state.currentValue).length,String(product).length);
+    const startCol=state.currentEndCol-displayWidth+1;
     state.lastProductUndo=m.snapshots.length?m.snapshots[m.snapshots.length-1]:null;
-    state.rows.push({type:'product',value:product,endCol:state.currentEndCol,showMinus:false});
+    state.rows.push({type:'product',value:product,displayWidth,endCol:state.currentEndCol,showMinus:false});
     state.rows.push({type:'line',startCol:Math.max(0,startCol),endCol:state.currentEndCol});
     state.divisionProduct=null;
     renderDivision();
@@ -6532,6 +6543,7 @@ function startSubtract(product){
   const topDigits=String(state.currentValue).split('').reverse().map(Number);
   const bottomDigits=String(product).split('').reverse().map(Number);
   const cols=Math.max(topDigits.length,bottomDigits.length);
+  if(productRow)productRow.displayWidth=cols;
   while(topDigits.length<cols)topDigits.push(0);
   while(bottomDigits.length<cols)bottomDigits.push(0);
   state.divisionSubtract={
