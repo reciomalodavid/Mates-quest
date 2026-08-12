@@ -1648,6 +1648,9 @@ body{
   line-height:1
 }
 .module-tab.active .module-tab-icon{background:#d3e8f4}
+.module-tab-icon-operations{grid-template-columns:1fr 1fr!important;gap:1px;padding:0 4px;font-family:Arial,sans-serif;font-size:1.35rem!important;font-weight:1000}
+.module-tab-icon-operations i{display:grid;place-items:center;width:17px;height:28px;font-style:normal;line-height:1}
+.module-tab-icon-operations i:first-child{color:#248455}.module-tab-icon-operations i:last-child{color:#d05a45}
 .module-tab-copy{
   min-width:0;
   display:grid;
@@ -4719,7 +4722,7 @@ body{
 </label>
 <div class="module-tabs">
 <button class="module-tab active" id="sumarestaTab" type="button">
-<span class="module-tab-icon">➕➖</span>
+<span class="module-tab-icon module-tab-icon-operations" aria-hidden="true"><i>+</i><i>−</i></span>
 <span class="module-tab-copy"><b>Suma y resta</b><small>Columnas, llevadas y préstamos</small></span>
 </button>
 <button class="module-tab" id="tablasTab" type="button">
@@ -4799,7 +4802,7 @@ body{
 <div><b>Decenas</b><div class="think-blocks" id="thinkTens"></div></div>
 <div><b>Unidades</b><div class="think-units" id="thinkUnits"></div></div>
 </div>
-<div class="think-built-number" id="thinkBuiltNumber">Has formado 0</div>
+<div class="think-built-number" id="thinkBuiltNumber" aria-live="polite"></div>
 <div class="think-choice-row">
 <button class="btn violet think-hundred-action" id="thinkAddHundred" type="button">+100 <small>Añadir una centena</small></button>
 <button class="btn orange" id="thinkAddTen" type="button">+10 <small>Añadir una decena</small></button>
@@ -9233,13 +9236,13 @@ function newThinkPlace(){
   const usesHundreds=thinkState.level>=4,usesTens=thinkState.level>=2;
   $('thinkHundredsColumn').classList.toggle('hidden',!usesHundreds);$('thinkAddHundred').classList.toggle('hidden',!usesHundreds);$('thinkRemoveHundred').classList.toggle('hidden',!usesHundreds);
   $('thinkAddTen').classList.toggle('hidden',!usesTens);$('thinkRemoveTen').classList.toggle('hidden',!usesTens);
-  renderThinkPlace();setThinkFeedback('thinkPlaceFeedback','');$('thinkPlaceExplanation').textContent='';
+  renderThinkPlace();setThinkFeedback('thinkPlaceFeedback','');$('thinkPlaceExplanation').textContent='';$('thinkBuiltNumber').textContent='';
 }
 function renderThinkPlace(){
   $('thinkHundreds').innerHTML=Array.from({length:thinkState.hundreds},()=>'<span class="think-hundred-block"></span>').join('');
   $('thinkTens').innerHTML=Array.from({length:thinkState.tens},()=>'<span class="think-ten-block"></span>').join('');
   $('thinkUnits').innerHTML=Array.from({length:thinkState.units},()=>'<span class="think-unit"></span>').join('');
-  $('thinkBuiltNumber').textContent=`Has formado ${thinkState.hundreds*100+thinkState.tens*10+thinkState.units}`;
+  $('thinkBuiltNumber').textContent='';
   $('thinkRemoveHundred').disabled=thinkState.hundreds===0;$('thinkRemoveTen').disabled=thinkState.tens===0;$('thinkRemoveOne').disabled=thinkState.units===0;
 }
 function newThinkTen(){
@@ -9307,9 +9310,11 @@ $('thinkRemoveTen').onclick=()=>{if(thinkState.tens>0){thinkState.tens--;renderT
 $('thinkRemoveOne').onclick=()=>{if(thinkState.units>0){thinkState.units--;renderThinkPlace()}};
 $('thinkClearPlace').onclick=()=>{thinkState.hundreds=0;thinkState.tens=0;thinkState.units=0;renderThinkPlace();setThinkFeedback('thinkPlaceFeedback','');$('thinkPlaceExplanation').textContent=''};
 $('thinkCheckPlace').onclick=()=>{
-  const ok=thinkState.hundreds*100+thinkState.tens*10+thinkState.units===thinkState.placeTarget;
+  const formed=thinkState.hundreds*100+thinkState.tens*10+thinkState.units;
+  const ok=formed===thinkState.placeTarget;
+  $('thinkBuiltNumber').textContent=`Has formado ${formed}`;
   setThinkFeedback('thinkPlaceFeedback',ok?'Reto comprendido. Vamos con otro.':'Todavía no. Revisa las decenas y las unidades.',ok?'ok':'bad');
-  $('thinkPlaceExplanation').textContent=ok?`${thinkState.hundreds} centenas, ${thinkState.tens} decenas y ${thinkState.units} unidades.`:'Cada barra vale 10 y cada cuadrado grande vale 100.';
+  $('thinkPlaceExplanation').textContent=`${thinkState.hundreds} centenas, ${thinkState.tens} decenas y ${thinkState.units} unidades: ${thinkState.hundreds*100} + ${thinkState.tens*10} + ${thinkState.units} = ${formed}.`;
   if(ok)completeThinkChallenge(newThinkPlace);
 };
 $('thinkCountChoices').onclick=event=>{
@@ -9339,7 +9344,7 @@ $('thinkJumpChoices').onclick=event=>{
 };
 
 const MODULE_META={
-  sumaresta:{icon:'➕➖',name:'Suma y resta'},tablas:{icon:'🔢',name:'Tablas'},multiplication:{icon:'✖️',name:'Multiplicación'},division:{icon:'➗',name:'División'},roots:{icon:'√',name:'Raíces'},fractions:{icon:'🍰',name:'Fracciones'},order:{icon:'🧩',name:'Jerarquía'},equations:{icon:'⚖️',name:'Ecuaciones'},think:{icon:'💡',name:'Pensar'},learn:{icon:'📘',name:'Aprende'}
+  sumaresta:{icon:'±',name:'Suma y resta'},tablas:{icon:'🔢',name:'Tablas'},multiplication:{icon:'✖️',name:'Multiplicación'},division:{icon:'➗',name:'División'},roots:{icon:'√',name:'Raíces'},fractions:{icon:'🍰',name:'Fracciones'},order:{icon:'🧩',name:'Jerarquía'},equations:{icon:'⚖️',name:'Ecuaciones'},think:{icon:'💡',name:'Pensar'},learn:{icon:'📘',name:'Aprende'}
 };
 function updateModuleActiveBar(mode){const meta=MODULE_META[mode]||MODULE_META.sumaresta;$('moduleActiveIcon').textContent=meta.icon;$('moduleActiveName').textContent=meta.name}
 function collapseModuleNavigation(){const nav=document.querySelector('.module-navigation');if(!nav||window.innerWidth<=900)return;nav.classList.add('nav-collapsed');$('moduleActiveBar').classList.remove('hidden')}
