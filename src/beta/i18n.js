@@ -547,6 +547,22 @@
     "tabla":"taula"
   })) exact.set(source, target);
 
+  for (const [source, target] of Object.entries({
+    "💡 Pensar":"💡 Pensa",
+    "👀 Reconocer cantidades":"👀 Reconeix quantitats",
+    "🧱 Valor posicional":"🧱 Valor posicional",
+    "🔟 Usar números amigos":"🔟 Fes servir nombres amics",
+    "↗️ Saltos en la recta":"↗️ Salts a la recta",
+    "Construye el número 34":"Construeix el nombre 34",
+    "Completa hasta 10":"Completa fins a 10",
+    "7 + 8 = 15: escribimos 5 y llevamos 1.":"7 + 8 = 15: escrivim 5 i en portem 1.",
+    "Mates Quest Beta":"Mates Quest Beta",
+    "Beta":"Beta",
+    "Commit":"Commit",
+    "IndexedDB":"IndexedDB",
+    "Service Worker":"Service Worker"
+  })) exact.set(source, target);
+
   const keyedMessages = {
     'beta.environment.beta': { es: 'Beta', ca: 'Beta' },
     'beta.environment.production': { es: 'Producción', ca: 'Producció' },
@@ -581,6 +597,7 @@
   let language = 'es';
   let applying = false;
   const textBindings = new WeakMap();
+  const missingSources = new Set();
   const attributeBindings = new WeakMap();
   const attrs = ['placeholder', 'title', 'aria-label'];
   const interpolate = (message, params = {}) => message.replace(/\{(\w+)\}/g, (_, name) => params[name] ?? `{${name}}`);
@@ -602,6 +619,7 @@
         return lead + core.replace(pattern, replacement) + tail;
       }
     }
+    if (/[A-Za-zÁÉÍÓÚáéíóúÑñ¿¡]/.test(core)) missingSources.add(core);
     return text;
   }
   function translate(text) {
@@ -708,6 +726,8 @@
     t,
     translate,
     addMessages,
-    has: (key, locale = language) => catalogs.get(locale)?.has(key) || false
+    has: (key, locale = language) => catalogs.get(locale)?.has(key) || false,
+    getMissingTranslations: () => [...missingSources].sort(),
+    resetMissingTranslations: () => missingSources.clear()
   };
 })();
