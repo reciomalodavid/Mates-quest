@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T14:36:56.574Z","gitCommit":"d5d43b6c6e386f6cd33acd02f61052bfcf3ae73e"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T14:44:00.960Z","gitCommit":"d5cedcd138569b5cfae50e3ed823e3e91f6b9ac1"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-orange-v2-192.png" rel="icon"/>
 <link href="icon-beta-orange-v2-192.png" rel="apple-touch-icon" sizes="192x192"/>
@@ -10683,6 +10683,27 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     ,[/^Cualquier número × 1 es él mismo: (.+)\.$/,'Qualsevol nombre × 1 és ell mateix: $1.']
     ,[/^✅ ¡Correcto! (.+)$/,'✅ Correcte! $1']
   ];
+  for (const [source, target] of Object.entries({
+    "El número desconocido. Normalmente lo llamamos":"El nombre desconegut. Normalment l’anomenem",
+    "Es una operación que":"És una operació que",
+    "deshace":"desfà",
+    "otra. La usamos para retirar lo que acompaña a x sin romper el equilibrio.":"una altra. La fem servir per retirar el que acompanya x sense trencar l’equilibri.",
+    ": restamos 5.":": restem 5.",
+    "x − 7":"x − 7",
+    ": sumamos 7.":": sumem 7.",
+    ": dividimos entre 3.":": dividim entre 3.",
+    "x ÷ 4":"x ÷ 4",
+    ": multiplicamos por 4.":": multipliquem per 4.",
+    ", porque restar deshace sumar.":", perquè restar desfà sumar.",
+    "sustituimos x por 7. Como 7 + 5 = 12, la solución es correcta.":"substituïm x per 7. Com que 7 + 5 = 12, la solució és correcta.",
+    "Primero deshacemos el":"Primer desfem el",
+    "restando 5 en ambos lados:":"restant 5 als dos costats:",
+    "3x = 15":"3x = 15",
+    "Después deshacemos el":"Després desfem el",
+    "dividiendo ambos lados entre 3:":"dividint els dos costats entre 3:",
+    "x = 5":"x = 5"
+  })) exact.set(source, target);
+
   const keyedMessages = {
     'beta.environment.beta': { es: 'Beta', ca: 'Beta' },
     'beta.environment.production': { es: 'Producción', ca: 'Producció' },
