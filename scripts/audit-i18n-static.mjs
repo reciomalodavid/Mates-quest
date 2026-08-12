@@ -47,8 +47,8 @@ const dynamicHtmlFragments = [];
 for (const literal of sourceScripts.matchAll(/(?:'((?:[^'\\\\]|\\\\.)*)'|"((?:[^"\\\\]|\\\\.)*)"|`((?:[^`\\\\]|\\\\.)*)`)/g)) {
   const value = literal[1] ?? literal[2] ?? literal[3] ?? '';
   if (!value.includes('<')) continue;
-  for (const fragment of value.matchAll(/>([^<>]+)</g)) {
-    const text = normalize(fragment[1]);
+  for (const fragment of value.split(/<[^>]*>/g)) {
+    const text = normalize(fragment);
     if (text.includes('${') || !/[A-Za-zÁÉÍÓÚáéíóúÑñ¿¡]/.test(text)) continue;
     dynamicHtmlFragments.push(text);
   }
