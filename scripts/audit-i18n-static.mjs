@@ -6,8 +6,11 @@ const sources = [
   ['index.html', fs.readFileSync(new URL('index.html', root), 'utf8')],
   ['src/beta/beta-ui.html', fs.readFileSync(new URL('src/beta/beta-ui.html', root), 'utf8')]
 ];
-const keys = new Set([...i18n.matchAll(/(?:^|[,{])\s*'((?:[^'\\]|\\.)*)'\s*:/gm)]
-  .map(match => match[1].replaceAll("\\'", "'")));
+const singleQuotedKeys = [...i18n.matchAll(/(?:^|[,{])\s*'((?:[^'\\]|\\.)*)'\s*:/gm)]
+  .map(match => match[1].replaceAll("\\'", "'"));
+const doubleQuotedKeys = [...i18n.matchAll(/(?:^|[,{])\s*"((?:[^"\\]|\\.)*)"\s*:/gm)]
+  .map(match => JSON.parse(`"${match[1]}"`));
+const keys = new Set([...singleQuotedKeys, ...doubleQuotedKeys]);
 const normalize = (text) => text
   .replace(/&nbsp;/g, ' ')
   .replace(/&amp;/g, '&')
@@ -25,7 +28,7 @@ for (const [file, html] of sources) {
     const text = normalize(match[1]);
     if (/[A-Za-zÁÉÍÓÚáéíóúÑñ¿¡]/.test(text)) candidates.push({ file, text });
   }
-  for (const match of withoutCode.matchAll(/\b(?:placeholder|title|aria-label)="([^"]+)"/g)) {
+  for (const match of withoutCode.matchAll(/\b(?:placeholder|title|aria-label|data-explanation)="([^"]+)"/g)) {
     const text = normalize(match[1]);
     if (/[A-Za-zÁÉÍÓÚáéíóúÑñ¿¡]/.test(text)) candidates.push({ file, text });
   }
