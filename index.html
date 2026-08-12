@@ -4532,6 +4532,82 @@ body{
   .app{width:calc(100% - 12px)!important;padding:6px 0 18px!important}
 }
 
+/* === Mobile fit + compact sync status === */
+.setup-input-grid{align-items:stretch}
+.setup-input-grid>*{min-width:0;box-sizing:border-box}
+.sync-details{
+  width:max-content;
+  max-width:100%;
+  margin:10px 0 14px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.sync-details summary{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  min-height:34px;
+  max-width:100%;
+  padding:6px 10px;
+  border:1px solid #d8e2e9;
+  border-radius:999px;
+  background:rgba(255,255,255,.82);
+  color:#607487;
+  font-size:.7rem;
+  font-weight:800;
+  line-height:1.15;
+}
+.sync-details summary::after{content:"⌄"!important;float:none!important;font-size:.82rem}
+.sync-details[open]{width:100%}
+.sync-details[open] summary::after{content:"⌃"!important}
+.sync-state-dot{
+  width:10px;
+  height:10px;
+  flex:0 0 10px;
+  border-radius:50%;
+  background:#e0aa2f;
+  box-shadow:0 0 0 3px rgba(224,170,47,.16);
+}
+.sync-details[data-sync-state="ok"] .sync-state-dot{background:#39b85a;box-shadow:0 0 0 3px rgba(57,184,90,.16)}
+.sync-details[data-sync-state="error"] .sync-state-dot{background:#dc5361;box-shadow:0 0 0 3px rgba(220,83,97,.15)}
+.sync-details-body{
+  width:min(100%,310px);
+  margin-top:7px;
+  padding:11px!important;
+  border:1px solid #dce5ec;
+  border-radius:13px;
+  background:#fff;
+  box-shadow:0 7px 18px rgba(50,73,94,.09);
+}
+
+@media(max-width:650px){
+  .controls{max-width:100%;overflow:hidden}
+  .setup-input-grid{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px!important;
+  }
+  .setup-input-grid .answerinput,
+  .setup-input-grid .btn,
+  .setup-input-grid select{
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    margin:0!important;
+  }
+  .setup-input-grid .answerinput{
+    padding:12px 8px!important;
+    font-size:clamp(.95rem,4.8vw,1.14rem)!important;
+  }
+  .setup-input-grid .btn{
+    padding:10px 7px!important;
+    font-size:clamp(.9rem,4.2vw,1.03rem)!important;
+    white-space:normal;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -4580,8 +4656,8 @@ body{
 <h3>Tu perfil</h3>
 <div id="globalMiniSummary" style="font-size:.82rem;line-height:1.5">Elige o crea un perfil arriba para guardar tu progreso.</div>
 </div>
-<details class="sync-details" id="syncBlock">
-<summary>Sincronización entre dispositivos</summary>
+<details class="sync-details" data-sync-state="pending" id="syncBlock">
+<summary><span aria-hidden="true" class="sync-state-dot"></span><span>Sincronización</span></summary>
 <div class="sync-details-body">
 <div id="syncStatus" style="font-size:.72rem;color:#4c6a85;margin-bottom:8px">Comprobando configuración…</div>
 <div class="hidden" id="syncSetupBlock">
@@ -4678,7 +4754,7 @@ body{
 <div class="title">División</div>
 <div class="controls" id="setupPanel" style="margin-top:0;margin-bottom:14px">
 <div class="prompt">Crea tu división</div>
-<div class="inputrow" style="flex-wrap:wrap">
+<div class="inputrow setup-input-grid" style="flex-wrap:wrap">
 <input class="answerinput" id="customDividend" placeholder="Dividendo" step="any" type="number"/>
 <input class="answerinput" id="customDivisor" placeholder="Divisor" step="any" type="number"/>
 <select class="answerinput" id="decimalPlaces" style="max-width:180px">
@@ -4705,7 +4781,7 @@ body{
 <div class="title">Multiplicación</div>
 <div class="controls" style="margin-top:0;margin-bottom:14px">
 <div class="prompt">Multiplicación personalizada</div>
-<div class="inputrow" style="flex-wrap:wrap">
+<div class="inputrow setup-input-grid" style="flex-wrap:wrap">
 <input class="answerinput" id="multA" min="0" placeholder="Primer número" step="1" type="number"/>
 <input class="answerinput" id="multB" min="0" placeholder="Segundo número" step="1" type="number"/>
 <button class="btn green" id="startMultBtn">Empezar</button>
@@ -9647,7 +9723,17 @@ function loadFirebaseScripts(){
     document.head.appendChild(s1);
   });
 }
-function setSyncStatus(text){const el=$('syncStatus');if(el)el.textContent=text}
+function setSyncStatus(text){
+  const el=$('syncStatus');
+  const block=$('syncBlock');
+  if(el)el.textContent=text;
+  if(!block)return;
+  const normalized=String(text||'').toLowerCase();
+  const isOk=normalized.includes('sincronizado')||normalized.includes('sincronitzat');
+  const isError=normalized.includes('no se pudo')||normalized.includes('no s’ha pogut')||normalized.includes('no s\'ha pogut')||normalized.includes('se perdió')||normalized.includes('s’ha perdut')||normalized.includes('error');
+  block.dataset.syncState=isOk?'ok':isError?'error':'pending';
+  block.title=text||'';
+}
 function showSyncSetupUI(){$('syncSetupBlock').classList.remove('hidden');$('syncActiveBlock').classList.add('hidden')}
 function showSyncActiveUI(code){$('syncSetupBlock').classList.add('hidden');$('syncActiveBlock').classList.remove('hidden');$('syncCodeDisplay').textContent=code}
 
