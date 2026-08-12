@@ -41,6 +41,25 @@ if (missing.length) {
   process.exit(1);
 }
 
+const sourceScripts = fs.readFileSync(new URL('index.html', root), 'utf8')
+  .match(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)?.join('\n') || '';
+const dynamicHtmlFragments = [];
+for (const literal of sourceScripts.matchAll(/(?:'((?:[^'\\\\]|\\\\.)*)'|"((?:[^"\\\\]|\\\\.)*)"|`((?:[^`\\\\]|\\\\.)*)`)/g)) {
+  const value = literal[1] ?? literal[2] ?? literal[3] ?? '';
+  if (!value.includes('<')) continue;
+  for (const fragment of value.matchAll(/>([^<>]+)</g)) {
+    const text = normalize(fragment[1]);
+    if (text.includes('${') || !/[A-Za-zÁÉÍÓÚáéíóúÑñ¿¡]/.test(text)) continue;
+    dynamicHtmlFragments.push(text);
+  }
+}
+const missingDynamicFragments = [...new Set(dynamicHtmlFragments)].filter(text => !keys.has(text));
+if (missingDynamicFragments.length) {
+  console.error(`Catalan dynamic HTML coverage incomplete (${missingDynamicFragments.length}):`);
+  for (const text of missingDynamicFragments) console.error(`- ${text}`);
+  process.exit(1);
+}
+
 const runtime = fs.readFileSync(new URL('src/beta/beta-runtime.js', root), 'utf8');
 const runtimeKeys = [...runtime.matchAll(/\.t\(\s*['"]([^'"]+)['"]/g)].map(match => match[1]);
 const missingRuntimeKeys = runtimeKeys.filter(key => !keys.has(key));
@@ -54,4 +73,4 @@ for (const api of ['t,', 'addMessages,', 'matesquest:languagechange', 'sourceKey
     process.exit(1);
   }
 }
-console.log(`Catalan coverage complete: ${new Set(candidates.map(({ text }) => text)).size} visible strings and ${new Set(runtimeKeys).size} runtime keys.`);
+console.log(`Catalan coverage complete: ${new Set(candidates.map(({ text }) => text)).size} visible strings, ${new Set(dynamicHtmlFragments).size} dynamic HTML fragments and ${new Set(runtimeKeys).size} runtime keys.`);
