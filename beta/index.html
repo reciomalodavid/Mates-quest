@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T09:52:23.713Z","gitCommit":"171d47d7fac3fa17e3fa68c7c9f0f9a38205fb7b"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T12:40:20.539Z","gitCommit":"696f44a1ed07890f1f03bf9e07177adfe04abeea"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-orange-v2-192.png" rel="icon"/>
 <link href="icon-beta-orange-v2-192.png" rel="apple-touch-icon" sizes="192x192"/>
@@ -4656,10 +4656,6 @@ body{
 <span class="hud-label">XP</span>
 <div class="hud-number">🏅 <span id="pointsTotal">0</span></div>
 </div>
-<div class="hud-card hud-hearts" id="heartsCard" title="Energía disponible">
-<span class="hud-label">Energía</span>
-<div aria-label="Tres intentos" class="hud-hearts-row" id="hearts"></div>
-</div>
 <div class="hud-card hud-streak" id="streakCard" title="Aciertos consecutivos">
 <span class="hud-label">Racha</span>
 <div class="hud-number">🔥 <span id="streak">0</span></div>
@@ -5705,18 +5701,11 @@ function renderHudStars(count){
     `<span class="hud-star ${index<=count?'available':'lost'}" aria-hidden="true">${index<=count?'⭐':'☆'}</span>`
   ).join('');
 }
-function renderHudHearts(count){
-  return [1,2,3].map(index=>
-    `<span class="hud-heart ${index<=count?'':'empty'}" aria-hidden="true"></span>`
-  ).join('');
-}
 function updateChallengeHeader(){
   const reward=possibleChallengeRating();
   const profile=currentProfile();
 
   $('pointsTotal').textContent=(profile?.points||0).toLocaleString('es-ES');
-  $('hearts').innerHTML=renderHudHearts(challengeScore.hearts);
-  $('hearts').setAttribute('aria-label',`${challengeScore.hearts} cargas de energía disponibles`);
   $('streak').textContent=String(challengeScore.streak);
   $('stars').innerHTML=renderHudStars(reward);
   $('stars').setAttribute('aria-label',challengeScore.rating>0?`${reward} estrellas conseguidas`:`${reward} estrellas objetivo del reto`);
@@ -5764,18 +5753,9 @@ function challengeWrong(message='',strongHint=''){
   if(!challengeScore.active)beginChallenge('reto');
   challengeScore.errors++;
   challengeScore.streak=0;
-  challengeScore.hearts=Math.max(0,challengeScore.hearts-1);
-  let rescued=false;
-  if(challengeScore.hearts===0){
-    challengeScore.hearts=1;
-    rescued=true;
-  }
   updateChallengeHeader();
-  hudAnimate('heartsCard','hud-shake');
   hudAnimate('rewardCard','hud-shake');
-  if(!rescued)return message;
-  const hint=strongHint||message||'Revisa el paso activo y usa el botón Pista.';
-  return `${message}${message?' ':''}💡 Te devuelvo 1 intento. Pista: ${hint}`;
+  return message;
 }
 
 function finishChallenge(){
@@ -6194,9 +6174,7 @@ function fail(t){
   const message=challengeWrong(t,t);
   stats();
   feedback(message,'bad');
-  $('speech').textContent=challengeScore.hearts===1&&challengeScore.errors>=3
-    ?'Te he devuelto un intento. Mira la pista y prueba otra vez.'
-    :'No pasa nada. Mira la pista y prueba otra vez.';
+  $('speech').textContent='No pasa nada. Mira la pista y prueba otra vez.';
 }
 function ok(t){
   const streak=challengeCorrect();
