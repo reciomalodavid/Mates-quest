@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T12:48:48.134Z","gitCommit":"bda370d4629b2545bc7823571f3b2694945deea9"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T12:50:02.958Z","gitCommit":"9e8d57f3b1407899e57e63688c1fbb5c8ff9ecf3"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-orange-v2-192.png" rel="icon"/>
 <link href="icon-beta-orange-v2-192.png" rel="apple-touch-icon" sizes="192x192"/>
@@ -4609,6 +4609,41 @@ body{
   }
 }
 
+
+/* Number Lab prototype */
+.game-hud{grid-template-columns:minmax(160px,220px)!important}
+.think-module{display:grid;gap:16px}
+.think-module.hidden{display:none}
+.think-hero{padding:22px;border-radius:18px;background:linear-gradient(135deg,#fff7e8,#ffe0b2);border:1px solid #f4c77b}
+.think-hero h2{margin:5px 0 8px}
+.think-hero p{margin:0;color:var(--muted);max-width:720px}
+.think-eyebrow{font-size:.72rem;font-weight:1000;letter-spacing:.12em;color:#9a5a00}
+.think-activity-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.think-activity-button{appearance:none;border:1px solid var(--line);background:#fff;border-radius:15px;padding:15px;text-align:left;cursor:pointer;color:inherit}
+.think-activity-button b,.think-activity-button span{display:block}
+.think-activity-button span{font-size:.82rem;color:var(--muted);margin-top:5px;line-height:1.3}
+.think-activity-button.active{border-color:#f0a33a;background:#fff8ec;box-shadow:0 0 0 2px rgba(240,163,58,.16)}
+.think-workspace{padding:22px;border:1px solid var(--line);border-radius:18px;background:#fff;text-align:center}
+.think-workspace.hidden{display:none}
+.think-dot-board{min-height:190px;display:grid;grid-template-columns:repeat(5,42px);grid-auto-rows:42px;justify-content:center;align-content:center;gap:12px;padding:18px;margin:12px auto}
+.think-dot{width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,#6aa8ff,#2f70d0);box-shadow:inset 0 2px 3px rgba(255,255,255,.6),0 3px 7px rgba(47,112,208,.18)}
+.think-dot.blank{visibility:hidden}
+.think-choice-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0}
+.think-choice{min-width:58px;min-height:48px;border:1px solid var(--line);border-radius:13px;background:#fff;font-size:1.25rem;font-weight:900;cursor:pointer}
+.think-choice:hover{background:#f5f8fc}
+.think-feedback{min-height:26px;font-weight:850;margin-top:10px}
+.think-feedback.ok{color:#187647}.think-feedback.bad{color:#a74a20}
+.think-place-board{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px auto;max-width:620px}
+.think-place-board>div{min-height:170px;padding:15px;border-radius:15px;background:#f7f9fc}
+.think-blocks,.think-units{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:end;margin-top:14px}
+.think-ten-block{width:18px;height:108px;border-radius:5px;background:repeating-linear-gradient(to bottom,#f6a63d 0,#f6a63d 9px,#fff2d9 10px,#fff2d9 11px);border:1px solid #cf7f1c}
+.think-unit{width:25px;height:25px;border-radius:5px;background:#6aa8ff;border:1px solid #2f70d0}
+.think-built-number,.think-equation{font-size:1.35rem;font-weight:1000;margin:12px}
+.think-choice-row .btn small{display:block;font-size:.65rem;opacity:.78}
+.think-ten-frame{display:grid;grid-template-columns:repeat(5,42px);grid-template-rows:repeat(2,42px);gap:8px;justify-content:center;margin:22px auto}
+.think-ten-cell{border:2px solid #d9e2ee;border-radius:9px;background:#f7f9fc}
+.think-ten-cell.filled{background:#65b98a;border-color:#3c9765}
+@media(max-width:700px){.think-activity-tabs{grid-template-columns:1fr}.think-place-board{grid-template-columns:1fr}.think-dot-board{grid-template-columns:repeat(5,34px);grid-auto-rows:34px;gap:8px}.think-dot{width:28px;height:28px}}
 </style>
 <style>
 .beta-badge{display:inline-flex;align-items:center;border-radius:999px;background:#5b36c8;color:#fff;padding:7px 11px;font-size:.74rem;font-weight:1000;letter-spacing:.06em;box-shadow:0 5px 0 rgba(42,22,105,.35)}
@@ -4655,14 +4690,6 @@ body{
 <div class="hud-card hud-points" id="pointsCard" title="Puntos totales acumulados">
 <span class="hud-label">XP</span>
 <div class="hud-number">🏅 <span id="pointsTotal">0</span></div>
-</div>
-<div class="hud-card hud-streak" id="streakCard" title="Aciertos consecutivos">
-<span class="hud-label">Racha</span>
-<div class="hud-number">🔥 <span id="streak">0</span></div>
-</div>
-<div class="hud-card hud-reward" id="rewardCard" title="Valoración del reto">
-<span class="hud-label" id="rewardLabel">Valoración</span>
-<div aria-label="Tres estrellas posibles" class="hud-stars" id="stars"></div>
 </div>
 </div>
 </header>
@@ -4724,6 +4751,7 @@ body{
 <option value="fractions">🍰 Fracciones</option>
 <option value="order">🧩 Jerarquía</option>
 <option value="equations">⚖️ Ecuaciones</option>
+<option value="think">💡 Pensar</option>
 <option value="learn">📘 Aprende</option>
 </select>
 </label>
@@ -4760,12 +4788,55 @@ body{
 <span class="module-tab-icon">⚖️</span>
 <span class="module-tab-copy"><b>Ecuaciones</b><small>Equilibrar y dejar x sola</small></span>
 </button>
+<button class="module-tab module-tab-think" id="thinkTab" type="button">
+<span class="module-tab-icon">💡</span>
+<span class="module-tab-copy"><b>Pensar</b><small>Sentido numérico y estrategias visuales</small></span>
+</button>
 <button class="module-tab module-tab-learn" id="learnTab" type="button">
 <span class="module-tab-icon">📘</span>
 <span class="module-tab-copy"><b>Aprende</b><small>Conceptos, ejemplos y mini pruebas</small></span>
 </button>
 </div>
 </nav>
+<div class="hidden think-module" id="thinkModule">
+<div class="think-hero">
+<span class="think-eyebrow">LABORATORIO DE NÚMEROS</span>
+<h2>Entiende los números jugando con cantidades</h2>
+<p>Aquí no se trata de correr ni memorizar un procedimiento. Mira, construye y encuentra una estrategia.</p>
+</div>
+<div class="think-activity-tabs" role="tablist" aria-label="Actividades de pensamiento matemático">
+<button class="think-activity-button active" data-think-activity="count" type="button"><b>👀 Conteo visual</b><span>Reconoce cantidades sin contar una a una.</span></button>
+<button class="think-activity-button" data-think-activity="place" type="button"><b>🧱 Formar números</b><span>Construye números con decenas y unidades.</span></button>
+<button class="think-activity-button" data-think-activity="ten" type="button"><b>🔟 Completar hasta 10</b><span>Descubre cuánto falta para llegar a diez.</span></button>
+</div>
+<section class="think-workspace" id="thinkCountPanel">
+<h3>¿Cuántos puntos ves?</h3>
+<div class="think-dot-board" id="thinkDots" aria-live="polite"></div>
+<div class="think-choice-row" id="thinkCountChoices"></div>
+<button class="btn grey" id="thinkNewCount" type="button">Nueva cantidad</button>
+<div class="think-feedback" id="thinkCountFeedback" role="status"></div>
+</section>
+<section class="think-workspace hidden" id="thinkPlacePanel">
+<h3 id="thinkPlacePrompt">Construye el número 34</h3>
+<div class="think-place-board"><div><b>Decenas</b><div class="think-blocks" id="thinkTens"></div></div><div><b>Unidades</b><div class="think-units" id="thinkUnits"></div></div></div>
+<div class="think-built-number" id="thinkBuiltNumber">Has formado 0</div>
+<div class="think-choice-row">
+<button class="btn orange" id="thinkAddTen" type="button">+10 <small>Añadir una decena</small></button>
+<button class="btn blue" id="thinkAddOne" type="button">+1 <small>Añadir una unidad</small></button>
+<button class="btn grey" id="thinkClearPlace" type="button">Vaciar</button>
+<button class="btn green" id="thinkCheckPlace" type="button">Comprobar</button>
+</div>
+<div class="think-feedback" id="thinkPlaceFeedback" role="status"></div>
+</section>
+<section class="think-workspace hidden" id="thinkTenPanel">
+<h3>¿Cuánto falta para llegar a 10?</h3>
+<div class="think-ten-frame" id="thinkTenFrame"></div>
+<div class="think-equation" id="thinkTenEquation"></div>
+<div class="think-choice-row" id="thinkTenChoices"></div>
+<button class="btn grey" id="thinkNewTen" type="button">Otro número</button>
+<div class="think-feedback" id="thinkTenFeedback" role="status"></div>
+</section>
+</div>
 <div class="hidden" id="divisionModule">
 <div class="title">División</div>
 <div class="controls" id="setupPanel" style="margin-top:0;margin-bottom:14px">
@@ -5706,10 +5777,6 @@ function updateChallengeHeader(){
   const profile=currentProfile();
 
   $('pointsTotal').textContent=(profile?.points||0).toLocaleString('es-ES');
-  $('streak').textContent=String(challengeScore.streak);
-  $('stars').innerHTML=renderHudStars(reward);
-  $('stars').setAttribute('aria-label',challengeScore.rating>0?`${reward} estrellas conseguidas`:`${reward} estrellas objetivo del reto`);
-  $('rewardLabel').textContent=challengeScore.rating>0?'Resultado':'Objetivo';
 }
 function beginChallenge(moduleName='reto'){
   challengeScore={
@@ -9115,8 +9182,75 @@ $('rootAnswerA').onkeydown=e=>{if(e.key==='Enter')$('rootAnswerB').focus()};
 $('rootAnswerB').onkeydown=e=>{if(e.key==='Enter')$('rootDoubleCheckBtn').click()};
 
 
+
+/* ======================= NUMBER LAB / THINK ======================= */
+const thinkState={count:0,placeTarget:34,tens:0,units:0,tenStart:6};
+function shuffled(values){return [...values].sort(()=>Math.random()-.5)}
+function setThinkFeedback(id,message,type='') {const node=$(id);node.textContent=message;node.className='think-feedback'+(type?' '+type:'')}
+function showThinkActivity(name){
+  ['count','place','ten'].forEach(key=>{
+    $('think'+key[0].toUpperCase()+key.slice(1)+'Panel').classList.toggle('hidden',key!==name);
+  });
+  document.querySelectorAll('[data-think-activity]').forEach(button=>button.classList.toggle('active',button.dataset.thinkActivity===name));
+  if(name==='count')newThinkCount();
+  if(name==='place')newThinkPlace();
+  if(name==='ten')newThinkTen();
+}
+function structuredDots(count){
+  return Array.from({length:10},(_,index)=>`<span class="think-dot ${index<count?'':'blank'}" aria-hidden="true"></span>`).join('');
+}
+function nearbyChoices(answer,max=10){
+  const values=new Set([answer]);
+  while(values.size<4){values.add(Math.max(1,Math.min(max,answer+(Math.floor(Math.random()*5)-2))))}
+  return shuffled([...values]);
+}
+function newThinkCount(){
+  thinkState.count=3+Math.floor(Math.random()*8);
+  $('thinkDots').innerHTML=structuredDots(thinkState.count);
+  $('thinkDots').setAttribute('aria-label',`Grupo de puntos para reconocer`);
+  $('thinkCountChoices').innerHTML=nearbyChoices(thinkState.count).map(value=>`<button class="think-choice" type="button" data-think-count="${value}">${value}</button>`).join('');
+  setThinkFeedback('thinkCountFeedback','');
+}
+function newThinkPlace(){
+  thinkState.placeTarget=11+Math.floor(Math.random()*89);thinkState.tens=0;thinkState.units=0;
+  $('thinkPlacePrompt').textContent=`Construye el número ${thinkState.placeTarget}`;
+  renderThinkPlace();setThinkFeedback('thinkPlaceFeedback','');
+}
+function renderThinkPlace(){
+  $('thinkTens').innerHTML=Array.from({length:thinkState.tens},()=>'<span class="think-ten-block"></span>').join('');
+  $('thinkUnits').innerHTML=Array.from({length:thinkState.units},()=>'<span class="think-unit"></span>').join('');
+  $('thinkBuiltNumber').textContent=`Has formado ${thinkState.tens*10+thinkState.units}`;
+}
+function newThinkTen(){
+  thinkState.tenStart=1+Math.floor(Math.random()*9);
+  $('thinkTenFrame').innerHTML=Array.from({length:10},(_,index)=>`<span class="think-ten-cell ${index<thinkState.tenStart?'filled':''}"></span>`).join('');
+  $('thinkTenEquation').textContent=`${thinkState.tenStart} + ? = 10`;
+  $('thinkTenChoices').innerHTML=nearbyChoices(10-thinkState.tenStart,9).map(value=>`<button class="think-choice" type="button" data-think-ten="${value}">${value}</button>`).join('');
+  setThinkFeedback('thinkTenFeedback','');
+}
+document.querySelectorAll('[data-think-activity]').forEach(button=>button.onclick=()=>showThinkActivity(button.dataset.thinkActivity));
+$('thinkNewCount').onclick=newThinkCount;
+$('thinkNewTen').onclick=newThinkTen;
+$('thinkAddTen').onclick=()=>{if(thinkState.tens<9){thinkState.tens++;renderThinkPlace()}};
+$('thinkAddOne').onclick=()=>{if(thinkState.units<9){thinkState.units++;renderThinkPlace()}};
+$('thinkClearPlace').onclick=()=>{thinkState.tens=0;thinkState.units=0;renderThinkPlace();setThinkFeedback('thinkPlaceFeedback','')};
+$('thinkCheckPlace').onclick=()=>{
+  const ok=thinkState.tens*10+thinkState.units===thinkState.placeTarget;
+  setThinkFeedback('thinkPlaceFeedback',ok?'Exacto. Has construido el número.':'Todavía no. Revisa las decenas y las unidades.',ok?'ok':'bad');
+};
+$('thinkCountChoices').onclick=event=>{
+  const button=event.target.closest('[data-think-count]');if(!button)return;
+  const ok=Number(button.dataset.thinkCount)===thinkState.count;
+  setThinkFeedback('thinkCountFeedback',ok?'Exacto. Has reconocido la cantidad.':'Míralos por grupos y prueba otra vez.',ok?'ok':'bad');
+};
+$('thinkTenChoices').onclick=event=>{
+  const button=event.target.closest('[data-think-ten]');if(!button)return;
+  const ok=Number(button.dataset.thinkTen)===10-thinkState.tenStart;
+  setThinkFeedback('thinkTenFeedback',ok?'Exacto. Ya has completado 10.':'Piensa qué pareja de números suma 10.',ok?'ok':'bad');
+};
+
 const MODULE_META={
-  sumaresta:{icon:'➕➖',name:'Suma y resta'},tablas:{icon:'🔢',name:'Tablas'},multiplication:{icon:'✖️',name:'Multiplicación'},division:{icon:'➗',name:'División'},roots:{icon:'√',name:'Raíces'},fractions:{icon:'🍰',name:'Fracciones'},order:{icon:'🧩',name:'Jerarquía'},equations:{icon:'⚖️',name:'Ecuaciones'},learn:{icon:'📘',name:'Aprende'}
+  sumaresta:{icon:'➕➖',name:'Suma y resta'},tablas:{icon:'🔢',name:'Tablas'},multiplication:{icon:'✖️',name:'Multiplicación'},division:{icon:'➗',name:'División'},roots:{icon:'√',name:'Raíces'},fractions:{icon:'🍰',name:'Fracciones'},order:{icon:'🧩',name:'Jerarquía'},equations:{icon:'⚖️',name:'Ecuaciones'},think:{icon:'💡',name:'Pensar'},learn:{icon:'📘',name:'Aprende'}
 };
 function updateModuleActiveBar(mode){const meta=MODULE_META[mode]||MODULE_META.sumaresta;$('moduleActiveIcon').textContent=meta.icon;$('moduleActiveName').textContent=meta.name}
 function collapseModuleNavigation(){const nav=document.querySelector('.module-navigation');if(!nav||window.innerWidth<=900)return;nav.classList.add('nav-collapsed');$('moduleActiveBar').classList.remove('hidden')}
@@ -9127,7 +9261,7 @@ function switchModule(mode){
   resetChallengeScore();
   if($("moduleSelect"))$("moduleSelect").value=mode;
   updateModuleActiveBar(mode);
-  const isDiv=mode==="division",isMult=mode==="multiplication",isSumaResta=mode==="sumaresta",isRoots=mode==="roots",isFractions=mode==="fractions",isOrder=mode==="order",isEq=mode==="equations",isLearn=mode==="learn",isTablas=mode==="tablas";
+  const isDiv=mode==="division",isMult=mode==="multiplication",isSumaResta=mode==="sumaresta",isRoots=mode==="roots",isFractions=mode==="fractions",isOrder=mode==="order",isEq=mode==="equations",isThink=mode==="think",isLearn=mode==="learn",isTablas=mode==="tablas";
   $("divisionModule").classList.toggle("hidden",!isDiv);
   $("multiplicationModule").classList.toggle("hidden",!isMult);
   $("sumarestaModule").classList.toggle("hidden",!isSumaResta);
@@ -9136,6 +9270,7 @@ function switchModule(mode){
   $("orderModule").classList.toggle("hidden",!isOrder);
   $("equationsModule").classList.toggle("hidden",!isEq);
   $("learnModule").classList.toggle("hidden",!isLearn);
+  $("thinkModule").classList.toggle("hidden",!isThink);
   $("tablasModule").classList.toggle("hidden",!isTablas);
   $("divisionTab").classList.toggle("active",isDiv);
   $("multiplicationTab").classList.toggle("active",isMult);
@@ -9145,8 +9280,9 @@ function switchModule(mode){
   $("orderTab").classList.toggle("active",isOrder);
   $("equationsTab").classList.toggle("active",isEq);
   $("learnTab").classList.toggle("active",isLearn);
+  $("thinkTab").classList.toggle("active",isThink);
   $("tablasTab").classList.toggle("active",isTablas);
-  $("stepsPanel").classList.toggle("hidden",isTablas||isLearn);
+  $("stepsPanel").classList.toggle("hidden",isTablas||isLearn||isThink);
   $("tqLeftPanel").classList.toggle("hidden",!isTablas);
   $("rightDefault").classList.remove("hidden");
 
@@ -9198,6 +9334,11 @@ function switchModule(mode){
     $("helpContext").innerHTML="<b>Ecuaciones</b><br>Primero eliges la operación inversa; después resuelves el cálculo.";
     $("ruleBox").innerHTML="<h3>Reglas rápidas</h3><ol><li>Identifica qué acompaña a x.</li><li>Usa la operación inversa.</li><li>Hazla en ambos lados.</li><li>Deja x sola.</li><li>Comprueba sustituyendo.</li></ol>";
     renderEquationSteps(0);
+  }else if(isThink){
+    $("speech").textContent="Mira la cantidad, construye el número y explica tu estrategia.";
+    $("helpContext").innerHTML="<b>Pensar</b><br>Busca grupos, decenas y parejas que forman 10.";
+    $("ruleBox").innerHTML="<h3>Ideas útiles</h3><ol><li>No cuentes siempre de uno en uno.</li><li>Busca grupos de 5 y de 10.</li><li>Separa decenas y unidades.</li><li>Comprueba de otra manera.</li></ol>";
+    showThinkActivity("count");
   }else if(isLearn){
     $("speech").textContent="Entiende la idea, sigue el ejemplo y comprueba antes de practicar.";
     $("helpContext").innerHTML="<b>Academia</b><br>Cada lección combina concepto, ejemplo trabajado, mini prueba y práctica.";
@@ -9217,6 +9358,7 @@ $("rootsTab").onclick=()=>chooseModule("roots");
 $("fractionsTab").onclick=()=>chooseModule("fractions");
 $("orderTab").onclick=()=>chooseModule("order");
 $("equationsTab").onclick=()=>chooseModule("equations");
+$("thinkTab").onclick=()=>chooseModule("think");
 $("learnTab").onclick=()=>chooseModule("learn");
 $("tablasTab").onclick=()=>chooseModule("tablas");
 $("moduleSelect").onchange=()=>chooseModule($("moduleSelect").value);
@@ -9300,6 +9442,7 @@ function resetCurrentModule(){
   else if(active&&active.id==="fractionsTab")switchModule("fractions");
   else if(active&&active.id==="orderTab")switchModule("order");
   else if(active&&active.id==="equationsTab")switchModule("equations");
+  else if(active&&active.id==="thinkTab")switchModule("think");
   else if(active&&active.id==="learnTab")switchModule("learn");
   else switchModule("sumaresta");
 }
