@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T06:34:54.591Z","gitCommit":"02202f29a1cbf359977b1584f75a47b53fe6c3d9"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T06:54:10.388Z","gitCommit":"aeb1803bbc6c332be69c7caff6b75f03b96dcee1"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-orange-v2-192.png" rel="icon"/>
 <link href="icon-beta-orange-v2-192.png" rel="apple-touch-icon" sizes="192x192"/>
@@ -10032,6 +10032,35 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     'Se perdió la conexión con la sincronización.':'S’ha perdut la connexió amb la sincronització.','Todavía no está listo, espera un momento.':'Encara no està llest; espera un moment.'
   };
   for (const [source, target] of Object.entries(dynamicExact)) exact.set(source, target);
+
+  // Textos renderizados por los paneles de pasos y ayudas contextuales.
+  // Se mantienen como frases completas para evitar mezclas castellano/catalán.
+  const renderedExact = {
+    'Haz la resta':'Fes la resta',
+    'Llevadas':'Portades',
+    'Suma la llevada':'Suma-hi la portada',
+    'Productos parciales':'Productes parcials',
+    'Desplaza cada fila':'Desplaça cada fila',
+    'Entiende la idea, sigue el ejemplo y comprueba antes de practicar.':'Entén la idea, segueix l’exemple i comprova-ho abans de practicar.',
+    'Paso actual':'Pas actual',
+    'División en curso':'Divisió en curs',
+    'Multiplicación en curso':'Multiplicació en curs',
+    'Suma de productos parciales':'Suma de productes parcials',
+    'Suma únicamente la columna marcada. Si solo hay una cifra, se suma con 0.':'Suma només la columna marcada. Si només hi ha una xifra, se suma amb 0.',
+    'Resuelve la resta de derecha a izquierda, una columna cada vez.':'Resol la resta de dreta a esquerra, una columna cada vegada.',
+    'Multiplica la cifra inferior por la cifra superior activa y añade la llevada.':'Multiplica la xifra inferior per la xifra superior activa i afegeix-hi la portada.',
+    'Empieza por la derecha y desplaza cada producto parcial una columna.':'Comença per la dreta i desplaça cada producte parcial una columna.',
+    'Entiende la idea principal.':'Entén la idea principal.',
+    'Sigue cada línea del ejemplo.':'Segueix cada línia de l’exemple.',
+    'Responde la mini prueba.':'Respon la miniprova.',
+    'Practica el mismo concepto.':'Practica el mateix concepte.',
+    'Cómo aprender':'Com aprendre',
+    'Cada lección combina concepto, ejemplo trabajado, mini prueba y práctica.':'Cada lliçó combina concepte, exemple resolt, miniprova i pràctica.',
+    'Elige el primer grupo.':'Tria el primer grup.',
+    'Piensa cuántas veces cabe.':'Pensa quantes vegades hi cap.',
+    'Baja la siguiente cifra.':'Baixa la xifra següent.'
+  };
+  for (const [source, target] of Object.entries(renderedExact)) exact.set(source, target);
 
   // Whole-sentence templates. Never translate isolated words: that produced mixed
   // Spanish/Catalan sentences and made the explanations harder to understand.
