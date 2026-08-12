@@ -518,31 +518,171 @@
     ,[/^Cualquier número × 1 es él mismo: (.+)\.$/,'Qualsevol nombre × 1 és ell mateix: $1.']
     ,[/^✅ ¡Correcto! (.+)$/,'✅ Correcte! $1']
   ];
+  const keyedMessages = {
+    'beta.environment.beta': { es: 'Beta', ca: 'Beta' },
+    'beta.environment.production': { es: 'Producción', ca: 'Producció' },
+    'beta.sw.unsupported': { es: 'No compatible', ca: 'No compatible' },
+    'beta.sw.active': { es: 'Activo', ca: 'Actiu' },
+    'beta.sw.pending': { es: 'Pendiente de instalación', ca: 'Pendent d’instal·lació' },
+    'beta.sw.unavailable': { es: 'No disponible', ca: 'No disponible' }
+  };
+  const catalogs = new Map([['es', new Map()], ['ca', new Map()]]);
+  const sourceKeys = new Map();
+  const stableKey = (source) => {
+    let hash = 2166136261;
+    for (let index = 0; index < source.length; index += 1) {
+      hash ^= source.charCodeAt(index);
+      hash = Math.imul(hash, 16777619);
+    }
+    return `legacy.${(hash >>> 0).toString(36)}`;
+  };
+  for (const [es, ca] of exact) {
+    const key = stableKey(es);
+    sourceKeys.set(es, key);
+    catalogs.get('es').set(key, es);
+    catalogs.get('ca').set(key, ca);
+  }
+  for (const [key, messages] of Object.entries(keyedMessages)) {
+    for (const [locale, message] of Object.entries(messages)) {
+      if (!catalogs.has(locale)) catalogs.set(locale, new Map());
+      catalogs.get(locale).set(key, message);
+    }
+  }
+
   let language = 'es';
   let applying = false;
-  const originals = new WeakMap();
-  const attrs = ['placeholder','title','aria-label'];
-  function translate(text){
-    if(language === 'es' || !text.trim()) return text;
-    const lead=text.match(/^\s*/)?.[0]||'', tail=text.match(/\s*$/)?.[0]||'', core=text.trim();
-    if(exact.has(core)) return lead+exact.get(core)+tail;
-    for(const [pattern,replacement] of templates){if(pattern.test(core))return lead+core.replace(pattern,replacement)+tail;}
+  const textBindings = new WeakMap();
+  const attributeBindings = new WeakMap();
+  const attrs = ['placeholder', 'title', 'aria-label'];
+  const interpolate = (message, params = {}) => message.replace(/\{(\w+)\}/g, (_, name) => params[name] ?? `{${name}}`);
+  function t(key, params = {}) {
+    const message = catalogs.get(language)?.get(key) ?? catalogs.get('es')?.get(key);
+    return interpolate(message ?? key, params);
+  }
+  function translateSource(text) {
+    if (language === 'es' || !text.trim()) return text;
+    const lead = text.match(/^\s*/)?.[0] || '';
+    const tail = text.match(/\s*$/)?.[0] || '';
+    const core = text.trim();
+    const key = sourceKeys.get(core);
+    if (key) return lead + t(key) + tail;
+    for (const [pattern, replacement] of templates) {
+      pattern.lastIndex = 0;
+      if (pattern.test(core)) {
+        pattern.lastIndex = 0;
+        return lead + core.replace(pattern, replacement) + tail;
+      }
+    }
     return text;
   }
-  function translateNode(node){
-    if(node.nodeType===Node.TEXT_NODE){
-      if(!originals.has(node)) originals.set(node,node.nodeValue);
-      const source=originals.get(node); const next=language==='es'?source:translate(source);
-      if(node.nodeValue!==next) node.nodeValue=next;
+  function translate(text) {
+    return translateSource(text);
+  }
+  function renderTextBinding(binding) {
+    if (language === 'es') return binding.source;
+    if (binding.key) {
+      const lead = binding.source.match(/^\s*/)?.[0] || '';
+      const tail = binding.source.match(/\s*$/)?.[0] || '';
+      return lead + t(binding.key) + tail;
+    }
+    return translateSource(binding.source);
+  }
+  function createTextBinding(source) {
+    return { source, key: sourceKeys.get(source.trim()) || null };
+  }
+  function translateTextNode(node) {
+    let binding = textBindings.get(node);
+    if (!binding) {
+      binding = createTextBinding(node.nodeValue);
+      textBindings.set(node, binding);
+    } else {
+      const expected = renderTextBinding(binding);
+      if (node.nodeValue !== expected) {
+        binding = createTextBinding(node.nodeValue);
+        textBindings.set(node, binding);
+      }
+    }
+    const next = renderTextBinding(binding);
+    if (node.nodeValue !== next) node.nodeValue = next;
+  }
+  function translateAttribute(element, attr) {
+    let bindings = attributeBindings.get(element);
+    if (!bindings) {
+      bindings = new Map();
+      attributeBindings.set(element, bindings);
+    }
+    const current = element.getAttribute(attr);
+    let binding = bindings.get(attr);
+    if (!binding) {
+      binding = createTextBinding(current);
+      bindings.set(attr, binding);
+    } else {
+      const expected = renderTextBinding(binding);
+      if (current !== expected) {
+        binding = createTextBinding(current);
+        bindings.set(attr, binding);
+      }
+    }
+    const next = renderTextBinding(binding);
+    if (current !== next) element.setAttribute(attr, next);
+  }
+  function translateNode(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      translateTextNode(node);
       return;
     }
-    if(node.nodeType!==Node.ELEMENT_NODE || ['SCRIPT','STYLE','CODE'].includes(node.tagName)) return;
-    for(const attr of attrs){if(node.hasAttribute(attr)){const key=`@${attr}`;let data=originals.get(node)||{};if(typeof data!=='object')data={};if(!(key in data))data[key]=node.getAttribute(attr);originals.set(node,data);node.setAttribute(attr,language==='es'?data[key]:translate(data[key]));}}
-    for(const child of node.childNodes) translateNode(child);
+    if (node.nodeType !== Node.ELEMENT_NODE || ['SCRIPT', 'STYLE', 'CODE'].includes(node.tagName)) return;
+    for (const attr of attrs) if (node.hasAttribute(attr)) translateAttribute(node, attr);
+    for (const child of node.childNodes) translateNode(child);
   }
-  function apply(root=document.body){applying=true;translateNode(root);document.documentElement.lang=language;const select=document.getElementById('languageSelect');if(select)select.value=language;applying=false;}
-  const observer=new MutationObserver(records=>{if(applying||language==='es')return;for(const record of records){if(record.type==='characterData')translateNode(record.target);else for(const node of record.addedNodes)translateNode(node);}});
-  function setLanguage(next){language=next==='ca'?'ca':'es';localStorage.setItem(STORAGE_KEY,language);apply();}
-  function start(){language=localStorage.getItem(STORAGE_KEY)==='ca'?'ca':'es';const select=document.getElementById('languageSelect');select?.addEventListener('change',event=>setLanguage(event.target.value));apply();observer.observe(document.body,{subtree:true,childList:true,characterData:true});}
-  window.MatesQuestI18n={start,setLanguage,getLanguage:()=>language,translate};
+  function apply(root = document.body) {
+    applying = true;
+    translateNode(root);
+    document.documentElement.lang = language;
+    const select = document.getElementById('languageSelect');
+    if (select) select.value = language;
+    applying = false;
+    window.dispatchEvent(new CustomEvent('matesquest:languagechange', { detail: { language } }));
+  }
+  const observer = new MutationObserver((records) => {
+    if (applying) return;
+    for (const record of records) {
+      if (record.type === 'characterData') translateTextNode(record.target);
+      else if (record.type === 'attributes') translateAttribute(record.target, record.attributeName);
+      else for (const node of record.addedNodes) translateNode(node);
+    }
+  });
+  function setLanguage(next) {
+    language = catalogs.has(next) ? next : 'es';
+    localStorage.setItem(STORAGE_KEY, language);
+    apply();
+  }
+  function addMessages(locale, messages) {
+    if (!catalogs.has(locale)) catalogs.set(locale, new Map());
+    const catalog = catalogs.get(locale);
+    for (const [key, message] of Object.entries(messages)) catalog.set(key, message);
+  }
+  function start() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    language = catalogs.has(saved) ? saved : 'es';
+    const select = document.getElementById('languageSelect');
+    select?.addEventListener('change', (event) => setLanguage(event.target.value));
+    apply();
+    observer.observe(document.body, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: attrs
+    });
+  }
+  window.MatesQuestI18n = {
+    start,
+    setLanguage,
+    getLanguage: () => language,
+    t,
+    translate,
+    addMessages,
+    has: (key, locale = language) => catalogs.get(locale)?.has(key) || false
+  };
 })();
