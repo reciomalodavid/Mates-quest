@@ -4628,6 +4628,11 @@ body{
 .think-hundred-action{background:#7d55b5!important;color:#fff!important;border-color:#68439d!important}.think-remove{background:#fff!important;color:#9b3d45!important;border-color:#e6b9bd!important}.think-remove:hover{background:#fff1f2!important}.think-remove:disabled{opacity:.35;cursor:not-allowed}
 .think-jump-story{font-size:1.05rem;font-weight:850;margin:14px}.think-jump-canvas{max-width:760px;margin:14px auto;padding:8px;border-radius:16px;background:#f8fbff;border:1px solid #dce7f3;overflow-x:auto}.think-jump-svg{display:block;width:100%;min-width:520px;height:auto}.think-jump-base{stroke:#8298ae;stroke-width:4;stroke-linecap:round}.think-jump-tick{stroke:#8298ae;stroke-width:3}.think-jump-arc{fill:none;stroke:#357bd8;stroke-width:4;stroke-linecap:round}.think-jump-arc.pending{stroke:#f1a33b;stroke-dasharray:7 7}.think-jump-arrow{fill:#357bd8}.think-jump-arrow.pending{fill:#f1a33b}.think-jump-label{font-size:15px;font-weight:900;fill:#2f70d0;text-anchor:middle}.think-jump-label.pending{fill:#a45d00}.think-jump-number{font-size:16px;font-weight:950;fill:#263b50;text-anchor:middle}.think-jump-number.unknown{fill:#a45d00}.think-jump-question{font-weight:950;font-size:1.05rem;margin-top:10px}
 @media(max-width:900px){.think-activity-tabs{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.think-hero{display:grid;align-items:stretch}.think-level{min-width:0}.think-activity-tabs,.think-place-board{grid-template-columns:1fr}.think-dot-board{grid-template-columns:repeat(5,34px);grid-auto-rows:34px;gap:8px}.think-dot{width:28px;height:28px}.think-progress>div:first-child{display:grid}}
+
+/* Friendly equation lesson */
+.equation-friendly-glossary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.equation-friendly-glossary>div{display:grid;gap:5px;padding:14px;border:1px solid var(--line);border-radius:13px;background:#f8fafc}.equation-friendly-glossary b{color:#385a73}.equation-friendly-glossary span{font-size:.86rem;line-height:1.45;color:var(--muted)}
+.inverse-friendly{background:linear-gradient(145deg,#fffaf0,#fff)!important}.inverse-pairs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.inverse-pairs>div{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:16px;border:1px solid #ead6ad;border-radius:15px;background:#fff;text-align:center}.inverse-pairs small{grid-column:1/-1;color:var(--muted);font-weight:850}.inverse-action{padding:10px;border-radius:11px;font-size:1.15rem;font-weight:1000}.inverse-action.plus,.inverse-action.multiply{background:#e7f4ff;color:#28679b}.inverse-action.minus,.inverse-action.divide{background:#fff0e7;color:#a44f23}.inverse-mini-examples{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.inverse-mini-examples p{margin:0;padding:10px 12px;border-radius:10px;background:#f7f9fc}.lesson-friendly-note{padding:12px 14px;border-left:4px solid #e5a22f;background:#fff7e7;border-radius:8px}.equation-decision{display:grid;gap:9px;margin:16px 0}.equation-question{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;padding:12px;border-radius:12px;background:#f6f9fc}.equation-question>span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#4f8db5;color:#fff;font-weight:1000}.equation-question p{margin:4px 0 0;color:var(--muted)}.equation-worked-friendly{margin-top:14px}.lesson-more{margin:12px 0;border:1px solid var(--line);border-radius:13px;background:#fff;overflow:hidden}.lesson-more summary{cursor:pointer;padding:14px 16px;font-weight:950;color:#385a73;background:#f7fafc}.lesson-more-body{padding:4px 16px 16px}.lesson-more-body p,.lesson-more-body li{line-height:1.55}.lesson-more-body ul{margin-bottom:0}
+@media(max-width:700px){.equation-friendly-glossary,.inverse-pairs,.inverse-mini-examples{grid-template-columns:1fr}.inverse-pairs>div{grid-template-columns:1fr auto 1fr}}
 </style>
 </head>
 <body>
@@ -5548,67 +5553,93 @@ body{
 </section>
 <section class="learn-page hidden" id="lesson-equations">
 <div class="learn-page-head"><button class="btn grey back-to-learn">← Temas</button><h2 class="learn-page-title">⚖️ Ecuaciones de primer grado</h2></div>
-<div class="lesson-route"><span>1. Desde cero</span><span>2. Mapa</span><span>3. Sin saltos</span><span>4. Chuleta</span><span>5. Comprueba</span></div><div class="learn-zero-primer"><div class="lesson-section lesson-zero"><div class="lesson-kicker">¿QUÉ ES UNA ECUACIÓN?</div><h3>La idea antes del procedimiento</h3><p>Es una igualdad con un valor desconocido. Resolverla significa descubrir qué valor hace verdadera la igualdad.</p><ul class="lesson-recognize"><li>Hay un signo igual y una incógnita, normalmente x.</li><li>Los dos lados deben conservar siempre el mismo valor.</li></ul></div><div class="lesson-section lesson-map-section"><div class="lesson-kicker">EL MAPA QUE SIEMPRE SE REPITE</div><h3>Plan de ataque</h3><div class="lesson-step-map"><div class="lesson-map-row"><span class="lesson-map-num">1</span><p>Piensa en una balanza: haz lo mismo en ambos lados.</p></div><div class="lesson-map-row"><span class="lesson-map-num">2</span><p>Elige un término que impide dejar x sola.</p></div><div class="lesson-map-row"><span class="lesson-map-num">3</span><p>Usa la operación inversa para deshacerlo.</p></div><div class="lesson-map-row"><span class="lesson-map-num">4</span><p>Simplifica ambos lados.</p></div><div class="lesson-map-row"><span class="lesson-map-num">5</span><p>Repite hasta obtener x = número.</p></div><div class="lesson-map-row"><span class="lesson-map-num">6</span><p>Sustituye el número en la ecuación original para comprobar.</p></div></div></div><div class="lesson-section lesson-worked-zero"><div class="lesson-kicker">EJEMPLO CON RAZONAMIENTO</div><h3>Una línea cada vez</h3><div class="logic-worked-example"><div class="logic-worked-row"><span class="logic-step-badge">1</span><div><b>3x + 5 = 20</b><small>Queremos dejar x sola.</small></div></div><div class="logic-worked-row"><span class="logic-step-badge">2</span><div><b>Restamos 5 en ambos lados</b><small>3x = 15.</small></div></div><div class="logic-worked-row"><span class="logic-step-badge">3</span><div><b>Dividimos ambos lados entre 3</b><small>x = 5.</small></div></div><div class="logic-worked-row"><span class="logic-step-badge">4</span><div><b>Comprobamos</b><small>3×5+5=20; verdadero.</small></div></div></div></div><div class="lesson-section lesson-cheat-sheet"><div class="cheat-head"><div class="cheat-icon">⚡</div><div><div class="lesson-kicker">CHEAT SHEET</div><h3>Lo que debes recordar</h3></div></div><div class="cheat-grid"><div class="cheat-item"><span>✓</span><p>+a se deshace con −a.</p></div><div class="cheat-item"><span>✓</span><p>−a se deshace con +a.</p></div><div class="cheat-item"><span>✓</span><p>×a se deshace con ÷a.</p></div><div class="cheat-item"><span>✓</span><p>Nunca cambies algo en un solo lado.</p></div><div class="cheat-item"><span>✓</span><p>No “pasa cambiando signo”: escribe la operación en ambos lados.</p></div></div></div><div class="lesson-section lesson-diagnose"><div class="lesson-kicker">SI ALGO SALE MAL</div><h3>Errores que conviene detectar</h3><div class="diagnose-grid"><div class="diagnose-item"><b>No hagas esto</b><p>Cambiar de signo sin comprender la operación inversa.</p></div><div class="diagnose-item"><b>No hagas esto</b><p>Operar solo un lado.</p></div><div class="diagnose-item"><b>No hagas esto</b><p>No comprobar la solución en la ecuación original.</p></div></div><div class="reason-check"><b>Comprobación de sentido</b><p>Una solución es correcta solo si al sustituirla ambos lados dan exactamente lo mismo.</p></div></div><div class="lesson-existing-divider"><span>Ahora profundiza con más ejemplos y práctica</span></div></div>
-<div class="lesson-section lesson-concept">
-<div class="lesson-kicker">IDEA FUNDAMENTAL</div>
-<h3>Una ecuación es una balanza</h3>
-<p>El signo igual no significa «aquí viene la respuesta». Significa que el lado izquierdo y el derecho tienen exactamente el mismo valor.</p>
-<div class="lesson-balance-demo">
-<div>3x + 5</div><div class="balance-symbol">⚖️</div><div>20</div>
+<div class="lesson-route"><span>1. Entiende</span><span>2. Deshaz</span><span>3. Equilibra</span><span>4. Comprueba</span></div>
+
+<div class="lesson-section lesson-zero">
+<div class="lesson-kicker">ANTES DE EMPEZAR</div>
+<h3>¿Qué estamos buscando?</h3>
+<p>Una ecuación es como una balanza equilibrada. Los dos lados del signo igual valen lo mismo, pero hay un número que todavía no conocemos.</p>
+<div class="equation-friendly-glossary">
+<div><b>Incógnita</b><span>El número desconocido. Normalmente lo llamamos <strong>x</strong>.</span></div>
+<div><b>Término</b><span>Cada número o expresión separada por una suma o una resta.</span></div>
+<div><b>Resolver</b><span>Descubrir qué número debe valer x para que la igualdad sea verdadera.</span></div>
 </div>
-<p>Para que la balanza siga equilibrada, cualquier operación que hagamos en un lado debemos hacerla también en el otro.</p>
-<div class="lesson-rule-big">Lo mismo en los dos lados.</div>
+<div class="lesson-balance-demo"><div>x + 5</div><div class="balance-symbol">⚖️</div><div>12</div></div>
+<p class="lesson-rule-big">Si cambias un lado, debes hacer exactamente lo mismo en el otro.</p>
 </div>
-<div class="lesson-section">
-<div class="lesson-kicker">HERRAMIENTA</div>
-<h3>Las operaciones inversas deshacen</h3>
-<div class="inverse-grid">
-<div><b>+ 5</b><span>se deshace con</span><b>− 5</b></div>
-<div><b>− 7</b><span>se deshace con</span><b>+ 7</b></div>
-<div><b>× 3</b><span>se deshace con</span><b>÷ 3</b></div>
-<div><b>÷ 4</b><span>se deshace con</span><b>× 4</b></div>
+
+<div class="lesson-section inverse-friendly">
+<div class="lesson-kicker">LA HERRAMIENTA CLAVE</div>
+<h3>¿Qué es una operación inversa?</h3>
+<p>Es una operación que <b>deshace</b> otra. La usamos para retirar lo que acompaña a x sin romper el equilibrio.</p>
+<div class="inverse-pairs">
+<div><span class="inverse-action plus">+ 5</span><b>se deshace con</b><span class="inverse-action minus">− 5</span><small>Sumar ↔ restar</small></div>
+<div><span class="inverse-action multiply">× 3</span><b>se deshace con</b><span class="inverse-action divide">÷ 3</span><small>Multiplicar ↔ dividir</small></div>
 </div>
-<p>El objetivo es dejar a <b>x sola</b>. No «pasamos» números mágicamente: aplicamos la operación inversa en ambos lados.</p>
+<div class="inverse-mini-examples">
+<p><b>x + 5</b>: restamos 5.</p>
+<p><b>x − 7</b>: sumamos 7.</p>
+<p><b>3x</b>: dividimos entre 3.</p>
+<p><b>x ÷ 4</b>: multiplicamos por 4.</p>
 </div>
-<div class="lesson-section">
-<div class="lesson-kicker">EJEMPLO 1</div>
-<h3>Una operación: x + 5 = 12</h3>
-<div class="equation-worked">
-<div><span>x + 5</span><b>=</b><span>12</span><small>Queremos quitar el +5.</small></div>
-<div><span>x + 5 − 5</span><b>=</b><span>12 − 5</span><small>Restamos 5 en ambos lados.</small></div>
-<div class="final"><span>x</span><b>=</b><span>7</span><small>La incógnita ya está sola.</small></div>
+<p class="lesson-friendly-note">No pasamos números mágicamente al otro lado. Aplicamos la operación inversa en los dos lados.</p>
 </div>
-<div class="lesson-check-line"><b>Comprobación:</b> sustituimos x por 7 → 7 + 5 = 12. Es verdadero.</div>
+
+<div class="lesson-section lesson-worked-zero">
+<div class="lesson-kicker">EJEMPLO GUIADO</div>
+<h3>Resolver x + 5 = 12</h3>
+<div class="equation-decision">
+<div class="equation-question"><span>1</span><div><b>¿Qué impide que x esté sola?</b><p>El <strong>+ 5</strong>.</p></div></div>
+<div class="equation-question"><span>2</span><div><b>¿Qué operación deshace + 5?</b><p><strong>− 5</strong>, porque restar deshace sumar.</p></div></div>
+<div class="equation-question"><span>3</span><div><b>¿Dónde restamos 5?</b><p>En los dos lados, para mantener la balanza equilibrada.</p></div></div>
 </div>
-<div class="lesson-section">
-<div class="lesson-kicker">EJEMPLO 2</div>
-<h3>Dos pasos: 3x + 5 = 20</h3>
-<div class="equation-worked">
-<div><span>3x + 5</span><b>=</b><span>20</span><small>Primero deshacemos la suma.</small></div>
-<div><span>3x + 5 − 5</span><b>=</b><span>20 − 5</span><small>Restamos 5 en ambos lados.</small></div>
-<div><span>3x</span><b>=</b><span>15</span><small>Ahora deshacemos el ×3.</small></div>
-<div><span>3x ÷ 3</span><b>=</b><span>15 ÷ 3</span><small>Dividimos ambos lados entre 3.</small></div>
-<div class="final"><span>x</span><b>=</b><span>5</span><small>Solución.</small></div>
+<div class="equation-worked equation-worked-friendly">
+<div><span>x + 5</span><b>=</b><span>12</span><small>La ecuación inicial.</small></div>
+<div><span>x + 5 − 5</span><b>=</b><span>12 − 5</span><small>La misma operación en ambos lados.</small></div>
+<div class="final"><span>x</span><b>=</b><span>7</span><small>x ya está sola.</small></div>
+</div>
+<div class="lesson-check-line"><b>Comprobación:</b> sustituimos x por 7. Como 7 + 5 = 12, la solución es correcta.</div>
+</div>
+
+<div class="lesson-section lesson-map-section">
+<div class="lesson-kicker">EL MAPA</div>
+<h3>Cuatro preguntas, siempre en este orden</h3>
+<div class="lesson-step-map">
+<div class="lesson-map-row"><span class="lesson-map-num">1</span><p>¿Qué operación acompaña a x?</p></div>
+<div class="lesson-map-row"><span class="lesson-map-num">2</span><p>¿Cuál es su operación inversa?</p></div>
+<div class="lesson-map-row"><span class="lesson-map-num">3</span><p>¿La he aplicado en los dos lados?</p></div>
+<div class="lesson-map-row"><span class="lesson-map-num">4</span><p>¿El resultado funciona en la ecuación original?</p></div>
 </div>
 </div>
-<div class="lesson-section">
-<div class="lesson-kicker">EJEMPLO 3</div>
-<h3>La incógnita en ambos lados</h3>
-<div class="equation-worked">
-<div><span>5x + 2</span><b>=</b><span>3x + 12</span><small>Juntamos las x en un lado.</small></div>
-<div><span>5x + 2 − 3x</span><b>=</b><span>3x + 12 − 3x</span><small>Restamos 3x en ambos lados.</small></div>
-<div><span>2x + 2</span><b>=</b><span>12</span><small>Ahora quitamos el +2.</small></div>
-<div><span>2x</span><b>=</b><span>10</span><small>Dividimos entre 2.</small></div>
-<div class="final"><span>x</span><b>=</b><span>5</span><small>Comprobamos en la ecuación original.</small></div>
+
+<details class="lesson-more">
+<summary>Ver un ejemplo de dos pasos</summary>
+<div class="lesson-more-body">
+<h3>3x + 5 = 20</h3>
+<p>Primero deshacemos el <b>+5</b> restando 5 en ambos lados: <b>3x = 15</b>.</p>
+<p>Después deshacemos el <b>×3</b> dividiendo ambos lados entre 3: <b>x = 5</b>.</p>
+<p>Comprobamos: 3 × 5 + 5 = 20.</p>
 </div>
-<div class="lesson-error"><b>Error frecuente:</b> cambiar un signo al «pasarlo» sin entender por qué. Es más seguro escribir la misma operación debajo de los dos lados.</div>
-<div class="lesson-nav"><button class="btn green learn-practice" data-practice="equations">Practicar ahora: ecuaciones</button></div>
+</details>
+
+<details class="lesson-more">
+<summary>Errores frecuentes</summary>
+<div class="lesson-more-body">
+<ul>
+<li>Cambiar un número de lado sin escribir qué operación hacemos.</li>
+<li>Aplicar una operación solo en uno de los lados.</li>
+<li>Dividir entre el número equivocado.</li>
+<li>No comprobar la solución al terminar.</li>
+</ul>
 </div>
+</details>
+
 <div class="lesson-check">
-<div class="lesson-kicker">COMPRUEBA SI LO HAS ENTENDIDO</div>
+<div class="lesson-kicker">PRUÉBALO TÚ</div>
 <h3>Para empezar a resolver x + 5 = 12, ¿qué hacemos?</h3>
 <div class="lesson-check-options"><button class="lesson-check-option" data-correct="true" type="button">Restar 5 en ambos lados</button><button class="lesson-check-option" data-correct="false" type="button">Restar 5 solo a la izquierda</button><button class="lesson-check-option" data-correct="false" type="button">Dividir entre 5</button></div>
-<div class="lesson-check-feedback" data-explanation="Restamos 5 en ambos lados para mantener la igualdad."></div>
+<div class="lesson-check-feedback" data-explanation="Restar deshace sumar, y debemos hacerlo en ambos lados para mantener la igualdad."></div>
+<div class="lesson-nav"><button class="btn green learn-practice" data-practice="equations">Practicar ahora: ecuaciones</button></div>
 </div>
 </section>
 <section class="learn-page hidden" id="lesson-tables">
