@@ -60,6 +60,30 @@ if (missingDynamicFragments.length) {
   process.exit(1);
 }
 
+const templatePatterns = [];
+for (const match of i18n.matchAll(/\\[\\/(\\^(?:\\\\\\/|[^\\/\\n])*\\$)\\/[gimyus]*\\s*,/g)) {
+  try { templatePatterns.push(new RegExp(match[1])); } catch {}
+}
+const internalRuntimeValues = new Set(['es-ES', 'ca-ES', 'suma', 'resta', 'error']);
+const spanishSignal = /\\b(?:el|la|los|las|un|una|de|del|que|qué|para|por|con|sin|y|es|elige|escribe|comprueba|correcto|paso|resultado|número|operación|suma|resta|multiplica|divide|pista|perfil|tabla|cifra|columna|ahora|primero|después|todavía|revisa|error|nivel|puntos|has|hemos|cuánto|cuál|antes|solo|entre|hasta|desde)\\b/i;
+const missingRuntimeMessages = [];
+for (const literal of sourceScripts.matchAll(/(?:'((?:[^'\\\\]|\\\\.)*)'|"((?:[^"\\\\]|\\\\.)*)"|`((?:[^`\\\\]|\\\\.)*)`)/g)) {
+  const raw = literal[1] ?? literal[2] ?? literal[3] ?? '';
+  const text = normalize(raw.replace(/\\\\n/g, ' ').replace(/\\$\\{[^}]+\\}/g, '7'));
+  if (
+    text.length < 3 || text.length > 300 || text.includes('<') ||
+    internalRuntimeValues.has(text) || !spanishSignal.test(text) ||
+    keys.has(text) || templatePatterns.some(pattern => pattern.test(text)) ||
+    /^([.#]|https?:)/.test(text)
+  ) continue;
+  missingRuntimeMessages.push(text);
+}
+if (missingRuntimeMessages.length) {
+  console.error(`Catalan generated-message coverage incomplete (${new Set(missingRuntimeMessages).size}):`);
+  for (const text of [...new Set(missingRuntimeMessages)]) console.error(`- ${text}`);
+  process.exit(1);
+}
+
 const runtime = fs.readFileSync(new URL('src/beta/beta-runtime.js', root), 'utf8');
 const runtimeKeys = [...runtime.matchAll(/\.t\(\s*['"]([^'"]+)['"]/g)].map(match => match[1]);
 const missingRuntimeKeys = runtimeKeys.filter(key => !keys.has(key));
@@ -73,4 +97,4 @@ for (const api of ['t,', 'addMessages,', 'matesquest:languagechange', 'sourceKey
     process.exit(1);
   }
 }
-console.log(`Catalan coverage complete: ${new Set(candidates.map(({ text }) => text)).size} visible strings, ${new Set(dynamicHtmlFragments).size} dynamic HTML fragments and ${new Set(runtimeKeys).size} runtime keys.`);
+console.log(`Catalan coverage complete: ${new Set(candidates.map(({ text }) => text)).size} visible strings, ${new Set(dynamicHtmlFragments).size} dynamic HTML fragments, generated messages and ${new Set(runtimeKeys).size} runtime keys.`);
