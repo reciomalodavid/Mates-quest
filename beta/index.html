@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T15:03:59.613Z","gitCommit":"5a8b218c3536fba5c769667d5c5e3ace05b6d34a"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T15:10:41.764Z","gitCommit":"af8d249b476236c718c4e5957e72d0970f26039f"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-orange-v2-192.png" rel="icon"/>
 <link href="icon-beta-orange-v2-192.png" rel="apple-touch-icon" sizes="192x192"/>
@@ -4308,7 +4308,7 @@ body{
 
 
 /* === Ajuste 6.7: heatmap y tablas más claros === */
-.tbtn{padding:14px 4px!important;border-radius:16px!important;min-height:104px!important}
+.tbtn{padding:14px 4px!important;border-radius:16px!important;min-height:92px!important}
 .tbtn small{font-size:.62rem!important;letter-spacing:.02em!important}
 .tbtn .table-status{display:block;margin-top:6px;font-size:.64rem;font-weight:1000;line-height:1.1}
 .tbtn .table-meta{display:block;margin-top:4px;font-size:.57rem;font-weight:850;color:#5e7489;line-height:1.2}
@@ -9774,10 +9774,9 @@ function tableSummary(profile,table){
   return{att,ok,accuracy,level,masteredCount,weakCount,learningCount,untriedCount};
 }
 function tableDisplayInfo(summary){
-  if(summary.level==='untried')return{status:'Sin practicar',meta:'Aún sin datos',level:'untried'};
-  if(summary.level==='mastered')return{status:'Muy bien',meta:`${summary.ok}/${summary.att} bien · ${Math.round(summary.accuracy*100)}%`,level:'mastered'};
-  if(summary.level==='weak')return{status:'Necesita repaso',meta:`${summary.ok}/${summary.att} bien · ${Math.round(summary.accuracy*100)}%`,level:'weak'};
-  return{status:'Practicada',meta:`${summary.ok}/${summary.att} bien · ${Math.round(summary.accuracy*100)}%`,level:'learning'};
+  if(summary.level==='untried')return{status:'Sin practicar',level:'untried'};
+  if(summary.level==='mastered')return{status:'Conseguida',level:'mastered'};
+  return{status:'En progreso',level:summary.level};
 }
 
 function renderTablesGrid(){
@@ -9787,11 +9786,8 @@ function renderTablesGrid(){
     const info=tableDisplayInfo(summary);
     const b=document.createElement('button');
     b.className=`tbtn neutral-table${selectedTables.has(i)?' on':''}`;
-    const progress=summary.att ? `${summary.masteredCount}/10 cuentas dominadas` : 'Empieza por la que quieras';
-    b.innerHTML=`<span class="table-number">${i}</span><small>tabla</small><span class="table-status">${info.status}</span><span class="table-meta">${info.meta}</span><span class="table-progress">${progress}</span>`;
-    b.title=summary.att
-      ? `Tabla del ${i}: ${summary.ok} aciertos de ${summary.att} respuestas (${Math.round(summary.accuracy*100)}%).`
-      : `Tabla del ${i}: todavía sin practicar.`;
+    b.innerHTML=`<span class="table-number">${i}</span><small>tabla</small><span class="table-status">${info.status}</span>`;
+    b.title=`Tabla del ${i}: ${info.status}.`;
     b.onclick=()=>{if(selectedTables.has(i))selectedTables.delete(i);else selectedTables.add(i);renderTablesGrid()};
     g.appendChild(b);
   }
