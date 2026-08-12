@@ -231,6 +231,35 @@
   };
   for (const [source, target] of Object.entries(dynamicExact)) exact.set(source, target);
 
+  // Textos renderizados por los paneles de pasos y ayudas contextuales.
+  // Se mantienen como frases completas para evitar mezclas castellano/catalán.
+  const renderedExact = {
+    'Haz la resta':'Fes la resta',
+    'Llevadas':'Portades',
+    'Suma la llevada':'Suma-hi la portada',
+    'Productos parciales':'Productes parcials',
+    'Desplaza cada fila':'Desplaça cada fila',
+    'Entiende la idea, sigue el ejemplo y comprueba antes de practicar.':'Entén la idea, segueix l’exemple i comprova-ho abans de practicar.',
+    'Paso actual':'Pas actual',
+    'División en curso':'Divisió en curs',
+    'Multiplicación en curso':'Multiplicació en curs',
+    'Suma de productos parciales':'Suma de productes parcials',
+    'Suma únicamente la columna marcada. Si solo hay una cifra, se suma con 0.':'Suma només la columna marcada. Si només hi ha una xifra, se suma amb 0.',
+    'Resuelve la resta de derecha a izquierda, una columna cada vez.':'Resol la resta de dreta a esquerra, una columna cada vegada.',
+    'Multiplica la cifra inferior por la cifra superior activa y añade la llevada.':'Multiplica la xifra inferior per la xifra superior activa i afegeix-hi la portada.',
+    'Empieza por la derecha y desplaza cada producto parcial una columna.':'Comença per la dreta i desplaça cada producte parcial una columna.',
+    'Entiende la idea principal.':'Entén la idea principal.',
+    'Sigue cada línea del ejemplo.':'Segueix cada línia de l’exemple.',
+    'Responde la mini prueba.':'Respon la miniprova.',
+    'Practica el mismo concepto.':'Practica el mateix concepte.',
+    'Cómo aprender':'Com aprendre',
+    'Cada lección combina concepto, ejemplo trabajado, mini prueba y práctica.':'Cada lliçó combina concepte, exemple resolt, miniprova i pràctica.',
+    'Elige el primer grupo.':'Tria el primer grup.',
+    'Piensa cuántas veces cabe.':'Pensa quantes vegades hi cap.',
+    'Baja la siguiente cifra.':'Baixa la xifra següent.'
+  };
+  for (const [source, target] of Object.entries(renderedExact)) exact.set(source, target);
+
   // Whole-sentence templates. Never translate isolated words: that produced mixed
   // Spanish/Catalan sentences and made the explanations harder to understand.
   const templates = [
