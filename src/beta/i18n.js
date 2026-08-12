@@ -354,6 +354,7 @@
     [/^Salto (.+) de (.+): (.+)$/,'Salt $1 de $2: $3'],
     [/^(.+) aterriza en (.+).$/,'$1 aterra a $2.'],
     [/^(.+) centenas, (.+) decenas y (.+) unidades.$/,'$1 centenes, $2 desenes i $3 unitats.'],
+    [/^(.+) centenas, (.+) decenas y (.+) unidades: (.+)$/,'$1 centenes, $2 desenes i $3 unitats: $4'],
     [/^¿Cuánto es (.+)\?$/,'Quant és $1?'],
     [/^¿Cuántas veces cabe (.+) en (.+)\?$/,'Quantes vegades hi cap $1 en $2?'],
     [/^Paso 2: ¿cuántas veces cabe (.+) en (.+)\?$/,'Pas 2: quantes vegades hi cap $1 en $2?'],
