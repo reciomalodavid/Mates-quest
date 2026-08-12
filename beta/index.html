@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T14:53:01.332Z","gitCommit":"525469ca1816735e5ac9003c735b9b0fad904140"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T14:53:36.407Z","gitCommit":"537dff1cc62c60aa66b1c453ef694d86d2a67e57"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-orange-v2-192.png" rel="icon"/>
 <link href="icon-beta-orange-v2-192.png" rel="apple-touch-icon" sizes="192x192"/>
@@ -10712,6 +10712,22 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     "tabla":"taula"
   })) exact.set(source, target);
 
+  for (const [source, target] of Object.entries({
+    "💡 Pensar":"💡 Pensa",
+    "👀 Reconocer cantidades":"👀 Reconeix quantitats",
+    "🧱 Valor posicional":"🧱 Valor posicional",
+    "🔟 Usar números amigos":"🔟 Fes servir nombres amics",
+    "↗️ Saltos en la recta":"↗️ Salts a la recta",
+    "Construye el número 34":"Construeix el nombre 34",
+    "Completa hasta 10":"Completa fins a 10",
+    "7 + 8 = 15: escribimos 5 y llevamos 1.":"7 + 8 = 15: escrivim 5 i en portem 1.",
+    "Mates Quest Beta":"Mates Quest Beta",
+    "Beta":"Beta",
+    "Commit":"Commit",
+    "IndexedDB":"IndexedDB",
+    "Service Worker":"Service Worker"
+  })) exact.set(source, target);
+
   const keyedMessages = {
     'beta.environment.beta': { es: 'Beta', ca: 'Beta' },
     'beta.environment.production': { es: 'Producción', ca: 'Producció' },
@@ -10746,6 +10762,7 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
   let language = 'es';
   let applying = false;
   const textBindings = new WeakMap();
+  const missingSources = new Set();
   const attributeBindings = new WeakMap();
   const attrs = ['placeholder', 'title', 'aria-label'];
   const interpolate = (message, params = {}) => message.replace(/\{(\w+)\}/g, (_, name) => params[name] ?? `{${name}}`);
@@ -10767,6 +10784,7 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
         return lead + core.replace(pattern, replacement) + tail;
       }
     }
+    if (/[A-Za-zÁÉÍÓÚáéíóúÑñ¿¡]/.test(core)) missingSources.add(core);
     return text;
   }
   function translate(text) {
@@ -10873,7 +10891,9 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     t,
     translate,
     addMessages,
-    has: (key, locale = language) => catalogs.get(locale)?.has(key) || false
+    has: (key, locale = language) => catalogs.get(locale)?.has(key) || false,
+    getMissingTranslations: () => [...missingSources].sort(),
+    resetMissingTranslations: () => missingSources.clear()
   };
 })();
 </script>
