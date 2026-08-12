@@ -93,7 +93,13 @@
     'Cuenta centenas, decenas y unidades por separado.':'Compta centenes, desenes i unitats per separat.',
     'Completa primero el siguiente múltiplo de 10.':'Completa primer el múltiple de 10 següent.',
     'Separa el salto en decenas y unidades.':'Separa el salt en desenes i unitats.',
-    'Actividad completada: cinco retos comprendidos.':'Activitat completada: cinc reptes compresos.'
+    'Actividad completada: cinco retos comprendidos.':'Activitat completada: cinc reptes compresos.',
+    'Completa cada salto':'Completa cada salt',
+    '¿Dónde aterriza este salto?':'On aterra aquest salt?',
+    'Siguiente salto':'Salt següent',
+    'Has completado todos los saltos.':'Has completat tots els salts.',
+    'Revisa desde qué número empieza el arco.':'Revisa des de quin nombre comença l’arc.',
+    'Primero saltamos las decenas; después, las unidades.':'Primer saltem les desenes; després, les unitats.'
   })) exact.set(source, target);
 
   const moduleExact = {
@@ -324,6 +330,8 @@
     [/^(.+) de 5 retos comprendidos$/,'$1 de 5 reptes compresos'],
     [/^Completa hasta (.+)$/,'Completa fins a $1'],
     [/^Empieza en (.+) y da los saltos (.+)$/,'Comença a $1 i fes els salts $2'],
+    [/^Salto (.+) de (.+): (.+)$/,'Salt $1 de $2: $3'],
+    [/^(.+) aterriza en (.+).$/,'$1 aterra a $2.'],
     [/^(.+) centenas, (.+) decenas y (.+) unidades.$/,'$1 centenes, $2 desenes i $3 unitats.'],
     [/^¿Cuánto es (.+)\?$/,'Quant és $1?'],
     [/^¿Cuántas veces cabe (.+) en (.+)\?$/,'Quantes vegades hi cap $1 en $2?'],
