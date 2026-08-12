@@ -17,11 +17,11 @@
   byId('aboutGitCommit').textContent = config.gitCommit;
   byId('aboutStorage').textContent = config.storagePrefix;
 
-  i18n.start();
   window.addEventListener('matesquest:languagechange', () => {
     byId('aboutEnvironment').textContent = environmentLabel();
     byId('aboutBuildDate').textContent = new Date(config.buildDate).toLocaleString(i18n.getLanguage() === 'ca' ? 'ca-ES' : 'es-ES');
   });
+  i18n.start();
 
   byId('aboutOpenBtn').addEventListener('click', () => byId('aboutDialog').showModal());
   byId('aboutCloseBtn').addEventListener('click', () => byId('aboutDialog').close());
