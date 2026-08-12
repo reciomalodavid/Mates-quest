@@ -1,11 +1,29 @@
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { inflateSync } from 'node:zlib';
 
 const root = resolve(import.meta.dirname, '..');
 const dist = resolve(root, 'dist');
 const checkOnly = process.argv.includes('--check');
 
 const read = (path) => readFile(resolve(root, path), 'utf8');
+const validatePng = async (path) => {
+  const png = await readFile(resolve(root, path));
+  const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+  if (!png.subarray(0, 8).equals(signature)) throw new Error(`${path} no es un PNG válido`);
+  const idat = [];
+  for (let offset = 8; offset + 12 <= png.length;) {
+    const length = png.readUInt32BE(offset);
+    const type = png.toString('ascii', offset + 4, offset + 8);
+    const end = offset + 12 + length;
+    if (end > png.length) throw new Error(`${path} está truncado`);
+    if (type === 'IDAT') idat.push(png.subarray(offset + 8, offset + 8 + length));
+    offset = end;
+  }
+  if (!idat.length) throw new Error(`${path} no contiene datos de imagen`);
+  try { inflateSync(Buffer.concat(idat)); }
+  catch { throw new Error(`${path} está corrupto y no se puede decodificar`); }
+};
 const requiredReplace = (source, search, replacement, label) => {
   if (!source.includes(search)) throw new Error(`No se encontró el marcador requerido: ${label}`);
   return source.replace(search, replacement);
@@ -16,6 +34,7 @@ const betaCss = await read('src/beta/beta.css');
 const betaUi = await read('src/beta/beta-ui.html');
 const betaRuntime = await read('src/beta/beta-runtime.js');
 const betaI18n = await read('src/beta/i18n.js');
+await Promise.all(['icon-beta-192.png', 'icon-beta-512.png'].map(validatePng));
 const buildDate = new Date().toISOString();
 const gitCommit = process.env.GITHUB_SHA || 'local-build';
 const buildConfig = Object.freeze({ ...config, buildDate, gitCommit });
