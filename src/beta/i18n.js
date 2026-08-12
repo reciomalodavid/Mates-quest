@@ -709,6 +709,11 @@
     "Divide":"Divideix"
   })) exact.set(source, target);
 
+  for (const [source, target] of Object.entries({
+    "Conseguida":"Aconseguida",
+    "En progreso":"En progrés"
+  })) exact.set(source, target);
+
   const keyedMessages = {
     'beta.environment.beta': { es: 'Beta', ca: 'Beta' },
     'beta.environment.production': { es: 'Producción', ca: 'Producció' },
