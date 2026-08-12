@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T06:54:10.388Z","gitCommit":"aeb1803bbc6c332be69c7caff6b75f03b96dcee1"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T09:52:23.713Z","gitCommit":"171d47d7fac3fa17e3fa68c7c9f0f9a38205fb7b"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-orange-v2-192.png" rel="icon"/>
 <link href="icon-beta-orange-v2-192.png" rel="apple-touch-icon" sizes="192x192"/>
@@ -4533,6 +4533,82 @@ body{
   .app{width:calc(100% - 12px)!important;padding:6px 0 18px!important}
 }
 
+/* === Mobile fit + compact sync status === */
+.setup-input-grid{align-items:stretch}
+.setup-input-grid>*{min-width:0;box-sizing:border-box}
+.sync-details{
+  width:max-content;
+  max-width:100%;
+  margin:10px 0 14px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.sync-details summary{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  min-height:34px;
+  max-width:100%;
+  padding:6px 10px;
+  border:1px solid #d8e2e9;
+  border-radius:999px;
+  background:rgba(255,255,255,.82);
+  color:#607487;
+  font-size:.7rem;
+  font-weight:800;
+  line-height:1.15;
+}
+.sync-details summary::after{content:"⌄"!important;float:none!important;font-size:.82rem}
+.sync-details[open]{width:100%}
+.sync-details[open] summary::after{content:"⌃"!important}
+.sync-state-dot{
+  width:10px;
+  height:10px;
+  flex:0 0 10px;
+  border-radius:50%;
+  background:#e0aa2f;
+  box-shadow:0 0 0 3px rgba(224,170,47,.16);
+}
+.sync-details[data-sync-state="ok"] .sync-state-dot{background:#39b85a;box-shadow:0 0 0 3px rgba(57,184,90,.16)}
+.sync-details[data-sync-state="error"] .sync-state-dot{background:#dc5361;box-shadow:0 0 0 3px rgba(220,83,97,.15)}
+.sync-details-body{
+  width:min(100%,310px);
+  margin-top:7px;
+  padding:11px!important;
+  border:1px solid #dce5ec;
+  border-radius:13px;
+  background:#fff;
+  box-shadow:0 7px 18px rgba(50,73,94,.09);
+}
+
+@media(max-width:650px){
+  .controls{max-width:100%;overflow:hidden}
+  .setup-input-grid{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px!important;
+  }
+  .setup-input-grid .answerinput,
+  .setup-input-grid .btn,
+  .setup-input-grid select{
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    margin:0!important;
+  }
+  .setup-input-grid .answerinput{
+    padding:12px 8px!important;
+    font-size:clamp(.95rem,4.8vw,1.14rem)!important;
+  }
+  .setup-input-grid .btn{
+    padding:10px 7px!important;
+    font-size:clamp(.9rem,4.2vw,1.03rem)!important;
+    white-space:normal;
+  }
+}
+
 </style>
 <style>
 .beta-badge{display:inline-flex;align-items:center;border-radius:999px;background:#5b36c8;color:#fff;padding:7px 11px;font-size:.74rem;font-weight:1000;letter-spacing:.06em;box-shadow:0 5px 0 rgba(42,22,105,.35)}
@@ -4600,8 +4676,8 @@ body{
 <h3>Tu perfil</h3>
 <div id="globalMiniSummary" style="font-size:.82rem;line-height:1.5">Elige o crea un perfil arriba para guardar tu progreso.</div>
 </div>
-<details class="sync-details" id="syncBlock">
-<summary>Sincronización entre dispositivos</summary>
+<details class="sync-details" data-sync-state="pending" id="syncBlock">
+<summary><span aria-hidden="true" class="sync-state-dot"></span><span>Sincronización</span></summary>
 <div class="sync-details-body">
 <div id="syncStatus" style="font-size:.72rem;color:#4c6a85;margin-bottom:8px">Comprobando configuración…</div>
 <div class="hidden" id="syncSetupBlock">
@@ -4698,7 +4774,7 @@ body{
 <div class="title">División</div>
 <div class="controls" id="setupPanel" style="margin-top:0;margin-bottom:14px">
 <div class="prompt">Crea tu división</div>
-<div class="inputrow" style="flex-wrap:wrap">
+<div class="inputrow setup-input-grid" style="flex-wrap:wrap">
 <input class="answerinput" id="customDividend" placeholder="Dividendo" step="any" type="number"/>
 <input class="answerinput" id="customDivisor" placeholder="Divisor" step="any" type="number"/>
 <select class="answerinput" id="decimalPlaces" style="max-width:180px">
@@ -4725,7 +4801,7 @@ body{
 <div class="title">Multiplicación</div>
 <div class="controls" style="margin-top:0;margin-bottom:14px">
 <div class="prompt">Multiplicación personalizada</div>
-<div class="inputrow" style="flex-wrap:wrap">
+<div class="inputrow setup-input-grid" style="flex-wrap:wrap">
 <input class="answerinput" id="multA" min="0" placeholder="Primer número" step="1" type="number"/>
 <input class="answerinput" id="multB" min="0" placeholder="Segundo número" step="1" type="number"/>
 <button class="btn green" id="startMultBtn">Empezar</button>
@@ -9667,7 +9743,17 @@ function loadFirebaseScripts(){
     document.head.appendChild(s1);
   });
 }
-function setSyncStatus(text){const el=$('syncStatus');if(el)el.textContent=text}
+function setSyncStatus(text){
+  const el=$('syncStatus');
+  const block=$('syncBlock');
+  if(el)el.textContent=text;
+  if(!block)return;
+  const normalized=String(text||'').toLowerCase();
+  const isOk=normalized.includes('sincronizado')||normalized.includes('sincronitzat');
+  const isError=normalized.includes('no se pudo')||normalized.includes('no s’ha pogut')||normalized.includes('no s\'ha pogut')||normalized.includes('se perdió')||normalized.includes('s’ha perdut')||normalized.includes('error');
+  block.dataset.syncState=isOk?'ok':isError?'error':'pending';
+  block.title=text||'';
+}
 function showSyncSetupUI(){$('syncSetupBlock').classList.remove('hidden');$('syncActiveBlock').classList.add('hidden')}
 function showSyncActiveUI(code){$('syncSetupBlock').classList.add('hidden');$('syncActiveBlock').classList.remove('hidden');$('syncCodeDisplay').textContent=code}
 
@@ -9806,6 +9892,7 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     'Práctica guiada de matemáticas':'Pràctica guiada de matemàtiques','Perfil':'Perfil','Elegir perfil':'Tria un perfil','+ Nuevo perfil':'+ Perfil nou','Crear perfil nuevo':'Crea un perfil nou','Energía':'Energia','Valoración':'Valoració','Tu perfil':'El teu perfil','Elige o crea un perfil arriba para guardar tu progreso.':'Tria o crea un perfil a dalt per desar el teu progrés.','Sincronización entre dispositivos':'Sincronització entre dispositius','Comprobando configuración…':'Comprovant la configuració…','Crear código nuevo':'Crea un codi nou','Código de este perfil:':'Codi d’aquest perfil:','Usa este código en tus otros dispositivos para que se sincronicen solos.':'Fes servir aquest codi als altres dispositius perquè se sincronitzin automàticament.','Dejar de sincronizar este dispositivo':'Deixa de sincronitzar aquest dispositiu','Vamos paso a paso.':'Anem pas a pas.','¿Qué quieres practicar?':'Què vols practicar?','Elige libremente una materia':'Tria lliurement una matèria','Suma y resta':'Suma i resta','Tablas de multiplicar':'Taules de multiplicar','Multiplicación':'Multiplicació','División':'Divisió','Raíces cuadradas':'Arrels quadrades','Raíces':'Arrels','Jerarquía':'Jerarquia','Aprende':'Aprèn','Columnas, llevadas y préstamos':'Columnes, portades i préstecs','Productos parciales paso a paso':'Productes parcials pas a pas','Exactas, estimación y simplificación':'Exactes, estimació i simplificació','El orden correcto de las operaciones':'L’ordre correcte de les operacions','Crea tu división':'Crea la teva divisió','Sin decimales':'Sense decimals','Paso 1: elige el primer grupo.':'Pas 1: tria el primer grup.','¿Qué grupo debemos coger primero?':'Quin grup hem d’agafar primer?','↶ Paso atrás':'↶ Pas enrere','Multiplicación personalizada':'Multiplicació personalitzada','Suma':'Suma','Con llevadas':'Amb portades','Resta':'Resta','Con préstamo':'Amb préstec','Suma personalizada':'Suma personalitzada','Número de cifras:':'Nombre de xifres:','Sin llevadas':'Sense portades','1. Elige el tipo de ejercicio':'1. Tria el tipus d’exercici','2. Escribe el número que irá dentro de la raíz':'2. Escriu el nombre que anirà dins de l’arrel','1. Elige la operación':'1. Tria l’operació','Número de fracciones:':'Nombre de fraccions:','Estamos aquí':'Som aquí','Sí, se puede reducir':'Sí, es pot simplificar','Puedes responder con un entero o una fracción:':'Pots respondre amb un enter o una fracció:','Jerarquía de operaciones':'Jerarquia d’operacions','Elige el nivel':'Tria el nivell','Básico':'Bàsic','Sin paréntesis ni potencias':'Sense parèntesis ni potències','Paréntesis':'Parèntesis','Primero lo de dentro':'Primer el que hi ha dins','Paréntesis y potencias combinados':'Parèntesis i potències combinats','Sí, permitir negativos':'Sí, permet negatius','Nueva operación':'Operació nova','Ecuaciones de primer grado':'Equacions de primer grau','Una operación':'Una operació','Más opciones':'Més opcions','Tamaño de los números':'Mida dels nombres','Generar ecuación':'Genera una equació','Nueva lección completa':'Lliçó completa nova','Siguiente':'Següent','Comprobar':'Comprova','Continuar':'Continua','Empezar':'Comença','Volver':'Torna','Correcto':'Correcte','¡Correcto!':'Correcte!','Inténtalo de nuevo':'Torna-ho a provar','Resultado':'Resultat','Puntos':'Punts','Aciertos':'Encerts','Errores':'Errors','Tiempo':'Temps','Nivel':'Nivell','Fácil':'Fàcil','Medio':'Mitjà','Difícil':'Difícil','Sí':'Sí','No':'No','Cancelar':'Cancel·la','Guardar':'Desa','Cerrar':'Tanca','Acerca de':'Informació','Versión':'Versió','Entorno':'Entorn','Compilación':'Compilació','Almacenamiento':'Emmagatzematge','No utilizado actualmente':'No s’utilitza actualment','Comprobando…':'Comprovant…','Activo':'Actiu','Pendiente de instalación':'Pendent d’instal·lació','No disponible':'No disponible','No compatible':'No compatible','Información técnica de esta instalación':'Informació tècnica d’aquesta instal·lació','Esta Beta utiliza almacenamiento, caché y documentos de sincronización separados de Producción.':'Aquesta Beta utilitza emmagatzematge, memòria cau i documents de sincronització separats de Producció.','Castellano':'Castellà','Idioma':'Idioma'
   }));
   const moreExact = {
+    'Sincronización':'Sincronització',
     'Actividad actual':'Activitat actual','Cambiar actividad':'Canvia d’activitat','Volver a la selección de actividades':'Torna a la selecció d’activitats',
     'Elige la actividad que quieres practicar.':'Tria l’activitat que vols practicar.','Empieza por la que quieras':'Comença per la que vulguis','Elige un tema':'Tria un tema',
     'Selecciona una casilla':'Selecciona una casella','Elige al menos una tabla para practicar.':'Tria com a mínim una taula per practicar.',
