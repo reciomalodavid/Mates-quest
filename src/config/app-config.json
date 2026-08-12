@@ -2,7 +2,7 @@
   "appName": "Mates Quest Beta",
   "shortName": "MQ Beta",
   "environment": "beta",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "storagePrefix": "matesQuestBeta",
   "indexedDbName": "matesQuestBeta",
   "cachePrefix": "mates-quest-beta",
@@ -15,6 +15,6 @@
     "messagingSenderId": "250230905666",
     "appId": "1:250230905666:web:06e89df4689dcacc17c6db"
   },
-  "themeColor": "#6d5dfc",
-  "backgroundColor": "#20184f"
+  "themeColor": "#F4A261",
+  "backgroundColor": "#FCE1C3"
 }

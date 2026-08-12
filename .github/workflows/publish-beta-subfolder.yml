@@ -9,6 +9,8 @@ on:
       - service-worker.js
       - icon-beta-192.png
       - icon-beta-512.png
+      - icon-beta-orange-v2-192.png
+      - icon-beta-orange-v2-512.png
       - package.json
       - scripts/build-beta.mjs
       - src/beta/**

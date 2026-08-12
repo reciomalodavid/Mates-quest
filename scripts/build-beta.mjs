@@ -34,7 +34,9 @@ const betaCss = await read('src/beta/beta.css');
 const betaUi = await read('src/beta/beta-ui.html');
 const betaRuntime = await read('src/beta/beta-runtime.js');
 const betaI18n = await read('src/beta/i18n.js');
-await Promise.all(['icon-beta-192.png', 'icon-beta-512.png'].map(validatePng));
+const betaIcon192 = 'icon-beta-orange-v2-192.png';
+const betaIcon512 = 'icon-beta-orange-v2-512.png';
+await Promise.all([betaIcon192, betaIcon512].map(validatePng));
 const buildDate = new Date().toISOString();
 const gitCommit = process.env.GITHUB_SHA || 'local-build';
 const buildConfig = Object.freeze({ ...config, buildDate, gitCommit });
@@ -54,8 +56,8 @@ const productionFirebaseConfig = `const FIREBASE_CONFIG = {
 };`;
 const betaFirebaseConfig = `const FIREBASE_CONFIG = ${JSON.stringify(config.firebaseConfig, null, 2)};`;
 html = requiredReplace(html, productionFirebaseConfig, betaFirebaseConfig, 'Beta Firebase client configuration');
-html = requiredReplace(html, '<link href="icon-192.png" rel="icon"/>', '<link href="icon-beta-192.png" rel="icon"/>', 'browser icon');
-html = requiredReplace(html, '<link href="icon-192.png" rel="apple-touch-icon"/>', '<link href="icon-beta-192.png" rel="apple-touch-icon"/>', 'Apple touch icon');
+html = requiredReplace(html, '<link href="icon-192.png" rel="icon"/>', `<link href="${betaIcon192}" rel="icon"/>`, 'browser icon');
+html = requiredReplace(html, '<link href="icon-192.png" rel="apple-touch-icon"/>', `<link href="${betaIcon192}" rel="apple-touch-icon" sizes="192x192"/>`, 'Apple touch icon');
 html = requiredReplace(html, '<meta content="Mates Quest" name="apple-mobile-web-app-title"/>', '<meta content="MQ Beta" name="apple-mobile-web-app-title"/>', 'Apple application title');
 html = requiredReplace(html, '</head>', `<style>\n${betaCss}\n</style>\n</head>`, 'head closing tag');
 html = requiredReplace(
@@ -76,19 +78,19 @@ html = html.replaceAll("firestoreDB.collection('syncs').doc(code)", 'betaSyncDoc
 html = requiredReplace(html, '</body>', `${betaUi}\n<script>\n${betaI18n}\n</script>\n<script>\n${betaRuntime}\n</script>\n</body>`, 'body closing tag');
 
 const manifest = {
-  id: './',
+  id: './?app=mates-quest-beta-orange-v2',
   name: config.appName,
   short_name: config.shortName,
   description: 'Entorno Beta de Mates Quest para probar nuevas funciones',
-  start_url: './index.html?source=pwa-beta',
+  start_url: './index.html?source=pwa-beta-v2',
   scope: './',
   display: 'standalone',
   orientation: 'any',
   background_color: config.backgroundColor,
   theme_color: config.themeColor,
   icons: [
-    { src: 'icon-beta-192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
-    { src: 'icon-beta-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+    { src: betaIcon192, sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+    { src: betaIcon512, sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
   ]
 };
 
@@ -102,8 +104,8 @@ const checks = [
   ['Beta Firebase project', html.includes('"projectId": "mates-quest-beta"') && !html.includes('"projectId": "mates-quest",')],
   ['About screen', html.includes('id="aboutDialog"')],
   ['Visible version', html.includes('id="betaVersionBadge"')],
-  ['Beta icon', html.includes('icon-beta-192.png')],
-  ['Relative manifest identity', manifest.id === './' && manifest.scope === './'],
+  ['Beta icon v2', html.includes(betaIcon192)],
+  ['Renewed manifest identity', manifest.id.includes('mates-quest-beta-orange-v2') && manifest.scope === './'],
   ['Language selector', html.includes('id="languageSelect"')],
   ['Catalan runtime', html.includes('MatesQuestI18n')],
   ['Isolated cache prefix', serviceWorker.includes(config.cachePrefix)]
@@ -117,6 +119,10 @@ if (!checkOnly) {
   await writeFile(resolve(dist, 'index.html'), html);
   await writeFile(resolve(dist, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   await writeFile(resolve(dist, 'service-worker.js'), serviceWorker);
+  await cp(resolve(root, betaIcon192), resolve(dist, betaIcon192));
+  await cp(resolve(root, betaIcon512), resolve(dist, betaIcon512));
+  // Keep the former filenames during this release so an already-running worker
+  // can finish updating without a broken app-shell request.
   await cp(resolve(root, 'icon-beta-192.png'), resolve(dist, 'icon-beta-192.png'));
   await cp(resolve(root, 'icon-beta-512.png'), resolve(dist, 'icon-beta-512.png'));
 }
