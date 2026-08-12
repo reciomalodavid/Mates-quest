@@ -4307,7 +4307,7 @@ body{
 
 
 /* === Ajuste 6.7: heatmap y tablas más claros === */
-.tbtn{padding:14px 4px!important;border-radius:16px!important;min-height:104px!important}
+.tbtn{padding:14px 4px!important;border-radius:16px!important;min-height:92px!important}
 .tbtn small{font-size:.62rem!important;letter-spacing:.02em!important}
 .tbtn .table-status{display:block;margin-top:6px;font-size:.64rem;font-weight:1000;line-height:1.1}
 .tbtn .table-meta{display:block;margin-top:4px;font-size:.57rem;font-weight:850;color:#5e7489;line-height:1.2}
@@ -9755,10 +9755,9 @@ function tableSummary(profile,table){
   return{att,ok,accuracy,level,masteredCount,weakCount,learningCount,untriedCount};
 }
 function tableDisplayInfo(summary){
-  if(summary.level==='untried')return{status:'Sin practicar',meta:'Aún sin datos',level:'untried'};
-  if(summary.level==='mastered')return{status:'Muy bien',meta:`${summary.ok}/${summary.att} bien · ${Math.round(summary.accuracy*100)}%`,level:'mastered'};
-  if(summary.level==='weak')return{status:'Necesita repaso',meta:`${summary.ok}/${summary.att} bien · ${Math.round(summary.accuracy*100)}%`,level:'weak'};
-  return{status:'Practicada',meta:`${summary.ok}/${summary.att} bien · ${Math.round(summary.accuracy*100)}%`,level:'learning'};
+  if(summary.level==='untried')return{status:'Sin practicar',level:'untried'};
+  if(summary.level==='mastered')return{status:'Conseguida',level:'mastered'};
+  return{status:'En progreso',level:summary.level};
 }
 
 function renderTablesGrid(){
@@ -9768,11 +9767,8 @@ function renderTablesGrid(){
     const info=tableDisplayInfo(summary);
     const b=document.createElement('button');
     b.className=`tbtn neutral-table${selectedTables.has(i)?' on':''}`;
-    const progress=summary.att ? `${summary.masteredCount}/10 cuentas dominadas` : 'Empieza por la que quieras';
-    b.innerHTML=`<span class="table-number">${i}</span><small>tabla</small><span class="table-status">${info.status}</span><span class="table-meta">${info.meta}</span><span class="table-progress">${progress}</span>`;
-    b.title=summary.att
-      ? `Tabla del ${i}: ${summary.ok} aciertos de ${summary.att} respuestas (${Math.round(summary.accuracy*100)}%).`
-      : `Tabla del ${i}: todavía sin practicar.`;
+    b.innerHTML=`<span class="table-number">${i}</span><small>tabla</small><span class="table-status">${info.status}</span>`;
+    b.title=`Tabla del ${i}: ${info.status}.`;
     b.onclick=()=>{if(selectedTables.has(i))selectedTables.delete(i);else selectedTables.add(i);renderTablesGrid()};
     g.appendChild(b);
   }
