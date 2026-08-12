@@ -535,6 +535,27 @@
     ,[/^Empieza en (.+)\. Primero saltamos las decenas; después, las unidades\.$/,'Comença a $1. Primer saltem les desenes; després, les unitats.']
     ,[/^(.+) grupos de 5 y (.+) más\.$/,'$1 grups de 5 i $2 més.']
     ,[/^Tabla del (.+): (.+)\. (.+)\.$/,'Taula del $1: $2. $3.']
+
+    ,[/^(.+) ÷ (.+)\. Busca primero el grupo mínimo que sea igual o mayor que el divisor\.$/,'$1 ÷ $2. Busca primer el grup mínim que sigui igual o més gran que el divisor.']
+    ,[/^(.+) × (.+)\. Trabaja cifra a cifra y controla las llevadas\.$/,'$1 × $2. Treballa xifra per xifra i controla les portades.']
+    ,[/^(.+) \+ (.+)\. Empieza por las unidades y recuerda las llevadas\.$/,'$1 + $2. Comença per les unitats i recorda les portades.']
+    ,[/^(.+) − (.+)\. Comprueba en cada columna si necesitas pedir prestado\.$/,'$1 − $2. Comprova a cada columna si cal demanar prestat.']
+    ,[/^Escalera del MCM de (.+)$/,'Escala del MCM de $1']
+    ,[/^Múltiplos de (.+)$/,'Múltiples de $1']
+    ,[/^Divisores de (.+)$/,'Divisors de $1']
+    ,[/^¿hay algún número mayor que 1 que divida exactamente tanto a (.+) como a (.+)\?$/,'hi ha cap nombre més gran que 1 que divideixi exactament tant $1 com $2?']
+    ,[/^Si comparten un divisor > 1$/,'Si comparteixen un divisor > 1']
+    ,[/^(.+) es el mayor divisor que comparten\. Dividir arriba y abajo entre (.+) mantiene el mismo valor\.$/,'$1 és el divisor més gran que comparteixen. Dividir a dalt i a baix entre $2 manté el mateix valor.']
+    ,[/^× (.+) arriba y abajo$/,'× $1 a dalt i a baix']
+    ,[/^Como todas las partes tienen tamaño (.+), solo contamos cuántas partes hay\.$/,'Com que totes les parts tenen mida $1, només comptem quantes parts hi ha.']
+    ,[/^Completa: ___ < √(.+) < ___$/,'Completa: ___ < √$1 < ___']
+    ,[/^(.+) XP para (.+)$/,'$1 XP per a $2']
+    ,[/^Rango actual: (.+)$/,'Rang actual: $1']
+    ,[/^➕ (.+) sumas · ➖ (.+) restas$/,'➕ $1 sumes · ➖ $2 restes']
+    ,[/^✖️ (.+) multiplicaciones · ➗ (.+) divisiones$/,'✖️ $1 multiplicacions · ➗ $2 divisions']
+    ,[/^√ (.+) raíces · 🍰 (.+) fracciones$/,'√ $1 arrels · 🍰 $2 fraccions']
+    ,[/^🧩 (.+) jerarquía · ⚖️ (.+) ecuaciones$/,'🧩 $1 jerarquia · ⚖️ $2 equacions']
+    ,[/^(.+) × (.+) = (.+) — fallada (.+) (.+)$/,'$1 × $2 = $3 — fallada $4 $5']
   ];
   for (const [source, target] of Object.entries({
     "El número desconocido. Normalmente lo llamamos":"El nombre desconegut. Normalment l’anomenem",
@@ -673,6 +694,20 @@
   })) exact.set(source, target);
 
   exact.set("y", "i");
+
+  for (const [source, target] of Object.entries({
+    "Suma la columna activa y añade la llevada anterior si existe.":"Suma la columna activa i afegeix-hi la portada anterior si n’hi ha.",
+    "Este es el resultado final.":"Aquest és el resultat final.",
+    "Escribe la fracción completa, por ejemplo":"Escriu la fracció completa, per exemple",
+    "Mira toda la expresión y elige la operación con mayor prioridad.":"Mira tota l’expressió i tria l’operació amb més prioritat.",
+    "Busca cuadrados perfectos y trabaja solo con la parte que te pide el ejercicio.":"Busca quadrats perfectes i treballa només amb la part que et demana l’exercici.",
+    "Alinea las cifras por columnas y empieza por las unidades.":"Alinea les xifres per columnes i comença per les unitats.",
+    "Busca cuadrados perfectos y comprueba multiplicando un número por sí mismo.":"Busca quadrats perfectes i comprova-ho multiplicant un nombre per si mateix.",
+    "Para sumar o restar, iguala denominadores antes de operar numeradores.":"Per sumar o restar, iguala els denominadors abans d’operar els numeradors.",
+    "Paréntesis → potencias → multiplicación/división → suma/resta.":"Parèntesis → potències → multiplicació/divisió → suma/resta.",
+    "Primero eliges la operación inversa; después resuelves el cálculo.":"Primer tries l’operació inversa; després resols el càlcul.",
+    "Divide":"Divideix"
+  })) exact.set(source, target);
 
   const keyedMessages = {
     'beta.environment.beta': { es: 'Beta', ca: 'Beta' },
