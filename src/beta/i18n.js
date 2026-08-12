@@ -539,6 +539,14 @@
     "x = 5":"x = 5"
   })) exact.set(source, target);
 
+  for (const [source, target] of Object.entries({
+    "Cociente":"Quocient",
+    "Reconocer cantidades":"Reconeix quantitats",
+    "Usar números amigos":"Fes servir nombres amics",
+    "Saltos en la recta":"Salts a la recta",
+    "tabla":"taula"
+  })) exact.set(source, target);
+
   const keyedMessages = {
     'beta.environment.beta': { es: 'Beta', ca: 'Beta' },
     'beta.environment.production': { es: 'Producción', ca: 'Producció' },
@@ -609,22 +617,20 @@
     return translateSource(binding.source);
   }
   function createTextBinding(source) {
-    return { source, key: sourceKeys.get(source.trim()) || null };
+    return { source, key: sourceKeys.get(source.trim()) || null, rendered: source };
   }
   function translateTextNode(node) {
     let binding = textBindings.get(node);
     if (!binding) {
       binding = createTextBinding(node.nodeValue);
       textBindings.set(node, binding);
-    } else {
-      const expected = renderTextBinding(binding);
-      if (node.nodeValue !== expected) {
-        binding = createTextBinding(node.nodeValue);
-        textBindings.set(node, binding);
-      }
+    } else if (node.nodeValue !== binding.rendered) {
+      binding = createTextBinding(node.nodeValue);
+      textBindings.set(node, binding);
     }
     const next = renderTextBinding(binding);
     if (node.nodeValue !== next) node.nodeValue = next;
+    binding.rendered = next;
   }
   function translateAttribute(element, attr) {
     let bindings = attributeBindings.get(element);
@@ -637,15 +643,13 @@
     if (!binding) {
       binding = createTextBinding(current);
       bindings.set(attr, binding);
-    } else {
-      const expected = renderTextBinding(binding);
-      if (current !== expected) {
-        binding = createTextBinding(current);
-        bindings.set(attr, binding);
-      }
+    } else if (current !== binding.rendered) {
+      binding = createTextBinding(current);
+      bindings.set(attr, binding);
     }
     const next = renderTextBinding(binding);
     if (current !== next) element.setAttribute(attr, next);
+    binding.rendered = next;
   }
   function translateNode(node) {
     if (node.nodeType === Node.TEXT_NODE) {
