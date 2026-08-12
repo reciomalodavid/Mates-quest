@@ -517,6 +517,24 @@
     ,[/^Pregunta (.+)\/(.+)$/,'Pregunta $1/$2']
     ,[/^Cualquier número × 1 es él mismo: (.+)\.$/,'Qualsevol nombre × 1 és ell mateix: $1.']
     ,[/^✅ ¡Correcto! (.+)$/,'✅ Correcte! $1']
+
+    ,[/^Escribimos (.+) y llevamos (.+)\.$/,'Escrivim $1 i en portem $2.']
+    ,[/^Usa solo la tabla: (.+)\.$/,'Fes servir només la taula: $1.']
+    ,[/^columna (.+) desde la derecha$/,'columna $1 des de la dreta']
+    ,[/^Arriba \((.+)\) ya es mayor o igual que abajo \((.+)\), no hace falta\.$/,'A dalt ($1) ja és més gran o igual que a baix ($2); no cal.']
+    ,[/^La operación escrita no es (.+)\. Cambia los números o el nivel\.$/,'L’operació escrita no és $1. Canvia els nombres o el nivell.']
+    ,[/^Como ya sabemos que es reducible, dividimos arriba y abajo entre su MCD: (.+)\.$/,'Com que ja sabem que es pot reduir, dividim a dalt i a baix pel seu MCD: $1.']
+    ,[/^Calcula los numeradores: (.+)\.$/,'Calcula els numeradors: $1.']
+    ,[/^(.+) = (.+)\. El denominador sigue siendo (.+)\.$/,'$1 = $2. El denominador continua sent $3.']
+    ,[/^Intercambia arriba y abajo: (.+)\.$/,'Intercanvia a dalt i a baix: $1.']
+    ,[/^Piensa en la potencia como multiplicación repetida: (.+) multiplicado por sí mismo (.+) veces\.$/,'Pensa en la potència com una multiplicació repetida: $1 multiplicat per si mateix $2 vegades.']
+    ,[/^Correcto\. ¡Racha de (.+)! 🔥$/,'Correcte. Ratxa de $1! 🔥']
+    ,[/^Prueba con cuadrados conocidos: (.+)$/,'Prova amb quadrats coneguts: $1']
+    ,[/^Prueba 4, 9, 16, 25, 36… El mayor que divide exactamente a (.+) es (.+)\.$/,'Prova 4, 9, 16, 25, 36… El més gran que divideix exactament $1 és $2.']
+    ,[/^¿Cuál es √(.+)\?$/,'Quant és √$1?']
+    ,[/^Empieza en (.+)\. Primero saltamos las decenas; después, las unidades\.$/,'Comença a $1. Primer saltem les desenes; després, les unitats.']
+    ,[/^(.+) grupos de 5 y (.+) más\.$/,'$1 grups de 5 i $2 més.']
+    ,[/^Tabla del (.+): (.+)\. (.+)\.$/,'Taula del $1: $2. $3.']
   ];
   for (const [source, target] of Object.entries({
     "El número desconocido. Normalmente lo llamamos":"El nombre desconegut. Normalment l’anomenem",
@@ -621,6 +639,37 @@
     "Primero elige una operación":"Primer tria una operació",
     "En ambos lados:":"Als dos costats:",
     "Aplicar a ambos lados":"Aplica als dos costats"
+  })) exact.set(source, target);
+
+  for (const [source, target] of Object.entries({
+    "unidades de millar":"unitats de miler",
+    "decenas de millar":"desenes de miler",
+    "centenas de millar":"centenes de miler",
+    "Primero construimos el numerador.":"Primer construïm el numerador.",
+    "Numerador del producto":"Numerador del producte",
+    "Ya tenemos numerador y denominador.":"Ja tenim numerador i denominador.",
+    "Intercambia numerador y denominador.":"Intercanvia el numerador i el denominador.",
+    "Primero multiplicamos los numeradores.":"Primer multipliquem els numeradors.",
+    "Has seguido la historia completa: preparar, transformar, operar y simplificar.":"Has seguit tota la història: preparar, transformar, operar i simplificar.",
+    "Has elegido denominadores iguales, pero las fracciones no los tienen.":"Has triat denominadors iguals, però les fraccions no els tenen.",
+    "Has elegido denominadores diferentes, pero alguno se repite.":"Has triat denominadors diferents, però algun es repeteix.",
+    "Resuelve primero lo de dentro":"Resol primer el que hi ha dins",
+    "Antes de multiplicar o dividir":"Abans de multiplicar o dividir",
+    "Multiplicar y dividir":"Multiplicar i dividir",
+    "De izquierda a derecha":"D’esquerra a dreta",
+    "Sumar y restar":"Sumar i restar",
+    "Comprueba":"Comprova",
+    "Leemos la igualdad con x a la izquierda.":"Llegim la igualtat amb la x a l’esquerra.",
+    "Has elegido y calculado cada movimiento sin romper la igualdad.":"Has triat i calculat cada moviment sense trencar la igualtat.",
+    "Mira cada columna":"Mira cada columna",
+    "No, no es exacta":"No, no és exacta",
+    "la tabla del":"la taula del",
+    "error":"error",
+    "No configurado todavía. Mira INSTRUCCIONES.md para activarlo (gratis).":"Encara no està configurat. Consulta INSTRUCCIONES.md per activar-lo (de franc).",
+    "Multiplica":"Multiplica",
+    "Sumar columna":"Suma la columna",
+    "No pasa nada. Repasa y prueba otra vez.":"No passa res. Repassa-ho i torna-ho a provar.",
+    "Primero mira la expresión completa: paréntesis, potencias, multiplicaciones y divisiones, sumas y restas.":"Primer mira l’expressió completa: parèntesis, potències, multiplicacions i divisions, sumes i restes."
   })) exact.set(source, target);
 
   const keyedMessages = {
