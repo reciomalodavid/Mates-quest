@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T12:56:35.386Z","gitCommit":"2c582f5932be2dcd5bd2773fb1ecc611b186a874"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T13:00:54.973Z","gitCommit":"c0b7fdf9547ca9cb2e0abc2be9aeea5afc1ed99f"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-orange-v2-192.png" rel="icon"/>
 <link href="icon-beta-orange-v2-192.png" rel="apple-touch-icon" sizes="192x192"/>
@@ -10154,7 +10154,13 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     'Cuenta centenas, decenas y unidades por separado.':'Compta centenes, desenes i unitats per separat.',
     'Completa primero el siguiente múltiplo de 10.':'Completa primer el múltiple de 10 següent.',
     'Separa el salto en decenas y unidades.':'Separa el salt en desenes i unitats.',
-    'Actividad completada: cinco retos comprendidos.':'Activitat completada: cinc reptes compresos.'
+    'Actividad completada: cinco retos comprendidos.':'Activitat completada: cinc reptes compresos.',
+    'Completa cada salto':'Completa cada salt',
+    '¿Dónde aterriza este salto?':'On aterra aquest salt?',
+    'Siguiente salto':'Salt següent',
+    'Has completado todos los saltos.':'Has completat tots els salts.',
+    'Revisa desde qué número empieza el arco.':'Revisa des de quin nombre comença l’arc.',
+    'Primero saltamos las decenas; después, las unidades.':'Primer saltem les desenes; després, les unitats.'
   })) exact.set(source, target);
 
   const moduleExact = {
@@ -10385,6 +10391,8 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     [/^(.+) de 5 retos comprendidos$/,'$1 de 5 reptes compresos'],
     [/^Completa hasta (.+)$/,'Completa fins a $1'],
     [/^Empieza en (.+) y da los saltos (.+)$/,'Comença a $1 i fes els salts $2'],
+    [/^Salto (.+) de (.+): (.+)$/,'Salt $1 de $2: $3'],
+    [/^(.+) aterriza en (.+).$/,'$1 aterra a $2.'],
     [/^(.+) centenas, (.+) decenas y (.+) unidades.$/,'$1 centenes, $2 desenes i $3 unitats.'],
     [/^¿Cuánto es (.+)\?$/,'Quant és $1?'],
     [/^¿Cuántas veces cabe (.+) en (.+)\?$/,'Quantes vegades hi cap $1 en $2?'],
