@@ -9403,8 +9403,30 @@ $('rootAnswerB').onkeydown=e=>{if(e.key==='Enter')$('rootDoubleCheckBtn').click(
 /* ======================= NUMBER LAB / THINK ======================= */
 const THINK_LEVEL_KEY='matesQuestThinkLevel_v1';
 const storedThinkLevel=Number(localStorage.getItem(THINK_LEVEL_KEY));
-const thinkState={activity:'count',level:storedThinkLevel>=1&&storedThinkLevel<=6?storedThinkLevel:2,mastery:0,count:0,countTimer:null,placeTarget:34,hundreds:0,tens:0,units:0,tenStart:6,tenTarget:10,jumpStart:0,jumpSteps:[],jumpAnswer:0,jumpIndex:0,jumpLandings:[]};
-function shuffled(values){return [...values].sort(()=>Math.random()-.5)}
+const thinkState={activity:'count',level:storedThinkLevel>=1&&storedThinkLevel<=6?storedThinkLevel:2,mastery:0,recent:{},count:0,countTimer:null,placeTarget:34,hundreds:0,tens:0,units:0,tenStart:6,tenTarget:10,jumpStart:0,jumpSteps:[],jumpAnswer:0,jumpIndex:0,jumpLandings:[]};
+function shuffled(values){
+  const result=[...values];
+  for(let i=result.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[result[i],result[j]]=[result[j],result[i]]}
+  return result;
+}
+function thinkHistoryKey(activity){return`${activity}:${thinkState.level}`}
+function freshThinkNumber(activity,min,max,avoid=4){
+  const key=thinkHistoryKey(activity),history=thinkState.recent[key]||[];
+  const pool=[];
+  for(let value=min;value<=max;value++)if(!history.includes(String(value)))pool.push(value);
+  const candidates=pool.length?pool:Array.from({length:max-min+1},(_,index)=>min+index);
+  const chosen=candidates[Math.floor(Math.random()*candidates.length)];
+  const memory=Math.min(avoid,Math.max(0,max-min));
+  thinkState.recent[key]=memory?[...history,String(chosen)].slice(-memory):[];
+  return chosen;
+}
+function freshThinkExercise(activity,factory,signature,avoid=4){
+  const key=thinkHistoryKey(activity),history=thinkState.recent[key]||[];
+  let exercise=factory(),id=signature(exercise),attempts=0;
+  while(history.includes(id)&&attempts<40){exercise=factory();id=signature(exercise);attempts++}
+  thinkState.recent[key]=[...history,id].slice(-avoid);
+  return exercise;
+}
 function setThinkFeedback(id,message,type=''){const node=$(id);node.textContent=message;node.className='think-feedback'+(type?' '+type:'')}
 function nearbyChoices(answer,min,max){
   const values=new Set([answer]);
@@ -9443,12 +9465,12 @@ function renderThinkCountChoices(){
 }
 function newThinkCount(){
   const ranges={1:[1,5],2:[3,10],3:[5,15],4:[6,20],5:[8,25],6:[10,30]},range=ranges[thinkState.level];
-  thinkState.count=range[0]+Math.floor(Math.random()*(range[1]-range[0]+1));
+  thinkState.count=freshThinkNumber('count',range[0],range[1]);
   $('thinkDots').innerHTML=structuredDots(thinkState.count);setThinkFeedback('thinkCountFeedback','');$('thinkCountExplanation').textContent='';revealThinkCount();
 }
 function newThinkPlace(){
   const placeRanges={1:[1,9],2:[10,49],3:[10,99],4:[100,499],5:[100,799],6:[100,999]},placeRange=placeRanges[thinkState.level];
-  thinkState.placeTarget=placeRange[0]+Math.floor(Math.random()*(placeRange[1]-placeRange[0]+1));thinkState.hundreds=0;thinkState.tens=0;thinkState.units=0;
+  thinkState.placeTarget=freshThinkNumber('place',placeRange[0],placeRange[1]);thinkState.hundreds=0;thinkState.tens=0;thinkState.units=0;
   $('thinkPlacePrompt').textContent=`Construye el número ${thinkState.placeTarget}`;
   const usesHundreds=thinkState.level>=4,usesTens=thinkState.level>=2;
   $('thinkHundredsColumn').classList.toggle('hidden',!usesHundreds);$('thinkAddHundred').classList.toggle('hidden',!usesHundreds);$('thinkRemoveHundred').classList.toggle('hidden',!usesHundreds);
@@ -9464,7 +9486,7 @@ function renderThinkPlace(){
 }
 function newThinkTen(){
   const upper=thinkState.level<=2?9:thinkState.level===3?49:thinkState.level===4?89:thinkState.level===5?189:289;
-  thinkState.tenStart=1+Math.floor(Math.random()*upper);
+  thinkState.tenStart=freshThinkNumber('ten',1,upper);
   thinkState.tenTarget=thinkState.level<=2?10:Math.ceil((thinkState.tenStart+1)/10)*10;
   const shown=thinkState.tenStart%10||10;
   $('thinkTenPrompt').textContent=`Completa hasta ${thinkState.tenTarget}`;
@@ -9501,15 +9523,19 @@ function renderThinkJumpChoices(){
   $('thinkJumpChoices').innerHTML=nearbyChoices(expected,0,140).map(value=>`<button class="think-choice" type="button" data-think-jump="${value}">${value}</button>`).join('');
 }
 function newThinkJump(){
-  const subtract=thinkState.level>=4&&Math.random()<.45;
-  if(thinkState.level<=2){
-    thinkState.jumpStart=1+Math.floor(Math.random()*10);const jump=1+Math.floor(Math.random()*(thinkState.level===1?4:8));thinkState.jumpSteps=[jump];thinkState.jumpAnswer=thinkState.jumpStart+jump;
-  }else{
-    thinkState.jumpStart=(subtract?50:10)+Math.floor(Math.random()*(thinkState.level>=5?100:50));
+  const exercise=freshThinkExercise('jump',()=>{
+    const subtract=thinkState.level>=4&&Math.random()<.45;
+    if(thinkState.level<=2){
+      const start=1+Math.floor(Math.random()*10),jump=1+Math.floor(Math.random()*(thinkState.level===1?4:8));
+      return{start,steps:[jump],answer:start+jump};
+    }
     const maxTens=thinkState.level>=5?5:3,tens=10*(1+Math.floor(Math.random()*maxTens)),units=1+Math.floor(Math.random()*9);
-    thinkState.jumpSteps=subtract?[-tens,-units]:[tens,units];thinkState.jumpAnswer=thinkState.jumpStart+thinkState.jumpSteps.reduce((sum,value)=>sum+value,0);
-    if(thinkState.jumpAnswer<0)return newThinkJump();
-  }
+    const startMin=subtract?Math.max(50,tens+units):10,startMax=subtract?(thinkState.level>=5?149:99):(thinkState.level>=5?109:59);
+    const start=startMin+Math.floor(Math.random()*(startMax-startMin+1));
+    const steps=subtract?[-tens,-units]:[tens,units],answer=start+steps.reduce((sum,value)=>sum+value,0);
+    return{start,steps,answer};
+  },item=>`${item.start}|${item.steps.join(',')}`);
+  thinkState.jumpStart=exercise.start;thinkState.jumpSteps=exercise.steps;thinkState.jumpAnswer=exercise.answer;
   thinkState.jumpIndex=0;thinkState.jumpLandings=[];
   $('thinkJumpStory').textContent=`Empieza en ${thinkState.jumpStart}. Primero saltamos las decenas; después, las unidades.`;
   setThinkFeedback('thinkJumpFeedback','');$('thinkJumpExplanation').textContent='';
