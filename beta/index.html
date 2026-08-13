@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-13T11:09:28.537Z","gitCommit":"c47050571d161ebfadf38d02eb374e404edcd529"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-13T11:31:56.692Z","gitCommit":"628273897dbbffe815eec9fa9827b0f325c8d799"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-orange-v2-192.png" rel="icon"/>
 <link href="icon-beta-orange-v2-192.png" rel="apple-touch-icon" sizes="192x192"/>
@@ -4628,8 +4628,9 @@ body{
 .think-module{display:grid;gap:16px}.think-module.hidden{display:none}
 .think-hero{display:flex;justify-content:space-between;gap:20px;align-items:end;padding:22px;border-radius:18px;background:linear-gradient(135deg,#fff7e8,#ffe0b2);border:1px solid #f4c77b}
 .think-hero h2{margin:5px 0 8px}.think-hero p{margin:0;color:var(--muted);max-width:720px}.think-eyebrow{font-size:.72rem;font-weight:1000;letter-spacing:.12em;color:#9a5a00}
-.think-level{display:grid;gap:5px;min-width:180px}.think-level span{font-size:.72rem;font-weight:900;color:#805016}
+.think-settings{display:flex;gap:10px;align-items:end;flex-wrap:wrap}.think-level{display:grid;gap:5px;min-width:180px}.think-level span{font-size:.72rem;font-weight:900;color:#805016}.think-goal{min-width:150px}
 .think-progress{padding:13px 16px;border:1px solid var(--line);border-radius:14px;background:#fff}.think-progress>div:first-child{display:flex;justify-content:space-between;gap:12px;font-size:.82rem}.think-progress-track{height:8px;background:#e8edf4;border-radius:999px;margin-top:9px;overflow:hidden}.think-progress-track span{display:block;width:0;height:100%;background:linear-gradient(90deg,#55aa7d,#84cf9e);transition:width .25s ease}
+.think-progress.unlimited .think-progress-track{display:none}
 .think-activity-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.think-activity-button{appearance:none;border:1px solid var(--line);background:#fff;border-radius:15px;padding:15px;text-align:left;cursor:pointer;color:inherit}.think-activity-button b,.think-activity-button span{display:block}.think-activity-button span{font-size:.82rem;color:var(--muted);margin-top:5px;line-height:1.3}.think-activity-button.active{border-color:#f0a33a;background:#fff8ec;box-shadow:0 0 0 2px rgba(240,163,58,.16)}
 .think-workspace{padding:22px;border:1px solid var(--line);border-radius:18px;background:#fff;text-align:center}.think-workspace.hidden{display:none}.think-prompt{font-size:1.15rem;font-weight:950;margin:10px}.think-prompt.hidden{display:none}
 .think-dot-board{min-height:190px;display:grid;grid-template-columns:repeat(5,42px);grid-auto-rows:42px;justify-content:center;align-content:center;gap:10px;padding:18px;margin:12px auto;transition:opacity .18s ease}.think-dot-board.concealed{opacity:0}.think-dot{width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,#6aa8ff,#2f70d0);box-shadow:inset 0 2px 3px rgba(255,255,255,.6),0 3px 7px rgba(47,112,208,.18)}.think-dot:nth-child(5n){margin-right:10px}.think-dot.blank{visibility:hidden}
@@ -4638,7 +4639,7 @@ body{
 .think-ten-frame{display:grid;grid-template-columns:repeat(5,42px);grid-auto-rows:42px;gap:8px;justify-content:center;margin:22px auto}.think-ten-cell{border:2px solid #d9e2ee;border-radius:9px;background:#f7f9fc}.think-ten-cell.filled{background:#65b98a;border-color:#3c9765}
 .think-hundred-action{background:#7d55b5!important;color:#fff!important;border-color:#68439d!important}.think-remove{background:#fff!important;color:#9b3d45!important;border-color:#e6b9bd!important}.think-remove:hover{background:#fff1f2!important}.think-remove:disabled{opacity:.35;cursor:not-allowed}
 .think-jump-story{font-size:1.05rem;font-weight:850;margin:14px}.think-jump-canvas{max-width:760px;margin:14px auto;padding:8px;border-radius:16px;background:#f8fbff;border:1px solid #dce7f3;overflow-x:auto}.think-jump-svg{display:block;width:100%;min-width:520px;height:auto}.think-jump-base{stroke:#8298ae;stroke-width:4;stroke-linecap:round}.think-jump-tick{stroke:#8298ae;stroke-width:3}.think-jump-arc{fill:none;stroke:#357bd8;stroke-width:4;stroke-linecap:round}.think-jump-arc.pending{stroke:#f1a33b;stroke-dasharray:7 7}.think-jump-arrow{fill:#357bd8}.think-jump-arrow.pending{fill:#f1a33b}.think-jump-label{font-size:15px;font-weight:900;fill:#2f70d0;text-anchor:middle}.think-jump-label.pending{fill:#a45d00}.think-jump-number{font-size:16px;font-weight:950;fill:#263b50;text-anchor:middle}.think-jump-number.unknown{fill:#a45d00}.think-jump-question{font-weight:950;font-size:1.05rem;margin-top:10px}
-@media(max-width:900px){.think-activity-tabs{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.think-hero{display:grid;align-items:stretch}.think-level{min-width:0}.think-activity-tabs,.think-place-board{grid-template-columns:1fr}.think-dot-board{grid-template-columns:repeat(5,34px);grid-auto-rows:34px;gap:8px}.think-dot{width:28px;height:28px}.think-progress>div:first-child{display:grid}}
+@media(max-width:900px){.think-activity-tabs{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.think-hero{display:grid;align-items:stretch}.think-settings{display:grid;grid-template-columns:1fr 1fr}.think-level{min-width:0}.think-activity-tabs,.think-place-board{grid-template-columns:1fr}.think-dot-board{grid-template-columns:repeat(5,34px);grid-auto-rows:34px;gap:8px}.think-dot{width:28px;height:28px}.think-progress>div:first-child{display:grid}}@media(max-width:460px){.think-settings{grid-template-columns:1fr}}
 
 /* Friendly equation lesson */
 .equation-friendly-glossary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.equation-friendly-glossary>div{display:grid;gap:5px;padding:14px;border:1px solid var(--line);border-radius:13px;background:#f8fafc}.equation-friendly-glossary b{color:#385a73}.equation-friendly-glossary span{font-size:.86rem;line-height:1.45;color:var(--muted)}
@@ -4805,16 +4806,16 @@ body{
 <h2>Entiende los números jugando con cantidades</h2>
 <p>Aquí no se trata de correr ni memorizar un procedimiento. Mira, construye y encuentra una estrategia.</p>
 </div>
-<label class="think-level"><span>Nivel de práctica</span><select class="answerinput" id="thinkLevel">
+<div class="think-settings"><label class="think-level"><span>Nivel de práctica</span><select class="answerinput" id="thinkLevel">
 <option value="1">Nivel 1 · Cantidades pequeñas</option>
 <option value="2">Nivel 2 · Grupos de 5 y 10</option>
 <option value="3">Nivel 3 · Decenas y unidades</option>
 <option value="4">Nivel 4 · Centenas y saltos</option>
 <option value="5">Nivel 5 · Estrategias eficientes</option>
 <option value="6">Nivel 6 · Cálculo flexible</option>
-</select></label>
+</select></label><label class="think-level think-goal"><span>Duración de la sesión</span><select class="answerinput" id="thinkGoal"><option value="5">5 retos</option><option value="10">10 retos</option><option value="20">20 retos</option><option value="0">Sin límite</option></select></label></div>
 </div>
-<div class="think-progress"><div><b>Ruta de la actividad</b><span id="thinkProgressText">0 de 5 retos comprendidos</span></div><div class="think-progress-track"><span id="thinkProgressBar"></span></div></div>
+<div class="think-progress" id="thinkProgress"><div><b>Ruta de la actividad</b><span id="thinkProgressText">0 de 5 retos completados</span></div><div class="think-progress-track"><span id="thinkProgressBar"></span></div></div>
 <div class="think-activity-tabs" role="tablist" aria-label="Actividades de pensamiento matemático">
 <button class="think-activity-button active" data-think-activity="count" type="button"><b>👀 Reconocer cantidades</b><span>Mira por grupos de cinco y de diez.</span></button>
 <button class="think-activity-button" data-think-activity="place" type="button"><b>🧱 Valor posicional</b><span>Construye centenas, decenas y unidades.</span></button>
@@ -9421,8 +9422,10 @@ $('rootAnswerB').onkeydown=e=>{if(e.key==='Enter')$('rootDoubleCheckBtn').click(
 
 /* ======================= NUMBER LAB / THINK ======================= */
 const THINK_LEVEL_KEY='matesQuestThinkLevel_v1';
+const THINK_GOAL_KEY='matesQuestThinkGoal_v1';
 const storedThinkLevel=Number(localStorage.getItem(THINK_LEVEL_KEY));
-const thinkState={activity:'count',level:storedThinkLevel>=1&&storedThinkLevel<=6?storedThinkLevel:2,mastery:0,recent:{},count:0,countTimer:null,placeTarget:34,hundreds:0,tens:0,units:0,tenStart:6,tenTarget:10,jumpStart:0,jumpSteps:[],jumpAnswer:0,jumpIndex:0,jumpLandings:[]};
+const storedThinkGoalRaw=localStorage.getItem(THINK_GOAL_KEY),storedThinkGoal=storedThinkGoalRaw===null?5:Number(storedThinkGoalRaw);
+const thinkState={activity:'count',level:storedThinkLevel>=1&&storedThinkLevel<=6?storedThinkLevel:2,goal:[0,5,10,20].includes(storedThinkGoal)?storedThinkGoal:5,mastery:0,recent:{},count:0,countTimer:null,placeTarget:34,hundreds:0,tens:0,units:0,tenStart:6,tenTarget:10,jumpStart:0,jumpSteps:[],jumpAnswer:0,jumpIndex:0,jumpLandings:[]};
 function shuffled(values){
   const result=[...values];
   for(let i=result.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[result[i],result[j]]=[result[j],result[i]]}
@@ -9439,13 +9442,6 @@ function freshThinkNumber(activity,min,max,avoid=4){
   thinkState.recent[key]=memory?[...history,String(chosen)].slice(-memory):[];
   return chosen;
 }
-function freshThinkExercise(activity,factory,signature,avoid=4){
-  const key=thinkHistoryKey(activity),history=thinkState.recent[key]||[];
-  let exercise=factory(),id=signature(exercise),attempts=0;
-  while(history.includes(id)&&attempts<40){exercise=factory();id=signature(exercise);attempts++}
-  thinkState.recent[key]=[...history,id].slice(-avoid);
-  return exercise;
-}
 function setThinkFeedback(id,message,type=''){const node=$(id);node.textContent=message;node.className='think-feedback'+(type?' '+type:'')}
 function nearbyChoices(answer,min,max){
   const values=new Set([answer]);
@@ -9456,12 +9452,14 @@ function nearbyChoices(answer,min,max){
 }
 function resetThinkMastery(){thinkState.mastery=0;updateThinkProgress()}
 function updateThinkProgress(){
-  $('thinkProgressText').textContent=thinkState.mastery>=5?'Actividad completada: cinco retos comprendidos.':`${thinkState.mastery} de 5 retos comprendidos`;
-  $('thinkProgressBar').style.width=`${Math.min(100,thinkState.mastery*20)}%`;
+  const unlimited=thinkState.goal===0;
+  $('thinkProgress').classList.toggle('unlimited',unlimited);
+  $('thinkProgressText').textContent=unlimited?(thinkState.mastery===1?'1 reto completado':`${thinkState.mastery} retos completados`):`${thinkState.mastery} de ${thinkState.goal} retos completados`;
+  $('thinkProgressBar').style.width=unlimited?'0%':`${Math.min(100,(thinkState.mastery/thinkState.goal)*100)}%`;
 }
 function completeThinkChallenge(next){
-  thinkState.mastery=Math.min(5,thinkState.mastery+1);updateThinkProgress();
-  if(thinkState.mastery<5)setTimeout(next,900);
+  thinkState.mastery++;updateThinkProgress();
+  if(thinkState.goal===0||thinkState.mastery<thinkState.goal)setTimeout(next,900);
 }
 function showThinkActivity(name){
   thinkState.activity=name;resetThinkMastery();
@@ -9520,17 +9518,25 @@ function jumpLanding(index){
 }
 function renderThinkJump(){
   const points=[thinkState.jumpStart,...thinkState.jumpSteps.map((_,index)=>jumpLanding(index))];
-  const count=points.length, width=700, left=70, right=630, gap=(right-left)/Math.max(1,count-1);
+  const width=700,left=70,right=630,available=right-left;
+  const referenceSpan=[0,10,15,50,80,140,200][thinkState.level];
+  const pixelsPerUnit=available/referenceSpan;
+  const offsets=[0];
+  thinkState.jumpSteps.forEach(step=>offsets.push(offsets[offsets.length-1]+Math.sign(step)*Math.max(32,Math.abs(step)*pixelsPerUnit)));
+  const offsetMin=Math.min(...offsets),offsetMax=Math.max(...offsets),offsetSpan=Math.max(1,offsetMax-offsetMin);
+  const fitScale=Math.min(1,available/offsetSpan),center=(left+right)/2-(offsetMin+offsetMax)*fitScale/2;
+  const positions=offsets.map(value=>center+value*fitScale);
   const ticks=points.map((value,index)=>{
     const known=index===0||index<=thinkState.jumpIndex;
-    return `<line class="think-jump-tick" x1="${left+gap*index}" y1="128" x2="${left+gap*index}" y2="146"></line><text class="think-jump-number ${known?'':'unknown'}" x="${left+gap*index}" y="170">${known?value:'?'}</text>`;
+    return `<line class="think-jump-tick" x1="${positions[index]}" y1="128" x2="${positions[index]}" y2="146"></line><text class="think-jump-number ${known?'':'unknown'}" x="${positions[index]}" y="170">${known?value:'?'}</text>`;
   }).join('');
   const arcs=thinkState.jumpSteps.map((step,index)=>{
     if(index>thinkState.jumpIndex)return '';
-    const x1=left+gap*index,x2=left+gap*(index+1),mid=(x1+x2)/2,active=index===thinkState.jumpIndex;
+    const x1=positions[index],x2=positions[index+1],mid=(x1+x2)/2,active=index===thinkState.jumpIndex;
     const direction=step>=0?1:-1;
-    const path=direction>0?`M ${x1} 126 Q ${mid} 38 ${x2} 126`:`M ${x1} 126 Q ${mid} 38 ${x2} 126`;
-    const arrowX=direction>0?x2:x2;
+    const arcHeight=Math.max(55,105-Math.min(50,Math.abs(x2-x1)*.12));
+    const path=`M ${x1} 126 Q ${mid} ${arcHeight} ${x2} 126`;
+    const arrowX=x2;
     return `<path class="think-jump-arc ${active?'pending':''}" d="${path}"></path><polygon class="think-jump-arrow ${active?'pending':''}" points="${arrowX},126 ${arrowX-(direction*11)},116 ${arrowX-(direction*8)},132"></polygon><text class="think-jump-label ${active?'pending':''}" x="${mid}" y="64">${step>0?'+':''}${step}</text>`;
   }).join('');
   $('thinkJumpCanvas').innerHTML=`<svg class="think-jump-svg" viewBox="0 0 700 190" role="img"><line class="think-jump-base" x1="45" y1="128" x2="655" y2="128"></line>${arcs}${ticks}</svg>`;
@@ -9539,22 +9545,23 @@ function renderThinkJump(){
 }
 function renderThinkJumpChoices(){
   const expected=jumpLanding(thinkState.jumpIndex);
-  $('thinkJumpChoices').innerHTML=nearbyChoices(expected,0,140).map(value=>`<button class="think-choice" type="button" data-think-jump="${value}">${value}</button>`).join('');
+  const radius=thinkState.level>=5?20:10;
+  $('thinkJumpChoices').innerHTML=nearbyChoices(expected,Math.max(0,expected-radius),expected+radius).map(value=>`<button class="think-choice" type="button" data-think-jump="${value}">${value}</button>`).join('');
 }
 function newThinkJump(){
-  const exercise=freshThinkExercise('jump',()=>{
-    const subtract=thinkState.level>=4&&Math.random()<.45;
-    if(thinkState.level<=2){
-      const start=1+Math.floor(Math.random()*10),jump=1+Math.floor(Math.random()*(thinkState.level===1?4:8));
-      return{start,steps:[jump],answer:start+jump};
-    }
-    const maxTens=thinkState.level>=5?5:3,tens=10*(1+Math.floor(Math.random()*maxTens)),units=1+Math.floor(Math.random()*9);
+  const subtract=thinkState.level>=4&&Math.random()<.45;
+  if(thinkState.level<=2){
+    const maxJump=thinkState.level===1?6:10;
+    thinkState.jumpStart=freshThinkNumber('jumpStart',1,10);
+    const jump=freshThinkNumber('jumpUnits',1,maxJump);
+    thinkState.jumpSteps=[jump];thinkState.jumpAnswer=thinkState.jumpStart+jump;
+  }else{
+    const maxTens=thinkState.level<=4?5:thinkState.level===5?8:10;
+    const tens=10*freshThinkNumber('jumpTens',1,maxTens),units=freshThinkNumber('jumpUnits',1,9);
     const startMin=subtract?Math.max(50,tens+units):10,startMax=subtract?(thinkState.level>=5?149:99):(thinkState.level>=5?109:59);
-    const start=startMin+Math.floor(Math.random()*(startMax-startMin+1));
-    const steps=subtract?[-tens,-units]:[tens,units],answer=start+steps.reduce((sum,value)=>sum+value,0);
-    return{start,steps,answer};
-  },item=>`${item.start}|${item.steps.join(',')}`);
-  thinkState.jumpStart=exercise.start;thinkState.jumpSteps=exercise.steps;thinkState.jumpAnswer=exercise.answer;
+    thinkState.jumpStart=freshThinkNumber(subtract?'jumpStartSubtract':'jumpStartAdd',startMin,startMax);
+    thinkState.jumpSteps=subtract?[-tens,-units]:[tens,units];thinkState.jumpAnswer=thinkState.jumpStart+thinkState.jumpSteps.reduce((sum,value)=>sum+value,0);
+  }
   thinkState.jumpIndex=0;thinkState.jumpLandings=[];
   $('thinkJumpStory').textContent=`Empieza en ${thinkState.jumpStart}. Primero saltamos las decenas; después, las unidades.`;
   setThinkFeedback('thinkJumpFeedback','');$('thinkJumpExplanation').textContent='';
@@ -9563,6 +9570,8 @@ function newThinkJump(){
 document.querySelectorAll('[data-think-activity]').forEach(button=>button.onclick=()=>showThinkActivity(button.dataset.thinkActivity));
 $('thinkLevel').value=String(thinkState.level);
 $('thinkLevel').onchange=()=>{thinkState.level=Number($('thinkLevel').value);localStorage.setItem(THINK_LEVEL_KEY,String(thinkState.level));showThinkActivity(thinkState.activity)};
+$('thinkGoal').value=String(thinkState.goal);
+$('thinkGoal').onchange=()=>{thinkState.goal=Number($('thinkGoal').value);localStorage.setItem(THINK_GOAL_KEY,String(thinkState.goal));showThinkActivity(thinkState.activity)};
 $('thinkShowCount').onclick=revealThinkCount;$('thinkNewTen').onclick=newThinkTen;$('thinkNewJump').onclick=newThinkJump;
 $('thinkAddHundred').onclick=()=>{if(thinkState.hundreds<9){thinkState.hundreds++;renderThinkPlace()}};
 $('thinkAddTen').onclick=()=>{if(thinkState.tens<9){thinkState.tens++;renderThinkPlace()}};
@@ -10434,10 +10443,11 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     'Exacto. Ya has completado 10.':'Exacte. Ja has completat 10.',
     'Piensa qué pareja de números suma 10.':'Pensa quina parella de nombres suma 10.',
     'Nivel de práctica':'Nivell de pràctica',
+    'Duración de la sesión':'Durada de la sessió','5 retos':'5 reptes','10 retos':'10 reptes','20 retos':'20 reptes','Sin límite':'Sense límit',
     '2.º de Primaria':'2n de Primària',
     '4.º de Primaria':'4t de Primària',
     'Ruta de la actividad':'Ruta de l’activitat',
-    '0 de 5 retos comprendidos':'0 de 5 reptes compresos',
+    '0 de 5 retos comprendidos':'0 de 5 reptes compresos','0 de 5 retos completados':'0 de 5 reptes completats',
     'Reconocer cantidades':'Reconeix quantitats',
     'Mira por grupos de cinco y de diez.':'Mira per grups de cinc i de deu.',
     'Valor posicional':'Valor posicional',
@@ -10771,6 +10781,9 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     [/^Construye el número (.+)$/,'Construeix el nombre $1'],
     [/^Has formado (.+)$/,'Has format $1'],
     [/^(.+) de 5 retos comprendidos$/,'$1 de 5 reptes compresos'],
+    [/^(.+) de (.+) retos completados$/,'$1 de $2 reptes completats'],
+    [/^1 reto completado$/,'1 repte completat'],
+    [/^(.+) retos completados$/,'$1 reptes completats'],
     [/^Completa hasta (.+)$/,'Completa fins a $1'],
     [/^Empieza en (.+) y da los saltos (.+)$/,'Comença a $1 i fes els salts $2'],
     [/^Salto (.+) de (.+): (.+)$/,'Salt $1 de $2: $3'],
