@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-12T15:10:58.202Z","gitCommit":"43f03e709724245d5c2dcd8092cbb5d423bccd87"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-13T07:20:57.335Z","gitCommit":"f4c30ee842c55f713c88dd08b8ce3000305ca266"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-orange-v2-192.png" rel="icon"/>
 <link href="icon-beta-orange-v2-192.png" rel="apple-touch-icon" sizes="192x192"/>
@@ -5945,8 +5945,9 @@ function rememberInputState(input){
 function prepareInputForKeypad(input){
   rememberInputState(input);
   if(input.dataset.keypadPreviousType==='number')input.type='text';
-  input.readOnly=true;
-  input.setAttribute('inputmode','none');
+  const touchOnly=window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  input.readOnly=touchOnly;
+  if(touchOnly)input.setAttribute('inputmode','none');
 }
 function prepareVisibleInputsForKeypad(){
   visibleKeypadInputs().forEach(prepareInputForKeypad);
@@ -6149,7 +6150,7 @@ function initMathKeypad(){
   });
   $('mathKeypad').addEventListener('click',event=>{
     const button=event.target.closest('[data-keypad-key],[data-keypad-action]');
-    if(!button||button.disabled)return;
+    if(!button||button.disabled||event.detail>1)return;
     handleMathKeypadAction(button.dataset.keypadKey||button.dataset.keypadAction);
   });
 
@@ -6405,14 +6406,37 @@ function cloneDivisionSubtractSnapshot(m){
 }
 function startGroup(){hideDivisionBack();$('helpContext').innerHTML='<b>Paso actual</b><br>Elige el primer grupo de cifras que sea igual o mayor que el divisor.';renderSteps(0);$('instruction').textContent='Paso 1: elige el primer grupo.';$('prompt').textContent='¿Qué grupo debemos coger primero?';const groups=[];for(let i=1;i<=state.digits.length;i++)groups.push(Number(state.digits.slice(0,i).join('')));const correct=groups.find(x=>x>=state.divisor)??Number(state.digits.join(''));renderDivision();options(groups,(b,v)=>{if(v===correct){b.classList.add('good');state.currentValue=v;state.pos=String(v).length;state.currentEndCol=state.pos-1;ok(`Correcto. ${v} es el primer grupo que ya se puede dividir.`);setTimeout(startQuotient,500)}else{b.classList.add('bad');fail(v<state.divisor?`${v} es menor que ${state.divisor}.`:'Podemos empezar antes.')}})}
 function startQuotient(){
-  hideDivisionBack();
   $('helpContext').innerHTML='<b>Paso actual</b><br>Calcula cuántas veces cabe el divisor sin pasarte.';
   renderSteps(1);renderDivision();
   $('instruction').textContent=`Paso 2: ¿cuántas veces cabe ${state.divisor} en ${state.currentValue}?`;
   $('prompt').textContent='Elige la cifra del cociente.';
+  const broughtRow=state.rows[state.rows.length-1]?.type==='brought';
+  showDivisionBack(()=>{
+    if(broughtRow){
+      state.rows.pop();
+      state.pos=Math.max(0,state.pos-1);
+      state.currentEndCol=Math.max(0,state.pos-1);
+      const previousRemainder=[...state.rows].reverse().find(row=>row.type==='remainder');
+      state.currentValue=previousRemainder?.value??0;
+      renderDivision();
+      feedback('Volvemos al paso de bajar la cifra.','ok');
+      nextDigit();
+    }else{
+      state.currentValue=0;
+      state.pos=0;
+      state.currentEndCol=0;
+      renderDivision();
+      feedback('Volvemos al principio de la operación.','ok');
+      startGroup();
+    }
+  });
+  let quotientAccepted=false;
   options([0,1,2,3,4,5,6,7,8,9],(b,v)=>{
+    if(quotientAccepted)return;
     const c=Math.floor(state.currentValue/state.divisor);
     if(v===c){
+      quotientAccepted=true;
+      $('optionControls').querySelectorAll('button').forEach(button=>button.disabled=true);
       b.classList.add('good');
       state.quotient.push(v);
       if(state.decimalStarted)state.decimalCount++;
@@ -6657,7 +6681,19 @@ function finishDivisionSubtract(){
     m.index=0;
     return askDivisionBorrow();
   }
-  hideDivisionBack();
+  state.lastCompletedSubtract={
+    model:{
+      ...m,
+      displayTop:[...m.displayTop],
+      bottomDigits:[...m.bottomDigits],
+      resultDigits:[...m.resultDigits],
+      borrowMark:[...m.borrowMark],
+      changedTop:[...m.changedTop],
+      snapshots:(m.snapshots||[]).map(cloneDivisionSubtractSnapshot)
+    },
+    rowsLength:state.rows.length,
+    previousValue:state.currentValue
+  };
   state.divisionSubtract=null;
   state.rows.push({type:'remainder',value:result,endCol:state.currentEndCol});
   state.currentValue=result;
@@ -6665,7 +6701,24 @@ function finishDivisionSubtract(){
   ok(`Resta terminada: ${m.top} − ${m.bottom} = ${result}.`);
   setTimeout(nextDigit,500);
 }
-function nextDigit(){hideDivisionBack();$('quotientDisplay').classList.remove('quotient-active');if(state.pos<state.digits.length){renderSteps(4);const digit=state.digits[state.pos];$('instruction').textContent='Paso 5: baja la siguiente cifra.';$('prompt').textContent='¿Qué cifra baja ahora?';options([...new Set(state.digits)],(b,v)=>{if(+v===digit){b.classList.add('good');state.currentValue=Number(String(state.currentValue)+digit);state.pos++;state.currentEndCol=state.pos-1;state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();ok(`Bajamos el ${digit}. Ahora tenemos ${state.currentValue}.`);setTimeout(startQuotient,500)}else{b.classList.add('bad');fail('Esa no es la siguiente cifra.')}});return}if(state.currentValue===0||state.decimalCount>=state.decimalsWanted)return finish();state.decimalStarted=true;state.digits.push(0);state.pos++;state.currentEndCol=state.pos-1;state.currentValue=Number(String(state.currentValue)+0);state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();feedback('Añadimos un cero para continuar con decimales.','ok');setTimeout(startQuotient,500)}
+function nextDigit(){
+  $('quotientDisplay').classList.remove('quotient-active');
+  if(state.lastCompletedSubtract){
+    showDivisionBack(()=>{
+      const saved=state.lastCompletedSubtract;
+      state.rows.splice(saved.rowsLength);
+      state.currentValue=saved.previousValue;
+      state.divisionSubtract=saved.model;
+      state.lastCompletedSubtract=null;
+      const m=state.divisionSubtract;
+      m.index=Math.max(0,m.cols-1);
+      m.resultDigits[m.index]=null;
+      renderDivision();
+      feedback('Volvemos a la última columna de la resta.','ok');
+      askDivisionSubtractDigit();
+    });
+  }else hideDivisionBack();
+  if(state.pos<state.digits.length){renderSteps(4);const digit=state.digits[state.pos];$('instruction').textContent='Paso 5: baja la siguiente cifra.';$('prompt').textContent='¿Qué cifra baja ahora?';options([...new Set(state.digits)],(b,v)=>{if(+v===digit){b.classList.add('good');state.currentValue=Number(String(state.currentValue)+digit);state.pos++;state.currentEndCol=state.pos-1;state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();ok(`Bajamos el ${digit}. Ahora tenemos ${state.currentValue}.`);setTimeout(startQuotient,500)}else{b.classList.add('bad');fail('Esa no es la siguiente cifra.')}});return}if(state.currentValue===0||state.decimalCount>=state.decimalsWanted)return finish();state.decimalStarted=true;state.digits.push(0);state.pos++;state.currentEndCol=state.pos-1;state.currentValue=Number(String(state.currentValue)+0);state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();feedback('Añadimos un cero para continuar con decimales.','ok');setTimeout(startQuotient,500)}
 function finish(){
   hideDivisionBack();
   clearFinishedAnswerInputs('answerInput');
