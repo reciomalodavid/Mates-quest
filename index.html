@@ -39,6 +39,12 @@ button,input,select{font:inherit}.app{width:min(1220px,calc(100% - 20px));margin
 
 .division-sheet{display:flex;align-items:flex-start;justify-content:center;font-family:"Courier New",monospace;font-weight:800;font-size:clamp(1.7rem,4vw,2.8rem)}
 .left-grid{display:grid;grid-auto-rows:52px;align-items:center;justify-items:center}.grid-cell{width:48px;height:52px;display:grid;place-items:center;position:relative}.grid-cell.line:after{content:"";position:absolute;left:2px;right:2px;bottom:3px;height:2px;background:#17324d}.grid-cell.minus:before{content:"−";position:absolute;left:-13px;top:8px;font-size:.8em}.right-side{min-width:145px;border-left:3px solid #111}.right-side .divisor-display{min-height:52px;display:flex;align-items:flex-end;padding-left:16px;border-bottom:3px solid #111;color:var(--purple);letter-spacing:.08em}.right-side .quotient{min-height:52px;display:flex;align-items:center;padding-left:16px;color:var(--purple);letter-spacing:.16em}
+.grid-cell.initial-source{background:#fff3cf;border:2px solid #efb43d;border-radius:10px;color:#9a5b00}
+.grid-cell.initial-partial{background:#fff8e7;border:2px solid #f2c86c;border-radius:10px;color:#9a5b00}
+.grid-cell.initial-group-enter{animation:initialGroupDrop .62s cubic-bezier(.2,.85,.3,1) both}
+.grid-cell.initial-partial-first:before{content:"↓";position:absolute;left:50%;top:-34px;transform:translateX(-50%);color:#2d8ed1;font-family:Inter,system-ui,sans-serif;font-size:.55em;font-weight:1000}
+@keyframes initialGroupDrop{from{opacity:.25;transform:translateY(-34px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.grid-cell.initial-group-enter{animation:none}}
 
 .module-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
 .module-tab{border:2px solid #c9d8e7;background:#eef6fd;color:#17324d;border-radius:14px;padding:12px 4px;font-weight:1000;font-size:.82rem;cursor:pointer}
@@ -6266,9 +6272,9 @@ const FIREBASE_CONFIG = {
 
 /* ======================= DIVISION MODULE ======================= */
 let state;
-const stepsData=[["Primer grupo","Elige las primeras cifras"],["Cociente","¿Cuántas veces cabe?"],["Multiplica","Cifra por cifra"],["Resta","Haz la resta"],["Baja cifra","Baja la siguiente cifra"],["Resultado","Termina la división"]];
+const stepsData=[["Grupo inicial","Forma el dividendo parcial"],["Cociente","¿Cuántas veces cabe?"],["Multiplica","Cifra por cifra"],["Resta","Haz la resta"],["Baja cifra","Baja la siguiente cifra"],["Resultado","Termina la división"]];
 function countDecimals(n){const s=String(n);return s.includes('.')?s.split('.')[1].length:0}
-function newState(dividend,divisor,decimals){const f=10**countDecimals(divisor);const D=Math.round(dividend*f),d=Math.round(divisor*f);return{originalDividend:dividend,originalDivisor:divisor,dividend:D,divisor:d,digits:String(Math.abs(D)).split('').map(Number),pos:0,currentValue:0,currentEndCol:0,quotient:[],rows:[],hearts:3,stars:0,decimalsWanted:decimals,decimalStarted:false,decimalCount:0}}
+function newState(dividend,divisor,decimals){const f=10**countDecimals(divisor);const D=Math.round(dividend*f),d=Math.round(divisor*f);return{originalDividend:dividend,originalDivisor:divisor,dividend:D,divisor:d,digits:String(Math.abs(D)).split('').map(Number),pos:0,currentValue:0,currentEndCol:0,initialGroupLength:0,showInitialGroupCue:false,quotient:[],rows:[],hearts:3,stars:0,decimalsWanted:decimals,decimalStarted:false,decimalCount:0}}
 function renderSteps(a){$('steps').innerHTML='';stepsData.forEach((s,i)=>{const d=document.createElement('div');d.className='step'+(i===a?' active':'')+(i<a?' done':'');d.innerHTML=`<div class="num">${i+1}</div><div><b>${s[0]}</b><br><small>${s[1]}</small></div>`;$('steps').appendChild(d)})}
 function feedback(t,type=''){const f=$('feedback');f.textContent=t;f.className='feedback'+(type?' '+type:'')}
 function stats(){updateChallengeHeader()}
@@ -6292,11 +6298,15 @@ function renderDivision(){
   g.style.gridTemplateColumns=`repeat(${cols},48px)`;
   g.style.gridAutoRows=state.divisionSubtract?'68px':'52px';
   g.innerHTML='';
-  state.digits.forEach((d,i)=>cell(g,d,0,i));
+  state.digits.forEach((d,i)=>cell(g,d,0,i,state.showInitialGroupCue&&i<state.initialGroupLength?'initial-source':''));
   let r=1;
 
   for(const it of state.rows){
-    if(it.type==='product'){
+    if(it.type==='initialGroup'){
+      const start=placeText(g,it.value,r,it.endCol,`initial-partial${state.showInitialGroupCue?' initial-group-enter':''}`);
+      const first=[...g.children].find(x=>x.style.gridRow==String(r+1)&&x.style.gridColumn==String(start+1));
+      if(first&&state.showInitialGroupCue)first.classList.add('initial-partial-first');
+    }else if(it.type==='product'){
       const productText=String(it.value).padStart(it.displayWidth||String(it.value).length,'0');
       const s=placeText(g,productText,r,it.endCol,'product');
       const first=[...g.children].find(x=>x.style.gridRow==String(r+1)&&x.style.gridColumn==String(s+1));
@@ -6385,8 +6395,45 @@ function cloneDivisionSubtractSnapshot(m){
     changedTop:[...m.changedTop]
   };
 }
-function startGroup(){hideDivisionBack();$('helpContext').innerHTML='<b>Paso actual</b><br>Elige el primer grupo de cifras que sea igual o mayor que el divisor.';renderSteps(0);$('instruction').textContent='Paso 1: elige el primer grupo.';$('prompt').textContent='¿Qué grupo debemos coger primero?';const groups=[];for(let i=1;i<=state.digits.length;i++)groups.push(Number(state.digits.slice(0,i).join('')));const correct=groups.find(x=>x>=state.divisor)??Number(state.digits.join(''));renderDivision();options(groups,(b,v)=>{if(v===correct){b.classList.add('good');state.currentValue=v;state.pos=String(v).length;state.currentEndCol=state.pos-1;ok(`Correcto. ${v} es el primer grupo que ya se puede dividir.`);setTimeout(startQuotient,500)}else{b.classList.add('bad');fail(v<state.divisor?`${v} es menor que ${state.divisor}.`:'Podemos empezar antes.')}})}
+function startGroup(){
+  hideDivisionBack();
+  state.rows=state.rows.filter(row=>row.type!=='initialGroup');
+  state.initialGroupLength=0;
+  state.showInitialGroupCue=false;
+  $('helpContext').innerHTML='<b>Paso actual</b><br>Busca el primer grupo de cifras en el que ya cabe el divisor.';
+  renderSteps(0);
+  $('instruction').textContent='Paso 1: forma el dividendo parcial inicial.';
+  $('prompt').textContent='¿Con qué grupo empezamos?';
+  const groups=[];
+  for(let i=1;i<=state.digits.length;i++)groups.push(Number(state.digits.slice(0,i).join('')));
+  const correct=groups.find(x=>x>=state.divisor)??Number(state.digits.join(''));
+  renderDivision();
+  let groupAccepted=false;
+  options(groups,(b,v)=>{
+    if(groupAccepted)return;
+    if(v===correct){
+      groupAccepted=true;
+      $('optionControls').querySelectorAll('button').forEach(button=>button.disabled=true);
+      b.classList.add('good');
+      state.currentValue=v;
+      state.pos=String(v).length;
+      state.currentEndCol=state.pos-1;
+      state.initialGroupLength=state.pos;
+      state.showInitialGroupCue=true;
+      state.rows.push({type:'initialGroup',value:v,endCol:state.currentEndCol});
+      $('instruction').textContent=`Paso 1: empezamos con ${v}.`;
+      $('prompt').textContent=`Colocamos ${v} como primer dividendo parcial.`;
+      renderDivision();
+      ok(`Correcto. Empezamos con ${v} como dividendo parcial inicial.`);
+      setTimeout(startQuotient,900);
+    }else{
+      b.classList.add('bad');
+      fail(v<state.divisor?`${v} es menor que ${state.divisor}.`:'Podemos empezar antes.');
+    }
+  });
+}
 function startQuotient(){
+  state.showInitialGroupCue=false;
   $('helpContext').innerHTML='<b>Paso actual</b><br>Calcula cuántas veces cabe el divisor sin pasarte.';
   renderSteps(1);renderDivision();
   $('instruction').textContent=`Paso 2: ¿cuántas veces cabe ${state.divisor} en ${state.currentValue}?`;
@@ -6406,6 +6453,9 @@ function startQuotient(){
       state.currentValue=0;
       state.pos=0;
       state.currentEndCol=0;
+      state.rows=state.rows.filter(row=>row.type!=='initialGroup');
+      state.initialGroupLength=0;
+      state.showInitialGroupCue=false;
       renderDivision();
       feedback('Volvemos al principio de la operación.','ok');
       startGroup();
