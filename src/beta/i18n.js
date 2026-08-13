@@ -25,6 +25,10 @@
     'Paso 1: elige el primer grupo.':'Pas 1: tria el primer grup.','Paso 1: forma el dividendo parcial inicial.':'Pas 1: forma el dividend parcial inicial.','Paso 5: baja la siguiente cifra.':'Pas 5: baixa la xifra següent.',
     'Elige el primer grupo de cifras que sea igual o mayor que el divisor.':'Tria el primer grup de xifres que sigui igual o més gran que el divisor.','Busca el primer grupo de cifras en el que ya cabe el divisor.':'Busca el primer grup de xifres en què ja hi cap el divisor.','¿Con qué grupo empezamos?':'Amb quin grup comencem?',
     'Calcula cuántas veces cabe el divisor sin pasarte.':'Calcula quantes vegades hi cap el divisor sense passar-te.',
+    'Ya no quedan cifras enteras. Decide cómo continuar la división.':'Ja no queden xifres enteres. Decideix com continuar la divisió.','¿Qué hacemos para obtener un resultado con decimales?':'Què fem per obtenir un resultat amb decimals?','Continuar con decimales':'Continua amb decimals','Terminar aquí':'Acaba aquí',
+    'Para obtener decimales debemos añadir una coma y continuar con un cero.':'Per obtenir decimals hem d’afegir una coma i continuar amb un zero.','Correcto. Escribimos la coma en el cociente y continuamos la división.':'Correcte. Escrivim la coma al quocient i continuem la divisió.',
+    'Para continuar con decimales, añadimos una cifra al dividendo.':'Per continuar amb decimals, afegim una xifra al dividend.','Paso 5: añade una cifra decimal y bájala.':'Pas 5: afegeix una xifra decimal i baixa-la.','¿Qué cifra añadimos y bajamos ahora?':'Quina xifra afegim i baixem ara?',
+    'Quitamos la coma y volvemos a decidir cómo continuar.':'Traiem la coma i tornem a decidir com continuar.','Para conservar el valor del dividendo añadimos un cero a la derecha.':'Per conservar el valor del dividend, afegim un zero a la dreta.','Quitamos el cero decimal y volvemos al paso anterior.':'Traiem el zero decimal i tornem al pas anterior.',
     'El cociente ya está escrito. Ahora multiplica esa cifra por cada cifra del divisor.':'El quocient ja està escrit. Ara multiplica aquesta xifra per cada xifra del divisor.',
     'Compara las dos cifras de la columna antes de decidir si necesitas préstamo.':'Compara les dues xifres de la columna abans de decidir si necessites un préstec.',
     'Resuelve la resta de derecha a izquierda, una columna cada vez.':'Resol la resta de dreta a esquerra, una columna cada vegada.',
@@ -436,6 +440,8 @@
     [/^Paso 1: empezamos con (.+)\.$/,'Pas 1: comencem amb $1.'],
     [/^Colocamos (.+) como primer dividendo parcial\.$/,'Col·loquem $1 com a primer dividend parcial.'],
     [/^Correcto\. Empezamos con (.+) como dividendo parcial inicial\.$/,'Correcte. Comencem amb $1 com a dividend parcial inicial.']
+    ,[/^El resto es (.+) y ya no quedan cifras por bajar\.$/,'El residu és $1 i ja no queden xifres per baixar.']
+    ,[/^Añadimos y bajamos el 0\. El nuevo dividendo parcial es (.+)\.$/,'Afegim i baixem el 0. El dividend parcial nou és $1.']
     ,[/^Pregunta (.+)\/(.+)$/,'Pregunta $1/$2']
     ,[/^¡Racha de (.+)! Imparable 🔥$/,'Ratxa de $1! Imparable 🔥']
     ,[/^¡Racha de (.+)! 🔥$/,'Ratxa de $1! 🔥']
