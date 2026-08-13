@@ -7,7 +7,7 @@
 <title>Mates Quest Beta</title>
 <meta name="application-name" content="Mates Quest Beta"/>
 <meta name="mates-quest-environment" content="beta"/>
-<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-13T10:48:34.593Z","gitCommit":"9c8fbc82683ab2f58612ea2c8874f2c0cf35cb4f"});</script>
+<script>window.MATES_QUEST_CONFIG=Object.freeze({"appName":"Mates Quest Beta","shortName":"MQ Beta","environment":"beta","version":"1.0.0-beta.2","storagePrefix":"matesQuestBeta","indexedDbName":"matesQuestBeta","cachePrefix":"mates-quest-beta","firebaseNamespace":"beta","firebaseConfig":{"apiKey":"AIzaSyCd5UEoFNVtz37Iqd6YcSSmYY_yoOGYEro","authDomain":"mates-quest-beta.firebaseapp.com","projectId":"mates-quest-beta","storageBucket":"mates-quest-beta.firebasestorage.app","messagingSenderId":"250230905666","appId":"1:250230905666:web:06e89df4689dcacc17c6db"},"themeColor":"#F4A261","backgroundColor":"#FCE1C3","buildDate":"2026-08-13T11:04:32.009Z","gitCommit":"0306ce5683086c6933e8786864914bc42197e426"});</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-beta-orange-v2-192.png" rel="icon"/>
 <link href="icon-beta-orange-v2-192.png" rel="apple-touch-icon" sizes="192x192"/>
@@ -44,6 +44,7 @@ button,input,select{font:inherit}.app{width:min(1220px,calc(100% - 20px));margin
 .grid-cell.initial-partial{background:#fff8e7;border:2px solid #f2c86c;border-radius:10px;color:#9a5b00}
 .grid-cell.initial-group-enter{animation:initialGroupDrop .62s cubic-bezier(.2,.85,.3,1) both}
 .grid-cell.initial-partial-first:before{content:"↓";position:absolute;left:50%;top:-34px;transform:translateX(-50%);color:#2d8ed1;font-family:Inter,system-ui,sans-serif;font-size:.55em;font-weight:1000}
+.grid-cell.decimal-digit:before{content:",";position:absolute;left:-7px;bottom:5px;color:#17324d;font-size:.72em;font-weight:1000}
 @keyframes initialGroupDrop{from{opacity:.25;transform:translateY(-34px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.grid-cell.initial-group-enter{animation:none}}
 
@@ -6293,7 +6294,7 @@ const FIREBASE_CONFIG = {
 let state;
 const stepsData=[["Grupo inicial","Forma el dividendo parcial"],["Cociente","¿Cuántas veces cabe?"],["Multiplica","Cifra por cifra"],["Resta","Haz la resta"],["Baja cifra","Baja la siguiente cifra"],["Resultado","Termina la división"]];
 function countDecimals(n){const s=String(n);return s.includes('.')?s.split('.')[1].length:0}
-function newState(dividend,divisor,decimals){const f=10**countDecimals(divisor);const D=Math.round(dividend*f),d=Math.round(divisor*f);return{originalDividend:dividend,originalDivisor:divisor,dividend:D,divisor:d,digits:String(Math.abs(D)).split('').map(Number),pos:0,currentValue:0,currentEndCol:0,initialGroupLength:0,showInitialGroupCue:false,quotient:[],rows:[],hearts:3,stars:0,decimalsWanted:decimals,decimalStarted:false,decimalCount:0}}
+function newState(dividend,divisor,decimals){const f=10**countDecimals(divisor);const D=Math.round(dividend*f),d=Math.round(divisor*f);const digits=String(Math.abs(D)).split('').map(Number);return{originalDividend:dividend,originalDivisor:divisor,dividend:D,divisor:d,digits,integerDigitCount:digits.length,pos:0,currentValue:0,currentEndCol:0,initialGroupLength:0,showInitialGroupCue:false,quotient:[],rows:[],hearts:3,stars:0,decimalsWanted:decimals,decimalStarted:false,decimalCount:0}}
 function renderSteps(a){$('steps').innerHTML='';stepsData.forEach((s,i)=>{const d=document.createElement('div');d.className='step'+(i===a?' active':'')+(i<a?' done':'');d.innerHTML=`<div class="num">${i+1}</div><div><b>${s[0]}</b><br><small>${s[1]}</small></div>`;$('steps').appendChild(d)})}
 function feedback(t,type=''){const f=$('feedback');f.textContent=t;f.className='feedback'+(type?' '+type:'')}
 function stats(){updateChallengeHeader()}
@@ -6309,7 +6310,7 @@ function ok(t){
   feedback(t,'ok');
   $('speech').textContent=streak>=3?`¡Racha de ${streak}! 🔥`:'¡Muy bien! Seguimos.';
 }
-function qtext(){let q=state.quotient.join('');if(state.decimalStarted){const p=q.length-state.decimalCount;q=q.slice(0,p)+'.'+q.slice(p)}return q}
+function qtext(){let q=state.quotient.join('');if(state.decimalStarted){const p=q.length-state.decimalCount;q=q.slice(0,p)+','+q.slice(p)}return q}
 function cell(grid,ch,row,col,cls=''){const c=document.createElement('div');c.className='grid-cell '+cls;c.style.gridRow=row+1;c.style.gridColumn=col+1;c.textContent=ch;grid.appendChild(c);return c}
 function placeText(grid,text,row,end,cls=''){const a=String(text).split(''),start=end-a.length+1;a.forEach((ch,i)=>cell(grid,ch,row,start+i,cls));return start}
 function renderDivision(){
@@ -6317,7 +6318,12 @@ function renderDivision(){
   g.style.gridTemplateColumns=`repeat(${cols},48px)`;
   g.style.gridAutoRows=state.divisionSubtract?'68px':'52px';
   g.innerHTML='';
-  state.digits.forEach((d,i)=>cell(g,d,0,i,state.showInitialGroupCue&&i<state.initialGroupLength?'initial-source':''));
+  state.digits.forEach((d,i)=>{
+    const classes=[];
+    if(state.showInitialGroupCue&&i<state.initialGroupLength)classes.push('initial-source');
+    if(state.decimalStarted&&i===state.integerDigitCount)classes.push('decimal-digit');
+    cell(g,d,0,i,classes.join(' '));
+  });
   let r=1;
 
   for(const it of state.rows){
@@ -6457,16 +6463,21 @@ function startQuotient(){
   renderSteps(1);renderDivision();
   $('instruction').textContent=`Paso 2: ¿cuántas veces cabe ${state.divisor} en ${state.currentValue}?`;
   $('prompt').textContent='Elige la cifra del cociente.';
-  const broughtRow=state.rows[state.rows.length-1]?.type==='brought';
+  const lastBroughtRow=state.rows[state.rows.length-1];
+  const broughtRow=lastBroughtRow?.type==='brought';
   showDivisionBack(()=>{
     if(broughtRow){
       state.rows.pop();
       state.pos=Math.max(0,state.pos-1);
+      if(lastBroughtRow.decimalZero){
+        state.digits.pop();
+        if(lastBroughtRow.startedDecimals)state.decimalStarted=false;
+      }
       state.currentEndCol=Math.max(0,state.pos-1);
       const previousRemainder=[...state.rows].reverse().find(row=>row.type==='remainder');
       state.currentValue=previousRemainder?.value??0;
       renderDivision();
-      feedback('Volvemos al paso de bajar la cifra.','ok');
+      feedback(lastBroughtRow.decimalZero?'Quitamos el cero decimal y volvemos al paso anterior.':'Volvemos al paso de bajar la cifra.','ok');
       nextDigit();
     }else{
       state.currentValue=0;
@@ -6751,6 +6762,62 @@ function finishDivisionSubtract(){
   ok(`Resta terminada: ${m.top} − ${m.bottom} = ${result}.`);
   setTimeout(nextDigit,500);
 }
+function askDecimalContinuation(){
+  renderSteps(4);
+  $('helpContext').innerHTML='<b>Paso actual</b><br>Ya no quedan cifras enteras. Decide cómo continuar la división.';
+  $('instruction').textContent=`El resto es ${state.currentValue} y ya no quedan cifras por bajar.`;
+  $('prompt').textContent='¿Qué hacemos para obtener un resultado con decimales?';
+  let decisionAccepted=false;
+  options(['Continuar con decimales','Terminar aquí'],(button,answer)=>{
+    if(decisionAccepted)return;
+    if(answer!=='Continuar con decimales'){
+      button.classList.add('bad');
+      fail('Para obtener decimales debemos añadir una coma y continuar con un cero.');
+      return;
+    }
+    decisionAccepted=true;
+    $('optionControls').querySelectorAll('button').forEach(item=>item.disabled=true);
+    button.classList.add('good');
+    state.decimalStarted=true;
+    renderDivision();
+    ok('Correcto. Escribimos la coma en el cociente y continuamos la división.');
+    setTimeout(()=>askDecimalZero(true),650);
+  });
+}
+function askDecimalZero(startedDecimals=false){
+  renderSteps(4);
+  $('helpContext').innerHTML='<b>Paso actual</b><br>Para continuar con decimales, añadimos una cifra al dividendo.';
+  $('instruction').textContent='Paso 5: añade una cifra decimal y bájala.';
+  $('prompt').textContent='¿Qué cifra añadimos y bajamos ahora?';
+  if(startedDecimals){
+    showDivisionBack(()=>{
+      state.decimalStarted=false;
+      renderDivision();
+      feedback('Quitamos la coma y volvemos a decidir cómo continuar.','ok');
+      nextDigit();
+    });
+  }
+  let zeroAccepted=false;
+  options([0,1,2,3,4,5,6,7,8,9],(button,digit)=>{
+    if(zeroAccepted)return;
+    if(digit!==0){
+      button.classList.add('bad');
+      fail('Para conservar el valor del dividendo añadimos un cero a la derecha.');
+      return;
+    }
+    zeroAccepted=true;
+    $('optionControls').querySelectorAll('button').forEach(item=>item.disabled=true);
+    button.classList.add('good');
+    state.digits.push(0);
+    state.pos++;
+    state.currentEndCol=state.pos-1;
+    state.currentValue=Number(String(state.currentValue)+0);
+    state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol,decimalZero:true,startedDecimals});
+    renderDivision();
+    ok(`Añadimos y bajamos el 0. El nuevo dividendo parcial es ${state.currentValue}.`);
+    setTimeout(startQuotient,650);
+  });
+}
 function nextDigit(){
   $('quotientDisplay').classList.remove('quotient-active');
   if(state.lastCompletedSubtract){
@@ -6768,7 +6835,11 @@ function nextDigit(){
       askDivisionSubtractDigit();
     });
   }else hideDivisionBack();
-  if(state.pos<state.digits.length){renderSteps(4);const digit=state.digits[state.pos];$('instruction').textContent='Paso 5: baja la siguiente cifra.';$('prompt').textContent='¿Qué cifra baja ahora?';options([...new Set(state.digits)],(b,v)=>{if(+v===digit){b.classList.add('good');state.currentValue=Number(String(state.currentValue)+digit);state.pos++;state.currentEndCol=state.pos-1;state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();ok(`Bajamos el ${digit}. Ahora tenemos ${state.currentValue}.`);setTimeout(startQuotient,500)}else{b.classList.add('bad');fail('Esa no es la siguiente cifra.')}});return}if(state.currentValue===0||state.decimalCount>=state.decimalsWanted)return finish();state.decimalStarted=true;state.digits.push(0);state.pos++;state.currentEndCol=state.pos-1;state.currentValue=Number(String(state.currentValue)+0);state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();feedback('Añadimos un cero para continuar con decimales.','ok');setTimeout(startQuotient,500)}
+  if(state.pos<state.digits.length){renderSteps(4);const digit=state.digits[state.pos];$('instruction').textContent='Paso 5: baja la siguiente cifra.';$('prompt').textContent='¿Qué cifra baja ahora?';options([...new Set(state.digits)],(b,v)=>{if(+v===digit){b.classList.add('good');state.currentValue=Number(String(state.currentValue)+digit);state.pos++;state.currentEndCol=state.pos-1;state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();ok(`Bajamos el ${digit}. Ahora tenemos ${state.currentValue}.`);setTimeout(startQuotient,500)}else{b.classList.add('bad');fail('Esa no es la siguiente cifra.')}});return}
+  if(state.currentValue===0||state.decimalCount>=state.decimalsWanted)return finish();
+  if(!state.decimalStarted)return askDecimalContinuation();
+  askDecimalZero(false);
+}
 function finish(){
   hideDivisionBack();
   clearFinishedAnswerInputs('answerInput');
@@ -10289,6 +10360,10 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     'Paso 1: elige el primer grupo.':'Pas 1: tria el primer grup.','Paso 1: forma el dividendo parcial inicial.':'Pas 1: forma el dividend parcial inicial.','Paso 5: baja la siguiente cifra.':'Pas 5: baixa la xifra següent.',
     'Elige el primer grupo de cifras que sea igual o mayor que el divisor.':'Tria el primer grup de xifres que sigui igual o més gran que el divisor.','Busca el primer grupo de cifras en el que ya cabe el divisor.':'Busca el primer grup de xifres en què ja hi cap el divisor.','¿Con qué grupo empezamos?':'Amb quin grup comencem?',
     'Calcula cuántas veces cabe el divisor sin pasarte.':'Calcula quantes vegades hi cap el divisor sense passar-te.',
+    'Ya no quedan cifras enteras. Decide cómo continuar la división.':'Ja no queden xifres enteres. Decideix com continuar la divisió.','¿Qué hacemos para obtener un resultado con decimales?':'Què fem per obtenir un resultat amb decimals?','Continuar con decimales':'Continua amb decimals','Terminar aquí':'Acaba aquí',
+    'Para obtener decimales debemos añadir una coma y continuar con un cero.':'Per obtenir decimals hem d’afegir una coma i continuar amb un zero.','Correcto. Escribimos la coma en el cociente y continuamos la división.':'Correcte. Escrivim la coma al quocient i continuem la divisió.',
+    'Para continuar con decimales, añadimos una cifra al dividendo.':'Per continuar amb decimals, afegim una xifra al dividend.','Paso 5: añade una cifra decimal y bájala.':'Pas 5: afegeix una xifra decimal i baixa-la.','¿Qué cifra añadimos y bajamos ahora?':'Quina xifra afegim i baixem ara?',
+    'Quitamos la coma y volvemos a decidir cómo continuar.':'Traiem la coma i tornem a decidir com continuar.','Para conservar el valor del dividendo añadimos un cero a la derecha.':'Per conservar el valor del dividend, afegim un zero a la dreta.','Quitamos el cero decimal y volvemos al paso anterior.':'Traiem el zero decimal i tornem al pas anterior.',
     'El cociente ya está escrito. Ahora multiplica esa cifra por cada cifra del divisor.':'El quocient ja està escrit. Ara multiplica aquesta xifra per cada xifra del divisor.',
     'Compara las dos cifras de la columna antes de decidir si necesitas préstamo.':'Compara les dues xifres de la columna abans de decidir si necessites un préstec.',
     'Resuelve la resta de derecha a izquierda, una columna cada vez.':'Resol la resta de dreta a esquerra, una columna cada vegada.',
@@ -10700,6 +10775,8 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     [/^Paso 1: empezamos con (.+)\.$/,'Pas 1: comencem amb $1.'],
     [/^Colocamos (.+) como primer dividendo parcial\.$/,'Col·loquem $1 com a primer dividend parcial.'],
     [/^Correcto\. Empezamos con (.+) como dividendo parcial inicial\.$/,'Correcte. Comencem amb $1 com a dividend parcial inicial.']
+    ,[/^El resto es (.+) y ya no quedan cifras por bajar\.$/,'El residu és $1 i ja no queden xifres per baixar.']
+    ,[/^Añadimos y bajamos el 0\. El nuevo dividendo parcial es (.+)\.$/,'Afegim i baixem el 0. El dividend parcial nou és $1.']
     ,[/^Pregunta (.+)\/(.+)$/,'Pregunta $1/$2']
     ,[/^¡Racha de (.+)! Imparable 🔥$/,'Ratxa de $1! Imparable 🔥']
     ,[/^¡Racha de (.+)! 🔥$/,'Ratxa de $1! 🔥']
