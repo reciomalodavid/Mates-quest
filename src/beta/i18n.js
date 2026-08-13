@@ -15,15 +15,15 @@
     'No se pudo crear el código. Revisa tu conexión o la configuración.':'No s’ha pogut crear el codi. Revisa la connexió o la configuració.',
     'No se pudo guardar en la nube (revisa tu conexión).':'No s’ha pogut desar al núvol (revisa la connexió).','No se pudo vincular. Revisa el código y tu conexión.':'No s’ha pogut vincular. Revisa el codi i la connexió.',
     'Sincronización desactivada en este dispositivo. Tus datos locales se mantienen.':'Sincronització desactivada en aquest dispositiu. Les dades locals es conserven.',
-    'Crea una división y empieza':'Crea una divisió i comença','División en curso':'Divisió en curs','Primer grupo':'Primer grup','Elige las primeras cifras':'Tria les primeres xifres',
+    'Crea una división y empieza':'Crea una divisió i comença','División en curso':'Divisió en curs','Primer grupo':'Primer grup','Elige las primeras cifras':'Tria les primeres xifres','Grupo inicial':'Grup inicial','Forma el dividendo parcial':'Forma el dividend parcial',
     '¿Cuántas veces cabe?':'Quantes vegades hi cap?','Elige la cifra del cociente.':'Tria la xifra del quocient.','Cifra por cifra':'Xifra per xifra','Columna por columna':'Columna per columna',
     'Decide si hace falta pedir prestado':'Decideix si cal demanar prestat','Sí, hace falta pedir prestado.':'Sí, cal demanar prestat.','No hace falta, arriba ya es suficiente.':'No cal, la xifra de dalt ja és prou gran.',
     '¿Necesitamos pedir prestado en esta columna?':'Hem de demanar prestat en aquesta columna?','Resta esa columna':'Resta aquesta columna','Restar columna':'Resta la columna',
     'Baja cifra':'Baixa una xifra','Baja la siguiente cifra':'Baixa la xifra següent','Termina la división':'Acaba la divisió','¡División terminada!':'Divisió acabada!',
     'Paso completado':'Pas completat','Volvemos a decidir el préstamo de esta columna.':'Tornem a decidir el préstec d’aquesta columna.',
     'Volvemos a elegir la cifra del cociente.':'Tornem a triar la xifra del quocient.','Volvemos al último mini-paso de la multiplicación.':'Tornem a l’últim minipas de la multiplicació.',
-    'Paso 1: elige el primer grupo.':'Pas 1: tria el primer grup.','Paso 5: baja la siguiente cifra.':'Pas 5: baixa la xifra següent.',
-    'Elige el primer grupo de cifras que sea igual o mayor que el divisor.':'Tria el primer grup de xifres que sigui igual o més gran que el divisor.',
+    'Paso 1: elige el primer grupo.':'Pas 1: tria el primer grup.','Paso 1: forma el dividendo parcial inicial.':'Pas 1: forma el dividend parcial inicial.','Paso 5: baja la siguiente cifra.':'Pas 5: baixa la xifra següent.',
+    'Elige el primer grupo de cifras que sea igual o mayor que el divisor.':'Tria el primer grup de xifres que sigui igual o més gran que el divisor.','Busca el primer grupo de cifras en el que ya cabe el divisor.':'Busca el primer grup de xifres en què ja hi cap el divisor.','¿Con qué grupo empezamos?':'Amb quin grup comencem?',
     'Calcula cuántas veces cabe el divisor sin pasarte.':'Calcula quantes vegades hi cap el divisor sense passar-te.',
     'El cociente ya está escrito. Ahora multiplica esa cifra por cada cifra del divisor.':'El quocient ja està escrit. Ara multiplica aquesta xifra per cada xifra del divisor.',
     'Compara las dos cifras de la columna antes de decidir si necesitas préstamo.':'Compara les dues xifres de la columna abans de decidir si necessites un préstec.',
@@ -432,7 +432,10 @@
     [/^Producto construido: (.+)\.$/,'Producte construït: $1.'],
     [/^Resultado: (.+)$/,'Resultat: $1'],
     [/^Resta terminada: (.+)\.$/,'Resta acabada: $1.'],
-    [/^Correcto\. (.+) es el primer grupo que ya se puede dividir\.$/,'Correcte. $1 és el primer grup que ja es pot dividir.']
+    [/^Correcto\. (.+) es el primer grupo que ya se puede dividir\.$/,'Correcte. $1 és el primer grup que ja es pot dividir.'],
+    [/^Paso 1: empezamos con (.+)\.$/,'Pas 1: comencem amb $1.'],
+    [/^Colocamos (.+) como primer dividendo parcial\.$/,'Col·loquem $1 com a primer dividend parcial.'],
+    [/^Correcto\. Empezamos con (.+) como dividendo parcial inicial\.$/,'Correcte. Comencem amb $1 com a dividend parcial inicial.']
     ,[/^Pregunta (.+)\/(.+)$/,'Pregunta $1/$2']
     ,[/^¡Racha de (.+)! Imparable 🔥$/,'Ratxa de $1! Imparable 🔥']
     ,[/^¡Racha de (.+)! 🔥$/,'Ratxa de $1! 🔥']
