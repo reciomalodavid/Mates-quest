@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Mates Quest</title>
 <meta name="application-name" content="Mates Quest"/>
-<meta name="mates-quest-build" content="7.1-auditada"/>
+<meta name="mates-quest-build" content="7.2-produccion"/>
 <link href="manifest.json" rel="manifest"/>
 <link href="icon-192.png" rel="icon"/>
 <link href="icon-192.png" rel="apple-touch-icon"/>
@@ -39,6 +39,13 @@ button,input,select{font:inherit}.app{width:min(1220px,calc(100% - 20px));margin
 
 .division-sheet{display:flex;align-items:flex-start;justify-content:center;font-family:"Courier New",monospace;font-weight:800;font-size:clamp(1.7rem,4vw,2.8rem)}
 .left-grid{display:grid;grid-auto-rows:52px;align-items:center;justify-items:center}.grid-cell{width:48px;height:52px;display:grid;place-items:center;position:relative}.grid-cell.line:after{content:"";position:absolute;left:2px;right:2px;bottom:3px;height:2px;background:#17324d}.grid-cell.minus:before{content:"−";position:absolute;left:-13px;top:8px;font-size:.8em}.right-side{min-width:145px;border-left:3px solid #111}.right-side .divisor-display{min-height:52px;display:flex;align-items:flex-end;padding-left:16px;border-bottom:3px solid #111;color:var(--purple);letter-spacing:.08em}.right-side .quotient{min-height:52px;display:flex;align-items:center;padding-left:16px;color:var(--purple);letter-spacing:.16em}
+.grid-cell.initial-source{background:#fff3cf;border:2px solid #efb43d;border-radius:10px;color:#9a5b00}
+.grid-cell.initial-partial{background:#fff8e7;border:2px solid #f2c86c;border-radius:10px;color:#9a5b00}
+.grid-cell.initial-group-enter{animation:initialGroupDrop .62s cubic-bezier(.2,.85,.3,1) both}
+.grid-cell.initial-partial-first:before{content:"↓";position:absolute;left:50%;top:-34px;transform:translateX(-50%);color:#2d8ed1;font-family:Inter,system-ui,sans-serif;font-size:.55em;font-weight:1000}
+.grid-cell.decimal-digit:before{content:",";position:absolute;left:-7px;bottom:5px;color:#17324d;font-size:.72em;font-weight:1000}
+@keyframes initialGroupDrop{from{opacity:.25;transform:translateY(-34px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.grid-cell.initial-group-enter{animation:none}}
 
 .module-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
 .module-tab{border:2px solid #c9d8e7;background:#eef6fd;color:#17324d;border-radius:14px;padding:12px 4px;font-weight:1000;font-size:.82rem;cursor:pointer}
@@ -1648,6 +1655,9 @@ body{
   line-height:1
 }
 .module-tab.active .module-tab-icon{background:#d3e8f4}
+.module-tab-icon-operations{grid-template-columns:1fr 1fr!important;gap:1px;padding:0 4px;font-family:Arial,sans-serif;font-size:1.35rem!important;font-weight:1000}
+.module-tab-icon-operations i{display:grid;place-items:center;width:17px;height:28px;font-style:normal;line-height:1}
+.module-tab-icon-operations i:first-child{color:#248455}.module-tab-icon-operations i:last-child{color:#d05a45}
 .module-tab-copy{
   min-width:0;
   display:grid;
@@ -4174,6 +4184,11 @@ select:focus,
 #divisionBackBtn.hidden{display:none!important}
 .product-building .minus{display:none!important}
 .grid-cell.division-carry{font-size:.48em;color:#7c54ef;font-weight:1000;align-self:start;padding-top:2px;text-shadow:0 1px 0 rgba(255,255,255,.95);background:rgba(143,99,255,.12);border-radius:8px;box-shadow:inset 0 0 0 1px rgba(143,99,255,.18)}
+.grid-cell.division-borrow-source{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:#a35c22}
+.grid-cell .division-borrow-note{position:absolute;z-index:3;left:50%;top:-19px;transform:translateX(-50%);min-width:31px;padding:2px 5px;border:1px solid #e2a56f;border-radius:8px;background:#fff4e8;color:#a34f13;font-family:Inter,system-ui,sans-serif;font-size:.38em;font-weight:1000;line-height:1.15;text-align:center;text-decoration:none;box-shadow:0 2px 5px rgba(92,54,22,.12)}
+.nb-cell.carry{align-self:end!important;min-width:28px;height:25px!important;margin-bottom:4px;padding:2px 5px!important;border:1px solid #d9c5f5;border-radius:8px!important;background:#f7f0ff!important;color:#7140bd!important;font-family:Inter,system-ui,sans-serif;font-size:.48em!important;line-height:1!important;text-align:center}
+.nb-cell.sum-carry{background:#fff7e7!important;border-color:#edcf8f!important;color:#9a5a00!important}
+.grid-cell.subtraction-building{color:#c56616!important;background:rgba(244,162,97,.12);border-radius:8px;box-shadow:inset 0 0 0 1px rgba(197,102,22,.18)}
 
 
 /* ======================= 6.6 — MORE COLOR + IPAD HEATMAP ======================= */
@@ -4299,7 +4314,7 @@ body{
 
 
 /* === Ajuste 6.7: heatmap y tablas más claros === */
-.tbtn{padding:14px 4px!important;border-radius:16px!important;min-height:104px!important}
+.tbtn{padding:14px 4px!important;border-radius:16px!important;min-height:92px!important}
 .tbtn small{font-size:.62rem!important;letter-spacing:.02em!important}
 .tbtn .table-status{display:block;margin-top:6px;font-size:.64rem;font-weight:1000;line-height:1.1}
 .tbtn .table-meta{display:block;margin-top:4px;font-size:.57rem;font-weight:850;color:#5e7489;line-height:1.2}
@@ -4483,6 +4498,158 @@ body{
   .new-profile-popover{width:100%}
 }
 
+/* === Responsive 7.1: usar cada pantalla sin estirar el contenido === */
+.app{
+  width:calc(100% - clamp(16px,3vw,56px))!important;
+  max-width:1780px!important;
+  padding:clamp(8px,1.4vw,20px) 0 28px!important;
+}
+
+@media(min-width:1500px){
+  .layout{
+    grid-template-columns:minmax(240px,270px) minmax(0,1fr) minmax(250px,290px)!important;
+    gap:clamp(18px,1.4vw,26px)!important;
+  }
+  .main{padding:clamp(22px,1.7vw,30px)!important}
+  .topbar{
+    grid-template-columns:minmax(280px,1fr) minmax(380px,1.15fr) minmax(440px,1.35fr)!important;
+  }
+  .module-navigation.expanded .module-tabs{
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  }
+}
+
+@media(min-width:901px) and (max-width:1499px){
+  .layout{
+    grid-template-columns:minmax(205px,230px) minmax(0,1fr) minmax(220px,250px)!important;
+  }
+}
+
+@media(min-width:901px) and (max-width:1180px){
+  .topbar{grid-template-columns:minmax(230px,.9fr) minmax(320px,1.1fr)!important}
+  .game-hud{grid-column:1/-1!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .layout{grid-template-columns:minmax(210px,230px) minmax(0,1fr)!important}
+  .right{
+    display:block!important;
+    position:static!important;
+    grid-column:1/-1!important;
+  }
+}
+
+@media(max-width:900px){
+  .app{width:calc(100% - 20px)!important;padding:10px 0 24px!important}
+  .left,.right{position:static!important}
+}
+
+@media(max-width:620px){
+  .app{width:calc(100% - 12px)!important;padding:6px 0 18px!important}
+}
+
+/* === Mobile fit + compact sync status === */
+.setup-input-grid{align-items:stretch}
+.setup-input-grid>*{min-width:0;box-sizing:border-box}
+.sync-details{
+  width:max-content;
+  max-width:100%;
+  margin:10px 0 14px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.sync-details summary{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  min-height:34px;
+  max-width:100%;
+  padding:6px 10px;
+  border:1px solid #d8e2e9;
+  border-radius:999px;
+  background:rgba(255,255,255,.82);
+  color:#607487;
+  font-size:.7rem;
+  font-weight:800;
+  line-height:1.15;
+}
+.sync-details summary::after{content:"⌄"!important;float:none!important;font-size:.82rem}
+.sync-details[open]{width:100%}
+.sync-details[open] summary::after{content:"⌃"!important}
+.sync-state-dot{
+  width:10px;
+  height:10px;
+  flex:0 0 10px;
+  border-radius:50%;
+  background:#e0aa2f;
+  box-shadow:0 0 0 3px rgba(224,170,47,.16);
+}
+.sync-details[data-sync-state="ok"] .sync-state-dot{background:#39b85a;box-shadow:0 0 0 3px rgba(57,184,90,.16)}
+.sync-details[data-sync-state="error"] .sync-state-dot{background:#dc5361;box-shadow:0 0 0 3px rgba(220,83,97,.15)}
+.sync-details-body{
+  width:min(100%,310px);
+  margin-top:7px;
+  padding:11px!important;
+  border:1px solid #dce5ec;
+  border-radius:13px;
+  background:#fff;
+  box-shadow:0 7px 18px rgba(50,73,94,.09);
+}
+
+@media(max-width:650px){
+  .controls{max-width:100%;overflow:hidden}
+  .setup-input-grid{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px!important;
+  }
+  .setup-input-grid .answerinput,
+  .setup-input-grid .btn,
+  .setup-input-grid select{
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    margin:0!important;
+  }
+  .setup-input-grid .answerinput{
+    padding:12px 8px!important;
+    font-size:clamp(.95rem,4.8vw,1.14rem)!important;
+  }
+  .setup-input-grid .btn{
+    padding:10px 7px!important;
+    font-size:clamp(.9rem,4.2vw,1.03rem)!important;
+    white-space:normal;
+  }
+}
+
+
+/* Number Lab */
+.game-hud{grid-template-columns:minmax(160px,220px)!important}
+.think-module{display:grid;gap:16px}.think-module.hidden{display:none}
+.think-hero{display:flex;justify-content:space-between;gap:20px;align-items:end;padding:22px;border-radius:18px;background:linear-gradient(135deg,#fff7e8,#ffe0b2);border:1px solid #f4c77b}
+.think-hero h2{margin:5px 0 8px}.think-hero p{margin:0;color:var(--muted);max-width:720px}.think-eyebrow{font-size:.72rem;font-weight:1000;letter-spacing:.12em;color:#9a5a00}
+.think-settings{display:flex;gap:10px;align-items:end;flex-wrap:wrap}.think-level{display:grid;gap:5px;min-width:180px}.think-level span{font-size:.72rem;font-weight:900;color:#805016}.think-goal{min-width:150px}
+.think-progress{padding:13px 16px;border:1px solid var(--line);border-radius:14px;background:#fff}.think-progress>div:first-child{display:flex;justify-content:space-between;gap:12px;font-size:.82rem}.think-progress-track{height:8px;background:#e8edf4;border-radius:999px;margin-top:9px;overflow:hidden}.think-progress-track span{display:block;width:0;height:100%;background:linear-gradient(90deg,#55aa7d,#84cf9e);transition:width .25s ease}
+.think-progress.unlimited .think-progress-track{display:none}
+.think-activity-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.think-activity-button{appearance:none;border:1px solid var(--line);background:#fff;border-radius:15px;padding:15px;text-align:left;cursor:pointer;color:inherit}.think-activity-button b,.think-activity-button span{display:block}.think-activity-button span{font-size:.82rem;color:var(--muted);margin-top:5px;line-height:1.3}.think-activity-button.active{border-color:#f0a33a;background:#fff8ec;box-shadow:0 0 0 2px rgba(240,163,58,.16)}
+.think-workspace{padding:22px;border:1px solid var(--line);border-radius:18px;background:#fff;text-align:center}.think-workspace.hidden{display:none}.think-prompt{font-size:1.15rem;font-weight:950;margin:10px}.think-prompt.hidden{display:none}
+.think-dot-board{min-height:190px;display:grid;grid-template-columns:repeat(5,42px);grid-auto-rows:42px;justify-content:center;align-content:center;gap:10px;padding:18px;margin:12px auto;transition:opacity .18s ease}.think-dot-board.concealed{opacity:0}.think-dot{width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,#6aa8ff,#2f70d0);box-shadow:inset 0 2px 3px rgba(255,255,255,.6),0 3px 7px rgba(47,112,208,.18)}.think-dot:nth-child(5n){margin-right:10px}.think-dot.blank{visibility:hidden}
+.think-choice-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0}.think-choice{min-width:58px;min-height:48px;border:1px solid var(--line);border-radius:13px;background:#fff;font-size:1.25rem;font-weight:900;cursor:pointer}.think-choice:hover{background:#f5f8fc}.think-feedback{min-height:26px;font-weight:850;margin-top:10px}.think-feedback.ok{color:#187647}.think-feedback.bad{color:#a74a20}.think-explanation{min-height:24px;color:var(--muted);font-size:.9rem;margin:5px auto;max-width:650px}
+.think-place-board{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px auto;max-width:760px}.think-place-board>div{min-height:175px;padding:15px;border-radius:15px;background:#f7f9fc}.think-hundreds,.think-blocks,.think-units{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;align-items:end;margin-top:14px}.think-hundred-block{width:56px;height:56px;border-radius:6px;border:1px solid #8e62bd;background:repeating-linear-gradient(0deg,transparent 0,transparent 9px,rgba(255,255,255,.55) 10px),repeating-linear-gradient(90deg,#b68ce0 0,#b68ce0 9px,#d9c1ef 10px)}.think-ten-block{width:18px;height:108px;border-radius:5px;background:repeating-linear-gradient(to bottom,#f6a63d 0,#f6a63d 9px,#fff2d9 10px,#fff2d9 11px);border:1px solid #cf7f1c}.think-unit{width:25px;height:25px;border-radius:5px;background:#6aa8ff;border:1px solid #2f70d0}.think-built-number,.think-equation{font-size:1.35rem;font-weight:1000;margin:12px}.think-choice-row .btn small{display:block;font-size:.65rem;opacity:.78}
+.think-ten-frame{display:grid;grid-template-columns:repeat(5,42px);grid-auto-rows:42px;gap:8px;justify-content:center;margin:22px auto}.think-ten-cell{border:2px solid #d9e2ee;border-radius:9px;background:#f7f9fc}.think-ten-cell.filled{background:#65b98a;border-color:#3c9765}
+.think-hundred-action{background:#7d55b5!important;color:#fff!important;border-color:#68439d!important}.think-remove{background:#fff!important;color:#9b3d45!important;border-color:#e6b9bd!important}.think-remove:hover{background:#fff1f2!important}.think-remove:disabled{opacity:.35;cursor:not-allowed}
+.think-jump-story{font-size:1.05rem;font-weight:850;margin:14px}.think-jump-canvas{max-width:760px;margin:14px auto;padding:8px;border-radius:16px;background:#f8fbff;border:1px solid #dce7f3;overflow-x:auto}.think-jump-svg{display:block;width:100%;min-width:520px;height:auto}.think-jump-base{stroke:#8298ae;stroke-width:4;stroke-linecap:round}.think-jump-tick{stroke:#8298ae;stroke-width:3}.think-jump-arc{fill:none;stroke:#357bd8;stroke-width:4;stroke-linecap:round}.think-jump-arc.pending{stroke:#f1a33b;stroke-dasharray:7 7}.think-jump-arrow{fill:#357bd8}.think-jump-arrow.pending{fill:#f1a33b}.think-jump-label{font-size:15px;font-weight:900;fill:#2f70d0;text-anchor:middle}.think-jump-label.pending{fill:#a45d00}.think-jump-number{font-size:16px;font-weight:950;fill:#263b50;text-anchor:middle}.think-jump-number.unknown{fill:#a45d00}.think-jump-question{font-weight:950;font-size:1.05rem;margin-top:10px}
+@media(max-width:900px){.think-activity-tabs{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.think-hero{display:grid;align-items:stretch}.think-settings{display:grid;grid-template-columns:1fr 1fr}.think-level{min-width:0}.think-activity-tabs,.think-place-board{grid-template-columns:1fr}.think-dot-board{grid-template-columns:repeat(5,34px);grid-auto-rows:34px;gap:8px}.think-dot{width:28px;height:28px}.think-progress>div:first-child{display:grid}}@media(max-width:460px){.think-settings{grid-template-columns:1fr}}
+
+/* Friendly equation lesson */
+.equation-friendly-glossary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.equation-friendly-glossary>div{display:grid;gap:5px;padding:14px;border:1px solid var(--line);border-radius:13px;background:#f8fafc}.equation-friendly-glossary b{color:#385a73}.equation-friendly-glossary span{font-size:.86rem;line-height:1.45;color:var(--muted)}
+.inverse-friendly{background:linear-gradient(145deg,#fffaf0,#fff)!important}.inverse-pairs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.inverse-pairs>div{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:16px;border:1px solid #ead6ad;border-radius:15px;background:#fff;text-align:center}.inverse-pairs small{grid-column:1/-1;color:var(--muted);font-weight:850}.inverse-action{padding:10px;border-radius:11px;font-size:1.15rem;font-weight:1000}.inverse-action.plus,.inverse-action.multiply{background:#e7f4ff;color:#28679b}.inverse-action.minus,.inverse-action.divide{background:#fff0e7;color:#a44f23}.inverse-mini-examples{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.inverse-mini-examples p{margin:0;padding:10px 12px;border-radius:10px;background:#f7f9fc}.lesson-friendly-note{padding:12px 14px;border-left:4px solid #e5a22f;background:#fff7e7;border-radius:8px}.equation-decision{display:grid;gap:9px;margin:16px 0}.equation-question{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;padding:12px;border-radius:12px;background:#f6f9fc}.equation-question>span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#4f8db5;color:#fff;font-weight:1000}.equation-question p{margin:4px 0 0;color:var(--muted)}.equation-worked-friendly{margin-top:14px}.lesson-more{margin:12px 0;border:1px solid var(--line);border-radius:13px;background:#fff;overflow:hidden}.lesson-more summary{cursor:pointer;padding:14px 16px;font-weight:950;color:#385a73;background:#f7fafc}.lesson-more-body{padding:4px 16px 16px}.lesson-more-body p,.lesson-more-body li{line-height:1.55}.lesson-more-body ul{margin-bottom:0}
+@media(max-width:700px){.equation-friendly-glossary,.inverse-pairs,.inverse-mini-examples{grid-template-columns:1fr}.inverse-pairs>div{grid-template-columns:1fr auto 1fr}}
+
+/* Production language selector */
+.language-picker{display:inline-flex;align-items:center;margin-left:auto}
+.language-picker select{border:1px solid rgba(255,255,255,.7);border-radius:999px;background:rgba(255,255,255,.96);color:#31506c;padding:6px 27px 6px 10px;font-size:.72rem;font-weight:900;cursor:pointer}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:520px){.language-picker select{font-size:.68rem;padding:5px 23px 5px 8px}.brand-actions{gap:6px}.app-brand span{display:none}}
 </style>
 </head>
 <body>
@@ -4491,6 +4658,7 @@ body{
 <div class="brand-actions">
 <div class="app-brand"><b>Mates Quest</b><span>Práctica guiada de matemáticas</span></div>
 <button class="back home-button" id="reloadBtn" title="Volver a la selección de actividades" type="button">⌂ Inicio</button>
+<label class="language-picker"><span class="sr-only">Idioma</span><select aria-label="Idioma" id="languageSelect"><option value="es">Castellano</option><option value="ca">Català</option></select></label>
 </div>
 <div class="profile-hub">
 <div class="profile-bar compact">
@@ -4511,18 +4679,6 @@ body{
 <span class="hud-label">XP</span>
 <div class="hud-number">🏅 <span id="pointsTotal">0</span></div>
 </div>
-<div class="hud-card hud-hearts" id="heartsCard" title="Energía disponible">
-<span class="hud-label">Energía</span>
-<div aria-label="Tres intentos" class="hud-hearts-row" id="hearts"></div>
-</div>
-<div class="hud-card hud-streak" id="streakCard" title="Aciertos consecutivos">
-<span class="hud-label">Racha</span>
-<div class="hud-number">🔥 <span id="streak">0</span></div>
-</div>
-<div class="hud-card hud-reward" id="rewardCard" title="Valoración del reto">
-<span class="hud-label" id="rewardLabel">Valoración</span>
-<div aria-label="Tres estrellas posibles" class="hud-stars" id="stars"></div>
-</div>
 </div>
 </header>
 <div class="layout">
@@ -4531,8 +4687,8 @@ body{
 <h3>Tu perfil</h3>
 <div id="globalMiniSummary" style="font-size:.82rem;line-height:1.5">Elige o crea un perfil arriba para guardar tu progreso.</div>
 </div>
-<details class="sync-details" id="syncBlock">
-<summary>Sincronización entre dispositivos</summary>
+<details class="sync-details" data-sync-state="pending" id="syncBlock">
+<summary><span aria-hidden="true" class="sync-state-dot"></span><span>Sincronización</span></summary>
 <div class="sync-details-body">
 <div id="syncStatus" style="font-size:.72rem;color:#4c6a85;margin-bottom:8px">Comprobando configuración…</div>
 <div class="hidden" id="syncSetupBlock">
@@ -4583,12 +4739,13 @@ body{
 <option value="fractions">🍰 Fracciones</option>
 <option value="order">🧩 Jerarquía</option>
 <option value="equations">⚖️ Ecuaciones</option>
+<option value="think">💡 Pensar</option>
 <option value="learn">📘 Aprende</option>
 </select>
 </label>
 <div class="module-tabs">
 <button class="module-tab active" id="sumarestaTab" type="button">
-<span class="module-tab-icon">➕➖</span>
+<span class="module-tab-icon module-tab-icon-operations" aria-hidden="true"><i>+</i><i>−</i></span>
 <span class="module-tab-copy"><b>Suma y resta</b><small>Columnas, llevadas y préstamos</small></span>
 </button>
 <button class="module-tab" id="tablasTab" type="button">
@@ -4619,17 +4776,94 @@ body{
 <span class="module-tab-icon">⚖️</span>
 <span class="module-tab-copy"><b>Ecuaciones</b><small>Equilibrar y dejar x sola</small></span>
 </button>
+<button class="module-tab module-tab-think" id="thinkTab" type="button">
+<span class="module-tab-icon">💡</span>
+<span class="module-tab-copy"><b>Pensar</b><small>Sentido numérico y estrategias visuales</small></span>
+</button>
 <button class="module-tab module-tab-learn" id="learnTab" type="button">
 <span class="module-tab-icon">📘</span>
 <span class="module-tab-copy"><b>Aprende</b><small>Conceptos, ejemplos y mini pruebas</small></span>
 </button>
 </div>
 </nav>
+<div class="hidden think-module" id="thinkModule">
+<div class="think-hero">
+<div>
+<span class="think-eyebrow">LABORATORIO DE NÚMEROS</span>
+<h2>Entiende los números jugando con cantidades</h2>
+<p>Aquí no se trata de correr ni memorizar un procedimiento. Mira, construye y encuentra una estrategia.</p>
+</div>
+<div class="think-settings"><label class="think-level"><span>Nivel de práctica</span><select class="answerinput" id="thinkLevel">
+<option value="1">Nivel 1 · Cantidades pequeñas</option>
+<option value="2">Nivel 2 · Grupos de 5 y 10</option>
+<option value="3">Nivel 3 · Decenas y unidades</option>
+<option value="4">Nivel 4 · Centenas y saltos</option>
+<option value="5">Nivel 5 · Estrategias eficientes</option>
+<option value="6">Nivel 6 · Cálculo flexible</option>
+</select></label><label class="think-level think-goal"><span>Duración de la sesión</span><select class="answerinput" id="thinkGoal"><option value="5">5 retos</option><option value="10">10 retos</option><option value="20">20 retos</option><option value="0">Sin límite</option></select></label></div>
+</div>
+<div class="think-progress" id="thinkProgress"><div><b>Ruta de la actividad</b><span id="thinkProgressText">0 de 5 retos completados</span></div><div class="think-progress-track"><span id="thinkProgressBar"></span></div></div>
+<div class="think-activity-tabs" role="tablist" aria-label="Actividades de pensamiento matemático">
+<button class="think-activity-button active" data-think-activity="count" type="button"><b>👀 Reconocer cantidades</b><span>Mira por grupos de cinco y de diez.</span></button>
+<button class="think-activity-button" data-think-activity="place" type="button"><b>🧱 Valor posicional</b><span>Construye centenas, decenas y unidades.</span></button>
+<button class="think-activity-button" data-think-activity="ten" type="button"><b>🔟 Usar números amigos</b><span>Llega al siguiente 10 de forma eficiente.</span></button>
+<button class="think-activity-button" data-think-activity="jump" type="button"><b>↗️ Saltos en la recta</b><span>Descompón para calcular mentalmente.</span></button>
+</div>
+<section class="think-workspace" id="thinkCountPanel">
+<h3>Mira la cantidad. Después desaparecerá.</h3>
+<div class="think-dot-board" id="thinkDots" aria-live="polite"></div>
+<div class="think-prompt hidden" id="thinkCountQuestion">¿Cuántos puntos ves?</div>
+<div class="think-choice-row" id="thinkCountChoices"></div>
+<button class="btn grey" id="thinkShowCount" type="button">Mostrar otra vez</button>
+<div class="think-feedback" id="thinkCountFeedback" role="status"></div>
+<div class="think-explanation" id="thinkCountExplanation"></div>
+</section>
+<section class="think-workspace hidden" id="thinkPlacePanel">
+<h3 id="thinkPlacePrompt">Construye el número 34</h3>
+<div class="think-place-board">
+<div class="think-hundreds-column" id="thinkHundredsColumn"><b>Centenas</b><div class="think-hundreds" id="thinkHundreds"></div></div>
+<div><b>Decenas</b><div class="think-blocks" id="thinkTens"></div></div>
+<div><b>Unidades</b><div class="think-units" id="thinkUnits"></div></div>
+</div>
+<div class="think-built-number" id="thinkBuiltNumber" aria-live="polite"></div>
+<div class="think-choice-row">
+<button class="btn violet think-hundred-action" id="thinkAddHundred" type="button">+100 <small>Añadir una centena</small></button>
+<button class="btn orange" id="thinkAddTen" type="button">+10 <small>Añadir una decena</small></button>
+<button class="btn blue" id="thinkAddOne" type="button">+1 <small>Añadir una unidad</small></button>
+<button class="btn think-remove" id="thinkRemoveHundred" type="button">−100 <small>Quitar una centena</small></button>
+<button class="btn think-remove" id="thinkRemoveTen" type="button">−10 <small>Quitar una decena</small></button>
+<button class="btn think-remove" id="thinkRemoveOne" type="button">−1 <small>Quitar una unidad</small></button>
+<button class="btn grey" id="thinkClearPlace" type="button">Vaciar</button>
+<button class="btn green" id="thinkCheckPlace" type="button">Comprobar</button>
+</div>
+<div class="think-feedback" id="thinkPlaceFeedback" role="status"></div>
+<div class="think-explanation" id="thinkPlaceExplanation"></div>
+</section>
+<section class="think-workspace hidden" id="thinkTenPanel">
+<h3 id="thinkTenPrompt">Completa hasta 10</h3>
+<div class="think-ten-frame" id="thinkTenFrame"></div>
+<div class="think-equation" id="thinkTenEquation"></div>
+<div class="think-choice-row" id="thinkTenChoices"></div>
+<button class="btn grey" id="thinkNewTen" type="button">Otro número</button>
+<div class="think-feedback" id="thinkTenFeedback" role="status"></div>
+<div class="think-explanation" id="thinkTenExplanation"></div>
+</section>
+<section class="think-workspace hidden" id="thinkJumpPanel">
+<h3>Completa cada salto</h3>
+<div class="think-jump-story" id="thinkJumpStory"></div>
+<div class="think-jump-canvas" id="thinkJumpCanvas" aria-label="Recta numérica con saltos"></div>
+<div class="think-jump-question" id="thinkJumpQuestion">¿Dónde aterriza este salto?</div>
+<div class="think-choice-row" id="thinkJumpChoices"></div>
+<button class="btn grey" id="thinkNewJump" type="button">Otro salto</button>
+<div class="think-feedback" id="thinkJumpFeedback" role="status"></div>
+<div class="think-explanation" id="thinkJumpExplanation"></div>
+</section>
+</div>
 <div class="hidden" id="divisionModule">
 <div class="title">División</div>
 <div class="controls" id="setupPanel" style="margin-top:0;margin-bottom:14px">
 <div class="prompt">Crea tu división</div>
-<div class="inputrow" style="flex-wrap:wrap">
+<div class="inputrow setup-input-grid" style="flex-wrap:wrap">
 <input class="answerinput" id="customDividend" placeholder="Dividendo" step="any" type="number"/>
 <input class="answerinput" id="customDivisor" placeholder="Divisor" step="any" type="number"/>
 <select class="answerinput" id="decimalPlaces" style="max-width:180px">
@@ -4656,7 +4890,7 @@ body{
 <div class="title">Multiplicación</div>
 <div class="controls" style="margin-top:0;margin-bottom:14px">
 <div class="prompt">Multiplicación personalizada</div>
-<div class="inputrow" style="flex-wrap:wrap">
+<div class="inputrow setup-input-grid" style="flex-wrap:wrap">
 <input class="answerinput" id="multA" min="0" placeholder="Primer número" step="1" type="number"/>
 <input class="answerinput" id="multB" min="0" placeholder="Segundo número" step="1" type="number"/>
 <button class="btn green" id="startMultBtn">Empezar</button>
@@ -5337,67 +5571,93 @@ body{
 </section>
 <section class="learn-page hidden" id="lesson-equations">
 <div class="learn-page-head"><button class="btn grey back-to-learn">← Temas</button><h2 class="learn-page-title">⚖️ Ecuaciones de primer grado</h2></div>
-<div class="lesson-route"><span>1. Desde cero</span><span>2. Mapa</span><span>3. Sin saltos</span><span>4. Chuleta</span><span>5. Comprueba</span></div><div class="learn-zero-primer"><div class="lesson-section lesson-zero"><div class="lesson-kicker">¿QUÉ ES UNA ECUACIÓN?</div><h3>La idea antes del procedimiento</h3><p>Es una igualdad con un valor desconocido. Resolverla significa descubrir qué valor hace verdadera la igualdad.</p><ul class="lesson-recognize"><li>Hay un signo igual y una incógnita, normalmente x.</li><li>Los dos lados deben conservar siempre el mismo valor.</li></ul></div><div class="lesson-section lesson-map-section"><div class="lesson-kicker">EL MAPA QUE SIEMPRE SE REPITE</div><h3>Plan de ataque</h3><div class="lesson-step-map"><div class="lesson-map-row"><span class="lesson-map-num">1</span><p>Piensa en una balanza: haz lo mismo en ambos lados.</p></div><div class="lesson-map-row"><span class="lesson-map-num">2</span><p>Elige un término que impide dejar x sola.</p></div><div class="lesson-map-row"><span class="lesson-map-num">3</span><p>Usa la operación inversa para deshacerlo.</p></div><div class="lesson-map-row"><span class="lesson-map-num">4</span><p>Simplifica ambos lados.</p></div><div class="lesson-map-row"><span class="lesson-map-num">5</span><p>Repite hasta obtener x = número.</p></div><div class="lesson-map-row"><span class="lesson-map-num">6</span><p>Sustituye el número en la ecuación original para comprobar.</p></div></div></div><div class="lesson-section lesson-worked-zero"><div class="lesson-kicker">EJEMPLO CON RAZONAMIENTO</div><h3>Una línea cada vez</h3><div class="logic-worked-example"><div class="logic-worked-row"><span class="logic-step-badge">1</span><div><b>3x + 5 = 20</b><small>Queremos dejar x sola.</small></div></div><div class="logic-worked-row"><span class="logic-step-badge">2</span><div><b>Restamos 5 en ambos lados</b><small>3x = 15.</small></div></div><div class="logic-worked-row"><span class="logic-step-badge">3</span><div><b>Dividimos ambos lados entre 3</b><small>x = 5.</small></div></div><div class="logic-worked-row"><span class="logic-step-badge">4</span><div><b>Comprobamos</b><small>3×5+5=20; verdadero.</small></div></div></div></div><div class="lesson-section lesson-cheat-sheet"><div class="cheat-head"><div class="cheat-icon">⚡</div><div><div class="lesson-kicker">CHEAT SHEET</div><h3>Lo que debes recordar</h3></div></div><div class="cheat-grid"><div class="cheat-item"><span>✓</span><p>+a se deshace con −a.</p></div><div class="cheat-item"><span>✓</span><p>−a se deshace con +a.</p></div><div class="cheat-item"><span>✓</span><p>×a se deshace con ÷a.</p></div><div class="cheat-item"><span>✓</span><p>Nunca cambies algo en un solo lado.</p></div><div class="cheat-item"><span>✓</span><p>No “pasa cambiando signo”: escribe la operación en ambos lados.</p></div></div></div><div class="lesson-section lesson-diagnose"><div class="lesson-kicker">SI ALGO SALE MAL</div><h3>Errores que conviene detectar</h3><div class="diagnose-grid"><div class="diagnose-item"><b>No hagas esto</b><p>Cambiar de signo sin comprender la operación inversa.</p></div><div class="diagnose-item"><b>No hagas esto</b><p>Operar solo un lado.</p></div><div class="diagnose-item"><b>No hagas esto</b><p>No comprobar la solución en la ecuación original.</p></div></div><div class="reason-check"><b>Comprobación de sentido</b><p>Una solución es correcta solo si al sustituirla ambos lados dan exactamente lo mismo.</p></div></div><div class="lesson-existing-divider"><span>Ahora profundiza con más ejemplos y práctica</span></div></div>
-<div class="lesson-section lesson-concept">
-<div class="lesson-kicker">IDEA FUNDAMENTAL</div>
-<h3>Una ecuación es una balanza</h3>
-<p>El signo igual no significa «aquí viene la respuesta». Significa que el lado izquierdo y el derecho tienen exactamente el mismo valor.</p>
-<div class="lesson-balance-demo">
-<div>3x + 5</div><div class="balance-symbol">⚖️</div><div>20</div>
+<div class="lesson-route"><span>1. Entiende</span><span>2. Deshaz</span><span>3. Equilibra</span><span>4. Comprueba</span></div>
+
+<div class="lesson-section lesson-zero">
+<div class="lesson-kicker">ANTES DE EMPEZAR</div>
+<h3>¿Qué estamos buscando?</h3>
+<p>Una ecuación es como una balanza equilibrada. Los dos lados del signo igual valen lo mismo, pero hay un número que todavía no conocemos.</p>
+<div class="equation-friendly-glossary">
+<div><b>Incógnita</b><span>El número desconocido. Normalmente lo llamamos <strong>x</strong>.</span></div>
+<div><b>Término</b><span>Cada número o expresión separada por una suma o una resta.</span></div>
+<div><b>Resolver</b><span>Descubrir qué número debe valer x para que la igualdad sea verdadera.</span></div>
 </div>
-<p>Para que la balanza siga equilibrada, cualquier operación que hagamos en un lado debemos hacerla también en el otro.</p>
-<div class="lesson-rule-big">Lo mismo en los dos lados.</div>
+<div class="lesson-balance-demo"><div>x + 5</div><div class="balance-symbol">⚖️</div><div>12</div></div>
+<p class="lesson-rule-big">Si cambias un lado, debes hacer exactamente lo mismo en el otro.</p>
 </div>
-<div class="lesson-section">
-<div class="lesson-kicker">HERRAMIENTA</div>
-<h3>Las operaciones inversas deshacen</h3>
-<div class="inverse-grid">
-<div><b>+ 5</b><span>se deshace con</span><b>− 5</b></div>
-<div><b>− 7</b><span>se deshace con</span><b>+ 7</b></div>
-<div><b>× 3</b><span>se deshace con</span><b>÷ 3</b></div>
-<div><b>÷ 4</b><span>se deshace con</span><b>× 4</b></div>
+
+<div class="lesson-section inverse-friendly">
+<div class="lesson-kicker">LA HERRAMIENTA CLAVE</div>
+<h3>¿Qué es una operación inversa?</h3>
+<p>Es una operación que <b>deshace</b> otra. La usamos para retirar lo que acompaña a x sin romper el equilibrio.</p>
+<div class="inverse-pairs">
+<div><span class="inverse-action plus">+ 5</span><b>se deshace con</b><span class="inverse-action minus">− 5</span><small>Sumar ↔ restar</small></div>
+<div><span class="inverse-action multiply">× 3</span><b>se deshace con</b><span class="inverse-action divide">÷ 3</span><small>Multiplicar ↔ dividir</small></div>
 </div>
-<p>El objetivo es dejar a <b>x sola</b>. No «pasamos» números mágicamente: aplicamos la operación inversa en ambos lados.</p>
+<div class="inverse-mini-examples">
+<p><b>x + 5</b>: restamos 5.</p>
+<p><b>x − 7</b>: sumamos 7.</p>
+<p><b>3x</b>: dividimos entre 3.</p>
+<p><b>x ÷ 4</b>: multiplicamos por 4.</p>
 </div>
-<div class="lesson-section">
-<div class="lesson-kicker">EJEMPLO 1</div>
-<h3>Una operación: x + 5 = 12</h3>
-<div class="equation-worked">
-<div><span>x + 5</span><b>=</b><span>12</span><small>Queremos quitar el +5.</small></div>
-<div><span>x + 5 − 5</span><b>=</b><span>12 − 5</span><small>Restamos 5 en ambos lados.</small></div>
-<div class="final"><span>x</span><b>=</b><span>7</span><small>La incógnita ya está sola.</small></div>
+<p class="lesson-friendly-note">No pasamos números mágicamente al otro lado. Aplicamos la operación inversa en los dos lados.</p>
 </div>
-<div class="lesson-check-line"><b>Comprobación:</b> sustituimos x por 7 → 7 + 5 = 12. Es verdadero.</div>
+
+<div class="lesson-section lesson-worked-zero">
+<div class="lesson-kicker">EJEMPLO GUIADO</div>
+<h3>Resolver x + 5 = 12</h3>
+<div class="equation-decision">
+<div class="equation-question"><span>1</span><div><b>¿Qué impide que x esté sola?</b><p>El <strong>+ 5</strong>.</p></div></div>
+<div class="equation-question"><span>2</span><div><b>¿Qué operación deshace + 5?</b><p><strong>− 5</strong>, porque restar deshace sumar.</p></div></div>
+<div class="equation-question"><span>3</span><div><b>¿Dónde restamos 5?</b><p>En los dos lados, para mantener la balanza equilibrada.</p></div></div>
 </div>
-<div class="lesson-section">
-<div class="lesson-kicker">EJEMPLO 2</div>
-<h3>Dos pasos: 3x + 5 = 20</h3>
-<div class="equation-worked">
-<div><span>3x + 5</span><b>=</b><span>20</span><small>Primero deshacemos la suma.</small></div>
-<div><span>3x + 5 − 5</span><b>=</b><span>20 − 5</span><small>Restamos 5 en ambos lados.</small></div>
-<div><span>3x</span><b>=</b><span>15</span><small>Ahora deshacemos el ×3.</small></div>
-<div><span>3x ÷ 3</span><b>=</b><span>15 ÷ 3</span><small>Dividimos ambos lados entre 3.</small></div>
-<div class="final"><span>x</span><b>=</b><span>5</span><small>Solución.</small></div>
+<div class="equation-worked equation-worked-friendly">
+<div><span>x + 5</span><b>=</b><span>12</span><small>La ecuación inicial.</small></div>
+<div><span>x + 5 − 5</span><b>=</b><span>12 − 5</span><small>La misma operación en ambos lados.</small></div>
+<div class="final"><span>x</span><b>=</b><span>7</span><small>x ya está sola.</small></div>
+</div>
+<div class="lesson-check-line"><b>Comprobación:</b> sustituimos x por 7. Como 7 + 5 = 12, la solución es correcta.</div>
+</div>
+
+<div class="lesson-section lesson-map-section">
+<div class="lesson-kicker">EL MAPA</div>
+<h3>Cuatro preguntas, siempre en este orden</h3>
+<div class="lesson-step-map">
+<div class="lesson-map-row"><span class="lesson-map-num">1</span><p>¿Qué operación acompaña a x?</p></div>
+<div class="lesson-map-row"><span class="lesson-map-num">2</span><p>¿Cuál es su operación inversa?</p></div>
+<div class="lesson-map-row"><span class="lesson-map-num">3</span><p>¿La he aplicado en los dos lados?</p></div>
+<div class="lesson-map-row"><span class="lesson-map-num">4</span><p>¿El resultado funciona en la ecuación original?</p></div>
 </div>
 </div>
-<div class="lesson-section">
-<div class="lesson-kicker">EJEMPLO 3</div>
-<h3>La incógnita en ambos lados</h3>
-<div class="equation-worked">
-<div><span>5x + 2</span><b>=</b><span>3x + 12</span><small>Juntamos las x en un lado.</small></div>
-<div><span>5x + 2 − 3x</span><b>=</b><span>3x + 12 − 3x</span><small>Restamos 3x en ambos lados.</small></div>
-<div><span>2x + 2</span><b>=</b><span>12</span><small>Ahora quitamos el +2.</small></div>
-<div><span>2x</span><b>=</b><span>10</span><small>Dividimos entre 2.</small></div>
-<div class="final"><span>x</span><b>=</b><span>5</span><small>Comprobamos en la ecuación original.</small></div>
+
+<details class="lesson-more">
+<summary>Ver un ejemplo de dos pasos</summary>
+<div class="lesson-more-body">
+<h3>3x + 5 = 20</h3>
+<p>Primero deshacemos el <b>+5</b> restando 5 en ambos lados: <b>3x = 15</b>.</p>
+<p>Después deshacemos el <b>×3</b> dividiendo ambos lados entre 3: <b>x = 5</b>.</p>
+<p>Comprobamos: 3 × 5 + 5 = 20.</p>
 </div>
-<div class="lesson-error"><b>Error frecuente:</b> cambiar un signo al «pasarlo» sin entender por qué. Es más seguro escribir la misma operación debajo de los dos lados.</div>
-<div class="lesson-nav"><button class="btn green learn-practice" data-practice="equations">Practicar ahora: ecuaciones</button></div>
+</details>
+
+<details class="lesson-more">
+<summary>Errores frecuentes</summary>
+<div class="lesson-more-body">
+<ul>
+<li>Cambiar un número de lado sin escribir qué operación hacemos.</li>
+<li>Aplicar una operación solo en uno de los lados.</li>
+<li>Dividir entre el número equivocado.</li>
+<li>No comprobar la solución al terminar.</li>
+</ul>
 </div>
+</details>
+
 <div class="lesson-check">
-<div class="lesson-kicker">COMPRUEBA SI LO HAS ENTENDIDO</div>
+<div class="lesson-kicker">PRUÉBALO TÚ</div>
 <h3>Para empezar a resolver x + 5 = 12, ¿qué hacemos?</h3>
 <div class="lesson-check-options"><button class="lesson-check-option" data-correct="true" type="button">Restar 5 en ambos lados</button><button class="lesson-check-option" data-correct="false" type="button">Restar 5 solo a la izquierda</button><button class="lesson-check-option" data-correct="false" type="button">Dividir entre 5</button></div>
-<div class="lesson-check-feedback" data-explanation="Restamos 5 en ambos lados para mantener la igualdad."></div>
+<div class="lesson-check-feedback" data-explanation="Restar deshace sumar, y debemos hacerlo en ambos lados para mantener la igualdad."></div>
+<div class="lesson-nav"><button class="btn green learn-practice" data-practice="equations">Practicar ahora: ecuaciones</button></div>
 </div>
 </section>
 <section class="learn-page hidden" id="lesson-tables">
@@ -5560,22 +5820,11 @@ function renderHudStars(count){
     `<span class="hud-star ${index<=count?'available':'lost'}" aria-hidden="true">${index<=count?'⭐':'☆'}</span>`
   ).join('');
 }
-function renderHudHearts(count){
-  return [1,2,3].map(index=>
-    `<span class="hud-heart ${index<=count?'':'empty'}" aria-hidden="true"></span>`
-  ).join('');
-}
 function updateChallengeHeader(){
   const reward=possibleChallengeRating();
   const profile=currentProfile();
 
   $('pointsTotal').textContent=(profile?.points||0).toLocaleString('es-ES');
-  $('hearts').innerHTML=renderHudHearts(challengeScore.hearts);
-  $('hearts').setAttribute('aria-label',`${challengeScore.hearts} cargas de energía disponibles`);
-  $('streak').textContent=String(challengeScore.streak);
-  $('stars').innerHTML=renderHudStars(reward);
-  $('stars').setAttribute('aria-label',challengeScore.rating>0?`${reward} estrellas conseguidas`:`${reward} estrellas objetivo del reto`);
-  $('rewardLabel').textContent=challengeScore.rating>0?'Resultado':'Objetivo';
 }
 function beginChallenge(moduleName='reto'){
   challengeScore={
@@ -5619,18 +5868,9 @@ function challengeWrong(message='',strongHint=''){
   if(!challengeScore.active)beginChallenge('reto');
   challengeScore.errors++;
   challengeScore.streak=0;
-  challengeScore.hearts=Math.max(0,challengeScore.hearts-1);
-  let rescued=false;
-  if(challengeScore.hearts===0){
-    challengeScore.hearts=1;
-    rescued=true;
-  }
   updateChallengeHeader();
-  hudAnimate('heartsCard','hud-shake');
   hudAnimate('rewardCard','hud-shake');
-  if(!rescued)return message;
-  const hint=strongHint||message||'Revisa el paso activo y usa el botón Pista.';
-  return `${message}${message?' ':''}💡 Te devuelvo 1 intento. Pista: ${hint}`;
+  return message;
 }
 
 function finishChallenge(){
@@ -5700,8 +5940,9 @@ function rememberInputState(input){
 function prepareInputForKeypad(input){
   rememberInputState(input);
   if(input.dataset.keypadPreviousType==='number')input.type='text';
-  input.readOnly=true;
-  input.setAttribute('inputmode','none');
+  const touchOnly=window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  input.readOnly=touchOnly;
+  if(touchOnly)input.setAttribute('inputmode','none');
 }
 function prepareVisibleInputsForKeypad(){
   visibleKeypadInputs().forEach(prepareInputForKeypad);
@@ -5904,7 +6145,7 @@ function initMathKeypad(){
   });
   $('mathKeypad').addEventListener('click',event=>{
     const button=event.target.closest('[data-keypad-key],[data-keypad-action]');
-    if(!button||button.disabled)return;
+    if(!button||button.disabled||event.detail>1)return;
     handleMathKeypadAction(button.dataset.keypadKey||button.dataset.keypadAction);
   });
 
@@ -6040,9 +6281,9 @@ const FIREBASE_CONFIG = {
 
 /* ======================= DIVISION MODULE ======================= */
 let state;
-const stepsData=[["Primer grupo","Elige las primeras cifras"],["Cociente","¿Cuántas veces cabe?"],["Multiplica","Cifra por cifra"],["Resta","Haz la resta"],["Baja cifra","Baja la siguiente cifra"],["Resultado","Termina la división"]];
+const stepsData=[["Grupo inicial","Forma el dividendo parcial"],["Cociente","¿Cuántas veces cabe?"],["Multiplica","Cifra por cifra"],["Resta","Haz la resta"],["Baja cifra","Baja la siguiente cifra"],["Resultado","Termina la división"]];
 function countDecimals(n){const s=String(n);return s.includes('.')?s.split('.')[1].length:0}
-function newState(dividend,divisor,decimals){const f=10**countDecimals(divisor);const D=Math.round(dividend*f),d=Math.round(divisor*f);return{originalDividend:dividend,originalDivisor:divisor,dividend:D,divisor:d,digits:String(Math.abs(D)).split('').map(Number),pos:0,currentValue:0,currentEndCol:0,quotient:[],rows:[],hearts:3,stars:0,decimalsWanted:decimals,decimalStarted:false,decimalCount:0}}
+function newState(dividend,divisor,decimals){const f=10**countDecimals(divisor);const D=Math.round(dividend*f),d=Math.round(divisor*f);const digits=String(Math.abs(D)).split('').map(Number);return{originalDividend:dividend,originalDivisor:divisor,dividend:D,divisor:d,digits,integerDigitCount:digits.length,pos:0,currentValue:0,currentEndCol:0,initialGroupLength:0,showInitialGroupCue:false,quotient:[],rows:[],hearts:3,stars:0,decimalsWanted:decimals,decimalStarted:false,decimalCount:0}}
 function renderSteps(a){$('steps').innerHTML='';stepsData.forEach((s,i)=>{const d=document.createElement('div');d.className='step'+(i===a?' active':'')+(i<a?' done':'');d.innerHTML=`<div class="num">${i+1}</div><div><b>${s[0]}</b><br><small>${s[1]}</small></div>`;$('steps').appendChild(d)})}
 function feedback(t,type=''){const f=$('feedback');f.textContent=t;f.className='feedback'+(type?' '+type:'')}
 function stats(){updateChallengeHeader()}
@@ -6050,9 +6291,7 @@ function fail(t){
   const message=challengeWrong(t,t);
   stats();
   feedback(message,'bad');
-  $('speech').textContent=challengeScore.hearts===1&&challengeScore.errors>=3
-    ?'Te he devuelto un intento. Mira la pista y prueba otra vez.'
-    :'No pasa nada. Mira la pista y prueba otra vez.';
+  $('speech').textContent='No pasa nada. Mira la pista y prueba otra vez.';
 }
 function ok(t){
   const streak=challengeCorrect();
@@ -6060,19 +6299,30 @@ function ok(t){
   feedback(t,'ok');
   $('speech').textContent=streak>=3?`¡Racha de ${streak}! 🔥`:'¡Muy bien! Seguimos.';
 }
-function qtext(){let q=state.quotient.join('');if(state.decimalStarted){const p=q.length-state.decimalCount;q=q.slice(0,p)+'.'+q.slice(p)}return q}
+function qtext(){let q=state.quotient.join('');if(state.decimalStarted){const p=q.length-state.decimalCount;q=q.slice(0,p)+','+q.slice(p)}return q}
 function cell(grid,ch,row,col,cls=''){const c=document.createElement('div');c.className='grid-cell '+cls;c.style.gridRow=row+1;c.style.gridColumn=col+1;c.textContent=ch;grid.appendChild(c);return c}
 function placeText(grid,text,row,end,cls=''){const a=String(text).split(''),start=end-a.length+1;a.forEach((ch,i)=>cell(grid,ch,row,start+i,cls));return start}
 function renderDivision(){
   const g=$('leftGrid'),cols=Math.max(state.digits.length,4);
   g.style.gridTemplateColumns=`repeat(${cols},48px)`;
+  g.style.gridAutoRows=state.divisionSubtract?'68px':'52px';
   g.innerHTML='';
-  state.digits.forEach((d,i)=>cell(g,d,0,i));
+  state.digits.forEach((d,i)=>{
+    const classes=[];
+    if(state.showInitialGroupCue&&i<state.initialGroupLength)classes.push('initial-source');
+    if(state.decimalStarted&&i===state.integerDigitCount)classes.push('decimal-digit');
+    cell(g,d,0,i,classes.join(' '));
+  });
   let r=1;
 
   for(const it of state.rows){
-    if(it.type==='product'){
-      const s=placeText(g,it.value,r,it.endCol,'product');
+    if(it.type==='initialGroup'){
+      const start=placeText(g,it.value,r,it.endCol,`initial-partial${state.showInitialGroupCue?' initial-group-enter':''}`);
+      const first=[...g.children].find(x=>x.style.gridRow==String(r+1)&&x.style.gridColumn==String(start+1));
+      if(first&&state.showInitialGroupCue)first.classList.add('initial-partial-first');
+    }else if(it.type==='product'){
+      const productText=String(it.value).padStart(it.displayWidth||String(it.value).length,'0');
+      const s=placeText(g,productText,r,it.endCol,'product');
       const first=[...g.children].find(x=>x.style.gridRow==String(r+1)&&x.style.gridColumn==String(s+1));
       if(first&&it.showMinus)first.classList.add('minus');
     }else if(it.type==='line'){
@@ -6088,6 +6338,27 @@ function renderDivision(){
   if(state.divisionProduct&&state.divisionProduct.resultDigits.length){
     const partial=[...state.divisionProduct.resultDigits].reverse().join('');
     placeText(g,partial,r,state.currentEndCol,'product product-building');
+  }
+
+  // Durante la resta mostramos cada cifra resuelta y los préstamos encima
+  // del grupo de trabajo, sin esperar al resultado completo.
+  if(state.divisionSubtract){
+    const sub=state.divisionSubtract;
+    sub.resultDigits.forEach((digit,index)=>{
+      if(digit!==null)cell(g,digit,r,sub.endCol-index,'remainder subtraction-building');
+    });
+    const topRow=Math.max(0,r-3);
+    const annotateBorrow=(index,value)=>{
+      const col=sub.endCol-index;
+      let base=[...g.children].find(node=>node.style.gridRow===String(topRow+1)&&node.style.gridColumn===String(col+1));
+      if(!base)base=cell(g,'',topRow,col,'remainder');
+      base.classList.add('division-borrow-source');
+      let note=base.querySelector('.division-borrow-note');
+      if(!note){note=document.createElement('span');note.className='division-borrow-note';base.appendChild(note)}
+      note.textContent=String(value);
+    };
+    sub.displayTop.forEach((digit,index)=>{if(sub.changedTop[index])annotateBorrow(index,digit)});
+    sub.borrowMark.forEach((borrowed,index)=>{if(borrowed)annotateBorrow(index,sub.displayTop[index]+10)});
   }
 
   const divisorStr=String(state.divisor);
@@ -6129,16 +6400,93 @@ function cloneDivisionProductSnapshot(m){
     snapshots:(m.snapshots||[]).map(s=>({index:s.index,carry:s.carry,resultDigits:[...s.resultDigits]}))
   };
 }
-function startGroup(){hideDivisionBack();$('helpContext').innerHTML='<b>Paso actual</b><br>Elige el primer grupo de cifras que sea igual o mayor que el divisor.';renderSteps(0);$('instruction').textContent='Paso 1: elige el primer grupo.';$('prompt').textContent='¿Qué grupo debemos coger primero?';const groups=[];for(let i=1;i<=state.digits.length;i++)groups.push(Number(state.digits.slice(0,i).join('')));const correct=groups.find(x=>x>=state.divisor)??Number(state.digits.join(''));renderDivision();options(groups,(b,v)=>{if(v===correct){b.classList.add('good');state.currentValue=v;state.pos=String(v).length;state.currentEndCol=state.pos-1;ok(`Correcto. ${v} es el primer grupo que ya se puede dividir.`);setTimeout(startQuotient,500)}else{b.classList.add('bad');fail(v<state.divisor?`${v} es menor que ${state.divisor}.`:'Podemos empezar antes.')}})}
-function startQuotient(){
+function cloneDivisionSubtractSnapshot(m){
+  return {
+    index:m.index,
+    displayTop:[...m.displayTop],
+    resultDigits:[...m.resultDigits],
+    borrowMark:[...m.borrowMark],
+    changedTop:[...m.changedTop]
+  };
+}
+function startGroup(){
   hideDivisionBack();
+  state.rows=state.rows.filter(row=>row.type!=='initialGroup');
+  state.initialGroupLength=0;
+  state.showInitialGroupCue=false;
+  $('helpContext').innerHTML='<b>Paso actual</b><br>Busca el primer grupo de cifras en el que ya cabe el divisor.';
+  renderSteps(0);
+  $('instruction').textContent='Paso 1: forma el dividendo parcial inicial.';
+  $('prompt').textContent='¿Con qué grupo empezamos?';
+  const groups=[];
+  for(let i=1;i<=state.digits.length;i++)groups.push(Number(state.digits.slice(0,i).join('')));
+  const correct=groups.find(x=>x>=state.divisor)??Number(state.digits.join(''));
+  renderDivision();
+  let groupAccepted=false;
+  options(groups,(b,v)=>{
+    if(groupAccepted)return;
+    if(v===correct){
+      groupAccepted=true;
+      $('optionControls').querySelectorAll('button').forEach(button=>button.disabled=true);
+      b.classList.add('good');
+      state.currentValue=v;
+      state.pos=String(v).length;
+      state.currentEndCol=state.pos-1;
+      state.initialGroupLength=state.pos;
+      state.showInitialGroupCue=true;
+      state.rows.push({type:'initialGroup',value:v,endCol:state.currentEndCol});
+      $('instruction').textContent=`Paso 1: empezamos con ${v}.`;
+      $('prompt').textContent=`Colocamos ${v} como primer dividendo parcial.`;
+      renderDivision();
+      ok(`Correcto. Empezamos con ${v} como dividendo parcial inicial.`);
+      setTimeout(startQuotient,900);
+    }else{
+      b.classList.add('bad');
+      fail(v<state.divisor?`${v} es menor que ${state.divisor}.`:'Podemos empezar antes.');
+    }
+  });
+}
+function startQuotient(){
+  state.showInitialGroupCue=false;
   $('helpContext').innerHTML='<b>Paso actual</b><br>Calcula cuántas veces cabe el divisor sin pasarte.';
   renderSteps(1);renderDivision();
   $('instruction').textContent=`Paso 2: ¿cuántas veces cabe ${state.divisor} en ${state.currentValue}?`;
   $('prompt').textContent='Elige la cifra del cociente.';
+  const lastBroughtRow=state.rows[state.rows.length-1];
+  const broughtRow=lastBroughtRow?.type==='brought';
+  showDivisionBack(()=>{
+    if(broughtRow){
+      state.rows.pop();
+      state.pos=Math.max(0,state.pos-1);
+      if(lastBroughtRow.decimalZero){
+        state.digits.pop();
+        if(lastBroughtRow.startedDecimals)state.decimalStarted=false;
+      }
+      state.currentEndCol=Math.max(0,state.pos-1);
+      const previousRemainder=[...state.rows].reverse().find(row=>row.type==='remainder');
+      state.currentValue=previousRemainder?.value??0;
+      renderDivision();
+      feedback(lastBroughtRow.decimalZero?'Quitamos el cero decimal y volvemos al paso anterior.':'Volvemos al paso de bajar la cifra.','ok');
+      nextDigit();
+    }else{
+      state.currentValue=0;
+      state.pos=0;
+      state.currentEndCol=0;
+      state.rows=state.rows.filter(row=>row.type!=='initialGroup');
+      state.initialGroupLength=0;
+      state.showInitialGroupCue=false;
+      renderDivision();
+      feedback('Volvemos al principio de la operación.','ok');
+      startGroup();
+    }
+  });
+  let quotientAccepted=false;
   options([0,1,2,3,4,5,6,7,8,9],(b,v)=>{
+    if(quotientAccepted)return;
     const c=Math.floor(state.currentValue/state.divisor);
     if(v===c){
+      quotientAccepted=true;
+      $('optionControls').querySelectorAll('button').forEach(button=>button.disabled=true);
       b.classList.add('good');
       state.quotient.push(v);
       if(state.decimalStarted)state.decimalCount++;
@@ -6188,9 +6536,10 @@ function askDivisionProductDigit(){
 
     const product=Number([...m.resultDigits].reverse().join(''));
     const quotientDigit=m.q;
-    const startCol=state.currentEndCol-String(product).length+1;
+    const displayWidth=Math.max(String(state.currentValue).length,String(product).length);
+    const startCol=state.currentEndCol-displayWidth+1;
     state.lastProductUndo=m.snapshots.length?m.snapshots[m.snapshots.length-1]:null;
-    state.rows.push({type:'product',value:product,endCol:state.currentEndCol,showMinus:false});
+    state.rows.push({type:'product',value:product,displayWidth,endCol:state.currentEndCol,showMinus:false});
     state.rows.push({type:'line',startCol:Math.max(0,startCol),endCol:state.currentEndCol});
     state.divisionProduct=null;
     renderDivision();
@@ -6284,20 +6633,202 @@ function startSubtract(product){
     });
   }else hideDivisionBack();
 
-  $('helpContext').innerHTML='<b>Paso actual</b><br>Resta el producto al grupo que estabas dividiendo.';
-  renderSteps(3);
-  const e=state.currentValue-product;
-  $('instruction').textContent=`Paso 4: resta ${state.currentValue} − ${product}.`;
-  $('prompt').textContent='¿Cuál es el resultado de la resta?';
-  input(e,(v,x)=>{
-    if(v===x){
-      hideDivisionBack();
-      state.rows.push({type:'remainder',value:x,endCol:state.currentEndCol});
-      renderDivision();ok('Resta correcta.');state.currentValue=x;setTimeout(nextDigit,500)
-    }else fail('La división va bien; revisa solo la resta.')
-  },`${state.currentValue} − ${product} = ${e}`)
+  const topDigits=String(state.currentValue).split('').reverse().map(Number);
+  const bottomDigits=String(product).split('').reverse().map(Number);
+  const cols=Math.max(topDigits.length,bottomDigits.length);
+  if(productRow)productRow.displayWidth=cols;
+  while(topDigits.length<cols)topDigits.push(0);
+  while(bottomDigits.length<cols)bottomDigits.push(0);
+  state.divisionSubtract={
+    top:state.currentValue,
+    bottom:product,
+    expected:state.currentValue-product,
+    endCol:state.currentEndCol,
+    cols,
+    index:0,
+    displayTop:[...topDigits],
+    bottomDigits,
+    resultDigits:Array(cols).fill(null),
+    borrowMark:Array(cols).fill(false),
+    changedTop:Array(cols).fill(false),
+    snapshots:[]
+  };
+  askDivisionBorrow();
 }
-function nextDigit(){hideDivisionBack();$('quotientDisplay').classList.remove('quotient-active');if(state.pos<state.digits.length){renderSteps(4);const digit=state.digits[state.pos];$('instruction').textContent='Paso 5: baja la siguiente cifra.';$('prompt').textContent='¿Qué cifra baja ahora?';options([...new Set(state.digits)],(b,v)=>{if(+v===digit){b.classList.add('good');state.currentValue=Number(String(state.currentValue)+digit);state.pos++;state.currentEndCol=state.pos-1;state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();ok(`Bajamos el ${digit}. Ahora tenemos ${state.currentValue}.`);setTimeout(startQuotient,500)}else{b.classList.add('bad');fail('Esa no es la siguiente cifra.')}});return}if(state.currentValue===0||state.decimalCount>=state.decimalsWanted)return finish();state.decimalStarted=true;state.digits.push(0);state.pos++;state.currentEndCol=state.pos-1;state.currentValue=Number(String(state.currentValue)+0);state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();feedback('Añadimos un cero para continuar con decimales.','ok');setTimeout(startQuotient,500)}
+function askDivisionBorrow(){
+  const m=state.divisionSubtract;
+  if(m.index>=m.cols)return finishDivisionSubtract();
+  $('helpContext').innerHTML='<b>Paso actual</b><br>Resuelve la resta de derecha a izquierda, una columna cada vez.';
+  renderSteps(3);
+  renderDivision();
+  const top=m.displayTop[m.index]||0;
+  const bottom=m.bottomDigits[m.index]||0;
+  const needsBorrow=top<bottom;
+  const position=m.index===0?'unidades':m.index===1?'decenas':m.index===2?'centenas':`posición ${m.index+1}`;
+  $('instruction').textContent=`Paso 4: resta las ${position}: ${top} − ${bottom}.`;
+  $('prompt').textContent='¿Necesitamos pedir prestado en esta columna?';
+  options(['Sí','No'],(btn,label)=>{
+    const saysYes=label==='Sí';
+    if(saysYes!==needsBorrow){
+      btn.classList.add('bad');
+      fail(needsBorrow?`${top} es menor que ${bottom}: necesitamos pedir prestado.`:`${top} ya es mayor o igual que ${bottom}: no hace falta préstamo.`);
+      return;
+    }
+    btn.classList.add('good');
+    m.snapshots.push(cloneDivisionSubtractSnapshot(m));
+    if(needsBorrow)applyDivisionBorrow(m);
+    renderDivision();
+    ok(needsBorrow?'Correcto. Cambiamos una unidad de la columna izquierda por 10 de esta columna.':'Correcto. Podemos restar directamente.');
+    setTimeout(askDivisionSubtractDigit,500);
+  });
+}
+function applyDivisionBorrow(m){
+  m.borrowMark[m.index]=true;
+  let lender=m.index+1;
+  while(lender<m.cols&&m.displayTop[lender]===0){
+    m.displayTop[lender]=9;
+    m.changedTop[lender]=true;
+    lender++;
+  }
+  if(lender<m.cols){
+    m.displayTop[lender]-=1;
+    m.changedTop[lender]=true;
+  }
+}
+function askDivisionSubtractDigit(){
+  const m=state.divisionSubtract;
+  const top=(m.displayTop[m.index]||0)+(m.borrowMark[m.index]?10:0);
+  const bottom=m.bottomDigits[m.index]||0;
+  const expected=top-bottom;
+  const position=m.index===0?'unidades':m.index===1?'decenas':m.index===2?'centenas':`posición ${m.index+1}`;
+  renderDivision();
+  $('instruction').textContent=`Paso 4: resta las ${position}.`;
+  $('prompt').textContent=`¿Cuánto es ${top} − ${bottom}?`;
+  showDivisionBack(()=>{
+    const snap=m.snapshots.pop();
+    Object.assign(m,{index:snap.index,displayTop:[...snap.displayTop],resultDigits:[...snap.resultDigits],borrowMark:[...snap.borrowMark],changedTop:[...snap.changedTop]});
+    renderDivision();
+    feedback('Volvemos a decidir el préstamo de esta columna.','ok');
+    askDivisionBorrow();
+  });
+  input(expected,(value,answer)=>{
+    if(value!==answer){
+      fail(`Revisa solo esta columna: ${top} − ${bottom}.`);
+      return;
+    }
+    m.resultDigits[m.index]=answer;
+    m.index++;
+    renderDivision();
+    ok(`Escribimos ${answer} y seguimos una columna a la izquierda.`);
+    setTimeout(askDivisionBorrow,500);
+  },`${top} − ${bottom} = ${expected}`);
+}
+function finishDivisionSubtract(){
+  const m=state.divisionSubtract;
+  const result=Number([...m.resultDigits].reverse().join(''));
+  if(result!==m.expected){
+    feedback('La resta por columnas no coincide. Vamos a revisarla.','bad');
+    m.index=0;
+    return askDivisionBorrow();
+  }
+  state.lastCompletedSubtract={
+    model:{
+      ...m,
+      displayTop:[...m.displayTop],
+      bottomDigits:[...m.bottomDigits],
+      resultDigits:[...m.resultDigits],
+      borrowMark:[...m.borrowMark],
+      changedTop:[...m.changedTop],
+      snapshots:(m.snapshots||[]).map(cloneDivisionSubtractSnapshot)
+    },
+    rowsLength:state.rows.length,
+    previousValue:state.currentValue
+  };
+  state.divisionSubtract=null;
+  state.rows.push({type:'remainder',value:result,endCol:state.currentEndCol});
+  state.currentValue=result;
+  renderDivision();
+  ok(`Resta terminada: ${m.top} − ${m.bottom} = ${result}.`);
+  setTimeout(nextDigit,500);
+}
+function askDecimalContinuation(){
+  renderSteps(4);
+  $('helpContext').innerHTML='<b>Paso actual</b><br>Ya no quedan cifras enteras. Decide cómo continuar la división.';
+  $('instruction').textContent=`El resto es ${state.currentValue} y ya no quedan cifras por bajar.`;
+  $('prompt').textContent='¿Qué hacemos para obtener un resultado con decimales?';
+  let decisionAccepted=false;
+  options(['Continuar con decimales','Terminar aquí'],(button,answer)=>{
+    if(decisionAccepted)return;
+    if(answer!=='Continuar con decimales'){
+      button.classList.add('bad');
+      fail('Para obtener decimales debemos añadir una coma y continuar con un cero.');
+      return;
+    }
+    decisionAccepted=true;
+    $('optionControls').querySelectorAll('button').forEach(item=>item.disabled=true);
+    button.classList.add('good');
+    state.decimalStarted=true;
+    renderDivision();
+    ok('Correcto. Escribimos la coma en el cociente y continuamos la división.');
+    setTimeout(()=>askDecimalZero(true),650);
+  });
+}
+function askDecimalZero(startedDecimals=false){
+  renderSteps(4);
+  $('helpContext').innerHTML='<b>Paso actual</b><br>Para continuar con decimales, añadimos una cifra al dividendo.';
+  $('instruction').textContent='Paso 5: añade una cifra decimal y bájala.';
+  $('prompt').textContent='¿Qué cifra añadimos y bajamos ahora?';
+  if(startedDecimals){
+    showDivisionBack(()=>{
+      state.decimalStarted=false;
+      renderDivision();
+      feedback('Quitamos la coma y volvemos a decidir cómo continuar.','ok');
+      nextDigit();
+    });
+  }
+  let zeroAccepted=false;
+  options([0,1,2,3,4,5,6,7,8,9],(button,digit)=>{
+    if(zeroAccepted)return;
+    if(digit!==0){
+      button.classList.add('bad');
+      fail('Para conservar el valor del dividendo añadimos un cero a la derecha.');
+      return;
+    }
+    zeroAccepted=true;
+    $('optionControls').querySelectorAll('button').forEach(item=>item.disabled=true);
+    button.classList.add('good');
+    state.digits.push(0);
+    state.pos++;
+    state.currentEndCol=state.pos-1;
+    state.currentValue=Number(String(state.currentValue)+0);
+    state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol,decimalZero:true,startedDecimals});
+    renderDivision();
+    ok(`Añadimos y bajamos el 0. El nuevo dividendo parcial es ${state.currentValue}.`);
+    setTimeout(startQuotient,650);
+  });
+}
+function nextDigit(){
+  $('quotientDisplay').classList.remove('quotient-active');
+  if(state.lastCompletedSubtract){
+    showDivisionBack(()=>{
+      const saved=state.lastCompletedSubtract;
+      state.rows.splice(saved.rowsLength);
+      state.currentValue=saved.previousValue;
+      state.divisionSubtract=saved.model;
+      state.lastCompletedSubtract=null;
+      const m=state.divisionSubtract;
+      m.index=Math.max(0,m.cols-1);
+      m.resultDigits[m.index]=null;
+      renderDivision();
+      feedback('Volvemos a la última columna de la resta.','ok');
+      askDivisionSubtractDigit();
+    });
+  }else hideDivisionBack();
+  if(state.pos<state.digits.length){renderSteps(4);const digit=state.digits[state.pos];$('instruction').textContent='Paso 5: baja la siguiente cifra.';$('prompt').textContent='¿Qué cifra baja ahora?';options([...new Set(state.digits)],(b,v)=>{if(+v===digit){b.classList.add('good');state.currentValue=Number(String(state.currentValue)+digit);state.pos++;state.currentEndCol=state.pos-1;state.rows.push({type:'brought',value:state.currentValue,endCol:state.currentEndCol});renderDivision();ok(`Bajamos el ${digit}. Ahora tenemos ${state.currentValue}.`);setTimeout(startQuotient,500)}else{b.classList.add('bad');fail('Esa no es la siguiente cifra.')}});return}
+  if(state.currentValue===0||state.decimalCount>=state.decimalsWanted)return finish();
+  if(!state.decimalStarted)return askDecimalContinuation();
+  askDecimalZero(false);
+}
 function finish(){
   hideDivisionBack();
   clearFinishedAnswerInputs('answerInput');
@@ -8876,8 +9407,203 @@ $('rootAnswerA').onkeydown=e=>{if(e.key==='Enter')$('rootAnswerB').focus()};
 $('rootAnswerB').onkeydown=e=>{if(e.key==='Enter')$('rootDoubleCheckBtn').click()};
 
 
+
+/* ======================= NUMBER LAB / THINK ======================= */
+const THINK_LEVEL_KEY='matesQuestThinkLevel_v1';
+const THINK_GOAL_KEY='matesQuestThinkGoal_v1';
+const storedThinkLevel=Number(localStorage.getItem(THINK_LEVEL_KEY));
+const storedThinkGoalRaw=localStorage.getItem(THINK_GOAL_KEY),storedThinkGoal=storedThinkGoalRaw===null?5:Number(storedThinkGoalRaw);
+const thinkState={activity:'count',level:storedThinkLevel>=1&&storedThinkLevel<=6?storedThinkLevel:2,goal:[0,5,10,20].includes(storedThinkGoal)?storedThinkGoal:5,mastery:0,recent:{},count:0,countTimer:null,placeTarget:34,hundreds:0,tens:0,units:0,tenStart:6,tenTarget:10,jumpStart:0,jumpSteps:[],jumpAnswer:0,jumpIndex:0,jumpLandings:[]};
+function shuffled(values){
+  const result=[...values];
+  for(let i=result.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[result[i],result[j]]=[result[j],result[i]]}
+  return result;
+}
+function thinkHistoryKey(activity){return`${activity}:${thinkState.level}`}
+function freshThinkNumber(activity,min,max,avoid=4){
+  const key=thinkHistoryKey(activity),history=thinkState.recent[key]||[];
+  const pool=[];
+  for(let value=min;value<=max;value++)if(!history.includes(String(value)))pool.push(value);
+  const candidates=pool.length?pool:Array.from({length:max-min+1},(_,index)=>min+index);
+  const chosen=candidates[Math.floor(Math.random()*candidates.length)];
+  const memory=Math.min(avoid,Math.max(0,max-min));
+  thinkState.recent[key]=memory?[...history,String(chosen)].slice(-memory):[];
+  return chosen;
+}
+function setThinkFeedback(id,message,type=''){const node=$(id);node.textContent=message;node.className='think-feedback'+(type?' '+type:'')}
+function nearbyChoices(answer,min,max){
+  const values=new Set([answer]);
+  const offsets=shuffled([-10,-5,-3,-2,-1,1,2,3,5,10]);
+  for(const offset of offsets){const value=answer+offset;if(value>=min&&value<=max)values.add(value);if(values.size===4)break}
+  for(let value=min;values.size<4&&value<=max;value++)values.add(value);
+  return shuffled([...values]);
+}
+function resetThinkMastery(){thinkState.mastery=0;updateThinkProgress()}
+function updateThinkProgress(){
+  const unlimited=thinkState.goal===0;
+  $('thinkProgress').classList.toggle('unlimited',unlimited);
+  $('thinkProgressText').textContent=unlimited?(thinkState.mastery===1?'1 reto completado':`${thinkState.mastery} retos completados`):`${thinkState.mastery} de ${thinkState.goal} retos completados`;
+  $('thinkProgressBar').style.width=unlimited?'0%':`${Math.min(100,(thinkState.mastery/thinkState.goal)*100)}%`;
+}
+function completeThinkChallenge(next){
+  thinkState.mastery++;updateThinkProgress();
+  if(thinkState.goal===0||thinkState.mastery<thinkState.goal)setTimeout(next,900);
+}
+function showThinkActivity(name){
+  thinkState.activity=name;resetThinkMastery();
+  ['count','place','ten','jump'].forEach(key=>$('think'+key[0].toUpperCase()+key.slice(1)+'Panel').classList.toggle('hidden',key!==name));
+  document.querySelectorAll('[data-think-activity]').forEach(button=>button.classList.toggle('active',button.dataset.thinkActivity===name));
+  if(name==='count')newThinkCount();if(name==='place')newThinkPlace();if(name==='ten')newThinkTen();if(name==='jump')newThinkJump();
+}
+function structuredDots(count){
+  const capacity=Math.ceil(count/10)*10;
+  return Array.from({length:capacity},(_,index)=>`<span class="think-dot ${index<count?'':'blank'}" aria-hidden="true"></span>`).join('');
+}
+function revealThinkCount(){
+  clearTimeout(thinkState.countTimer);$('thinkDots').classList.remove('concealed');$('thinkCountQuestion').classList.add('hidden');$('thinkCountChoices').innerHTML='';
+  const observeMs=[0,4200,3800,3400,3000,2700,2400][thinkState.level];
+  thinkState.countTimer=setTimeout(()=>{$('thinkDots').classList.add('concealed');$('thinkCountQuestion').classList.remove('hidden');renderThinkCountChoices()},observeMs);
+}
+function renderThinkCountChoices(){
+  const max=[0,5,10,15,20,25,30][thinkState.level];
+  $('thinkCountChoices').innerHTML=nearbyChoices(thinkState.count,1,max).map(value=>`<button class="think-choice" type="button" data-think-count="${value}">${value}</button>`).join('');
+}
+function newThinkCount(){
+  const ranges={1:[1,5],2:[3,10],3:[5,15],4:[6,20],5:[8,25],6:[10,30]},range=ranges[thinkState.level];
+  thinkState.count=freshThinkNumber('count',range[0],range[1]);
+  $('thinkDots').innerHTML=structuredDots(thinkState.count);setThinkFeedback('thinkCountFeedback','');$('thinkCountExplanation').textContent='';revealThinkCount();
+}
+function newThinkPlace(){
+  const placeRanges={1:[1,9],2:[10,49],3:[10,99],4:[100,499],5:[100,799],6:[100,999]},placeRange=placeRanges[thinkState.level];
+  thinkState.placeTarget=freshThinkNumber('place',placeRange[0],placeRange[1]);thinkState.hundreds=0;thinkState.tens=0;thinkState.units=0;
+  $('thinkPlacePrompt').textContent=`Construye el número ${thinkState.placeTarget}`;
+  const usesHundreds=thinkState.level>=4,usesTens=thinkState.level>=2;
+  $('thinkHundredsColumn').classList.toggle('hidden',!usesHundreds);$('thinkAddHundred').classList.toggle('hidden',!usesHundreds);$('thinkRemoveHundred').classList.toggle('hidden',!usesHundreds);
+  $('thinkAddTen').classList.toggle('hidden',!usesTens);$('thinkRemoveTen').classList.toggle('hidden',!usesTens);
+  renderThinkPlace();setThinkFeedback('thinkPlaceFeedback','');$('thinkPlaceExplanation').textContent='';$('thinkBuiltNumber').textContent='';
+}
+function renderThinkPlace(){
+  $('thinkHundreds').innerHTML=Array.from({length:thinkState.hundreds},()=>'<span class="think-hundred-block"></span>').join('');
+  $('thinkTens').innerHTML=Array.from({length:thinkState.tens},()=>'<span class="think-ten-block"></span>').join('');
+  $('thinkUnits').innerHTML=Array.from({length:thinkState.units},()=>'<span class="think-unit"></span>').join('');
+  $('thinkBuiltNumber').textContent='';
+  $('thinkRemoveHundred').disabled=thinkState.hundreds===0;$('thinkRemoveTen').disabled=thinkState.tens===0;$('thinkRemoveOne').disabled=thinkState.units===0;
+}
+function newThinkTen(){
+  const upper=thinkState.level<=2?9:thinkState.level===3?49:thinkState.level===4?89:thinkState.level===5?189:289;
+  thinkState.tenStart=freshThinkNumber('ten',1,upper);
+  thinkState.tenTarget=thinkState.level<=2?10:Math.ceil((thinkState.tenStart+1)/10)*10;
+  const shown=thinkState.tenStart%10||10;
+  $('thinkTenPrompt').textContent=`Completa hasta ${thinkState.tenTarget}`;
+  $('thinkTenFrame').innerHTML=Array.from({length:10},(_,index)=>`<span class="think-ten-cell ${index<shown?'filled':''}"></span>`).join('');
+  $('thinkTenEquation').textContent=`${thinkState.tenStart} + ? = ${thinkState.tenTarget}`;
+  const answer=thinkState.tenTarget-thinkState.tenStart;
+  $('thinkTenChoices').innerHTML=nearbyChoices(answer,1,10).map(value=>`<button class="think-choice" type="button" data-think-ten="${value}">${value}</button>`).join('');
+  setThinkFeedback('thinkTenFeedback','');$('thinkTenExplanation').textContent='';
+}
+function jumpLanding(index){
+  return thinkState.jumpStart+thinkState.jumpSteps.slice(0,index+1).reduce((sum,value)=>sum+value,0);
+}
+function renderThinkJump(){
+  const points=[thinkState.jumpStart,...thinkState.jumpSteps.map((_,index)=>jumpLanding(index))];
+  const width=700,left=70,right=630,available=right-left;
+  const referenceSpan=[0,10,15,50,80,140,200][thinkState.level];
+  const pixelsPerUnit=available/referenceSpan;
+  const offsets=[0];
+  thinkState.jumpSteps.forEach(step=>offsets.push(offsets[offsets.length-1]+Math.sign(step)*Math.max(32,Math.abs(step)*pixelsPerUnit)));
+  const offsetMin=Math.min(...offsets),offsetMax=Math.max(...offsets),offsetSpan=Math.max(1,offsetMax-offsetMin);
+  const fitScale=Math.min(1,available/offsetSpan),center=(left+right)/2-(offsetMin+offsetMax)*fitScale/2;
+  const positions=offsets.map(value=>center+value*fitScale);
+  const ticks=points.map((value,index)=>{
+    const known=index===0||index<=thinkState.jumpIndex;
+    return `<line class="think-jump-tick" x1="${positions[index]}" y1="128" x2="${positions[index]}" y2="146"></line><text class="think-jump-number ${known?'':'unknown'}" x="${positions[index]}" y="170">${known?value:'?'}</text>`;
+  }).join('');
+  const arcs=thinkState.jumpSteps.map((step,index)=>{
+    if(index>thinkState.jumpIndex)return '';
+    const x1=positions[index],x2=positions[index+1],mid=(x1+x2)/2,active=index===thinkState.jumpIndex;
+    const direction=step>=0?1:-1;
+    const arcHeight=Math.max(55,105-Math.min(50,Math.abs(x2-x1)*.12));
+    const path=`M ${x1} 126 Q ${mid} ${arcHeight} ${x2} 126`;
+    const arrowX=x2;
+    return `<path class="think-jump-arc ${active?'pending':''}" d="${path}"></path><polygon class="think-jump-arrow ${active?'pending':''}" points="${arrowX},126 ${arrowX-(direction*11)},116 ${arrowX-(direction*8)},132"></polygon><text class="think-jump-label ${active?'pending':''}" x="${mid}" y="64">${step>0?'+':''}${step}</text>`;
+  }).join('');
+  $('thinkJumpCanvas').innerHTML=`<svg class="think-jump-svg" viewBox="0 0 700 190" role="img"><line class="think-jump-base" x1="45" y1="128" x2="655" y2="128"></line>${arcs}${ticks}</svg>`;
+  const current=thinkState.jumpIndex+1;
+  $('thinkJumpQuestion').textContent=current<=thinkState.jumpSteps.length?`Salto ${current} de ${thinkState.jumpSteps.length}: ¿Dónde aterriza este salto?`:'Has completado todos los saltos.';
+}
+function renderThinkJumpChoices(){
+  const expected=jumpLanding(thinkState.jumpIndex);
+  const radius=thinkState.level>=5?20:10;
+  $('thinkJumpChoices').innerHTML=nearbyChoices(expected,Math.max(0,expected-radius),expected+radius).map(value=>`<button class="think-choice" type="button" data-think-jump="${value}">${value}</button>`).join('');
+}
+function newThinkJump(){
+  const subtract=thinkState.level>=4&&Math.random()<.45;
+  if(thinkState.level<=2){
+    const maxJump=thinkState.level===1?6:10;
+    thinkState.jumpStart=freshThinkNumber('jumpStart',1,10);
+    const jump=freshThinkNumber('jumpUnits',1,maxJump);
+    thinkState.jumpSteps=[jump];thinkState.jumpAnswer=thinkState.jumpStart+jump;
+  }else{
+    const maxTens=thinkState.level<=4?5:thinkState.level===5?8:10;
+    const tens=10*freshThinkNumber('jumpTens',1,maxTens),units=freshThinkNumber('jumpUnits',1,9);
+    const startMin=subtract?Math.max(50,tens+units):10,startMax=subtract?(thinkState.level>=5?149:99):(thinkState.level>=5?109:59);
+    thinkState.jumpStart=freshThinkNumber(subtract?'jumpStartSubtract':'jumpStartAdd',startMin,startMax);
+    thinkState.jumpSteps=subtract?[-tens,-units]:[tens,units];thinkState.jumpAnswer=thinkState.jumpStart+thinkState.jumpSteps.reduce((sum,value)=>sum+value,0);
+  }
+  thinkState.jumpIndex=0;thinkState.jumpLandings=[];
+  $('thinkJumpStory').textContent=`Empieza en ${thinkState.jumpStart}. Primero saltamos las decenas; después, las unidades.`;
+  setThinkFeedback('thinkJumpFeedback','');$('thinkJumpExplanation').textContent='';
+  renderThinkJump();renderThinkJumpChoices();
+}
+document.querySelectorAll('[data-think-activity]').forEach(button=>button.onclick=()=>showThinkActivity(button.dataset.thinkActivity));
+$('thinkLevel').value=String(thinkState.level);
+$('thinkLevel').onchange=()=>{thinkState.level=Number($('thinkLevel').value);localStorage.setItem(THINK_LEVEL_KEY,String(thinkState.level));showThinkActivity(thinkState.activity)};
+$('thinkGoal').value=String(thinkState.goal);
+$('thinkGoal').onchange=()=>{thinkState.goal=Number($('thinkGoal').value);localStorage.setItem(THINK_GOAL_KEY,String(thinkState.goal));showThinkActivity(thinkState.activity)};
+$('thinkShowCount').onclick=revealThinkCount;$('thinkNewTen').onclick=newThinkTen;$('thinkNewJump').onclick=newThinkJump;
+$('thinkAddHundred').onclick=()=>{if(thinkState.hundreds<9){thinkState.hundreds++;renderThinkPlace()}};
+$('thinkAddTen').onclick=()=>{if(thinkState.tens<9){thinkState.tens++;renderThinkPlace()}};
+$('thinkAddOne').onclick=()=>{if(thinkState.units<9){thinkState.units++;renderThinkPlace()}};
+$('thinkRemoveHundred').onclick=()=>{if(thinkState.hundreds>0){thinkState.hundreds--;renderThinkPlace()}};
+$('thinkRemoveTen').onclick=()=>{if(thinkState.tens>0){thinkState.tens--;renderThinkPlace()}};
+$('thinkRemoveOne').onclick=()=>{if(thinkState.units>0){thinkState.units--;renderThinkPlace()}};
+$('thinkClearPlace').onclick=()=>{thinkState.hundreds=0;thinkState.tens=0;thinkState.units=0;renderThinkPlace();setThinkFeedback('thinkPlaceFeedback','');$('thinkPlaceExplanation').textContent=''};
+$('thinkCheckPlace').onclick=()=>{
+  const formed=thinkState.hundreds*100+thinkState.tens*10+thinkState.units;
+  const ok=formed===thinkState.placeTarget;
+  $('thinkBuiltNumber').textContent=`Has formado ${formed}`;
+  setThinkFeedback('thinkPlaceFeedback',ok?'Reto comprendido. Vamos con otro.':'Todavía no. Revisa las decenas y las unidades.',ok?'ok':'bad');
+  $('thinkPlaceExplanation').textContent=`${thinkState.hundreds} centenas, ${thinkState.tens} decenas y ${thinkState.units} unidades: ${thinkState.hundreds*100} + ${thinkState.tens*10} + ${thinkState.units} = ${formed}.`;
+  if(ok)completeThinkChallenge(newThinkPlace);
+};
+$('thinkCountChoices').onclick=event=>{
+  const button=event.target.closest('[data-think-count]');if(!button)return;const ok=Number(button.dataset.thinkCount)===thinkState.count;
+  setThinkFeedback('thinkCountFeedback',ok?'Reto comprendido. Vamos con otro.':'Míralos por grupos y prueba otra vez.',ok?'ok':'bad');
+  $('thinkCountExplanation').textContent=ok?`${Math.floor(thinkState.count/5)} grupos de 5 y ${thinkState.count%5} más.`:'Busca primero los grupos completos de 5.';
+  if(ok)completeThinkChallenge(newThinkCount);
+};
+$('thinkTenChoices').onclick=event=>{
+  const button=event.target.closest('[data-think-ten]');if(!button)return;const answer=thinkState.tenTarget-thinkState.tenStart;const ok=Number(button.dataset.thinkTen)===answer;
+  setThinkFeedback('thinkTenFeedback',ok?'Reto comprendido. Vamos con otro.':'Piensa qué pareja de números suma 10.',ok?'ok':'bad');
+  $('thinkTenExplanation').textContent=ok?`${thinkState.tenStart} + ${answer} = ${thinkState.tenTarget}`:'Completa primero el siguiente múltiplo de 10.';
+  if(ok)completeThinkChallenge(newThinkTen);
+};
+$('thinkJumpChoices').onclick=event=>{
+  const button=event.target.closest('[data-think-jump]');if(!button)return;
+  const expected=jumpLanding(thinkState.jumpIndex),ok=Number(button.dataset.thinkJump)===expected;
+  if(!ok){setThinkFeedback('thinkJumpFeedback','Todavía no. Revisa cada salto.','bad');$('thinkJumpExplanation').textContent='Revisa desde qué número empieza el arco.';return}
+  thinkState.jumpLandings.push(expected);thinkState.jumpIndex++;renderThinkJump();
+  if(thinkState.jumpIndex<thinkState.jumpSteps.length){
+    setThinkFeedback('thinkJumpFeedback','Siguiente salto','ok');$('thinkJumpExplanation').textContent=`${thinkState.jumpSteps[thinkState.jumpIndex-1]>0?'+':''}${thinkState.jumpSteps[thinkState.jumpIndex-1]} aterriza en ${expected}.`;renderThinkJumpChoices();
+  }else{
+    $('thinkJumpChoices').innerHTML='';setThinkFeedback('thinkJumpFeedback','Reto comprendido. Vamos con otro.','ok');
+    $('thinkJumpExplanation').textContent=`${thinkState.jumpStart} ${thinkState.jumpSteps.map(value=>(value>=0?'+ ':'− ')+Math.abs(value)).join(' ')} = ${thinkState.jumpAnswer}`;
+    completeThinkChallenge(newThinkJump);
+  }
+};
+
 const MODULE_META={
-  sumaresta:{icon:'➕➖',name:'Suma y resta'},tablas:{icon:'🔢',name:'Tablas'},multiplication:{icon:'✖️',name:'Multiplicación'},division:{icon:'➗',name:'División'},roots:{icon:'√',name:'Raíces'},fractions:{icon:'🍰',name:'Fracciones'},order:{icon:'🧩',name:'Jerarquía'},equations:{icon:'⚖️',name:'Ecuaciones'},learn:{icon:'📘',name:'Aprende'}
+  sumaresta:{icon:'±',name:'Suma y resta'},tablas:{icon:'🔢',name:'Tablas'},multiplication:{icon:'✖️',name:'Multiplicación'},division:{icon:'➗',name:'División'},roots:{icon:'√',name:'Raíces'},fractions:{icon:'🍰',name:'Fracciones'},order:{icon:'🧩',name:'Jerarquía'},equations:{icon:'⚖️',name:'Ecuaciones'},think:{icon:'💡',name:'Pensar'},learn:{icon:'📘',name:'Aprende'}
 };
 function updateModuleActiveBar(mode){const meta=MODULE_META[mode]||MODULE_META.sumaresta;$('moduleActiveIcon').textContent=meta.icon;$('moduleActiveName').textContent=meta.name}
 function collapseModuleNavigation(){const nav=document.querySelector('.module-navigation');if(!nav||window.innerWidth<=900)return;nav.classList.add('nav-collapsed');$('moduleActiveBar').classList.remove('hidden')}
@@ -8888,7 +9614,7 @@ function switchModule(mode){
   resetChallengeScore();
   if($("moduleSelect"))$("moduleSelect").value=mode;
   updateModuleActiveBar(mode);
-  const isDiv=mode==="division",isMult=mode==="multiplication",isSumaResta=mode==="sumaresta",isRoots=mode==="roots",isFractions=mode==="fractions",isOrder=mode==="order",isEq=mode==="equations",isLearn=mode==="learn",isTablas=mode==="tablas";
+  const isDiv=mode==="division",isMult=mode==="multiplication",isSumaResta=mode==="sumaresta",isRoots=mode==="roots",isFractions=mode==="fractions",isOrder=mode==="order",isEq=mode==="equations",isThink=mode==="think",isLearn=mode==="learn",isTablas=mode==="tablas";
   $("divisionModule").classList.toggle("hidden",!isDiv);
   $("multiplicationModule").classList.toggle("hidden",!isMult);
   $("sumarestaModule").classList.toggle("hidden",!isSumaResta);
@@ -8897,6 +9623,7 @@ function switchModule(mode){
   $("orderModule").classList.toggle("hidden",!isOrder);
   $("equationsModule").classList.toggle("hidden",!isEq);
   $("learnModule").classList.toggle("hidden",!isLearn);
+  $("thinkModule").classList.toggle("hidden",!isThink);
   $("tablasModule").classList.toggle("hidden",!isTablas);
   $("divisionTab").classList.toggle("active",isDiv);
   $("multiplicationTab").classList.toggle("active",isMult);
@@ -8906,8 +9633,9 @@ function switchModule(mode){
   $("orderTab").classList.toggle("active",isOrder);
   $("equationsTab").classList.toggle("active",isEq);
   $("learnTab").classList.toggle("active",isLearn);
+  $("thinkTab").classList.toggle("active",isThink);
   $("tablasTab").classList.toggle("active",isTablas);
-  $("stepsPanel").classList.toggle("hidden",isTablas||isLearn);
+  $("stepsPanel").classList.toggle("hidden",isTablas||isLearn||isThink);
   $("tqLeftPanel").classList.toggle("hidden",!isTablas);
   $("rightDefault").classList.remove("hidden");
 
@@ -8959,6 +9687,11 @@ function switchModule(mode){
     $("helpContext").innerHTML="<b>Ecuaciones</b><br>Primero eliges la operación inversa; después resuelves el cálculo.";
     $("ruleBox").innerHTML="<h3>Reglas rápidas</h3><ol><li>Identifica qué acompaña a x.</li><li>Usa la operación inversa.</li><li>Hazla en ambos lados.</li><li>Deja x sola.</li><li>Comprueba sustituyendo.</li></ol>";
     renderEquationSteps(0);
+  }else if(isThink){
+    $("speech").textContent="Mira la cantidad, construye el número y explica tu estrategia.";
+    $("helpContext").innerHTML="<b>Pensar</b><br><span>Busca grupos de 5 y 10, comprende el valor posicional y descompón los saltos.</span>";
+    $("ruleBox").innerHTML="<h3>Ideas útiles</h3><ol><li>Busca estructuras antes de contar.</li><li>Relaciona cada cifra con su valor.</li><li>Usa el siguiente múltiplo de 10 como apoyo.</li><li>Descompón saltos grandes.</li></ol>";
+    showThinkActivity("count");
   }else if(isLearn){
     $("speech").textContent="Entiende la idea, sigue el ejemplo y comprueba antes de practicar.";
     $("helpContext").innerHTML="<b>Academia</b><br>Cada lección combina concepto, ejemplo trabajado, mini prueba y práctica.";
@@ -8978,6 +9711,7 @@ $("rootsTab").onclick=()=>chooseModule("roots");
 $("fractionsTab").onclick=()=>chooseModule("fractions");
 $("orderTab").onclick=()=>chooseModule("order");
 $("equationsTab").onclick=()=>chooseModule("equations");
+$("thinkTab").onclick=()=>chooseModule("think");
 $("learnTab").onclick=()=>chooseModule("learn");
 $("tablasTab").onclick=()=>chooseModule("tablas");
 $("moduleSelect").onchange=()=>chooseModule($("moduleSelect").value);
@@ -9061,6 +9795,7 @@ function resetCurrentModule(){
   else if(active&&active.id==="fractionsTab")switchModule("fractions");
   else if(active&&active.id==="orderTab")switchModule("order");
   else if(active&&active.id==="equationsTab")switchModule("equations");
+  else if(active&&active.id==="thinkTab")switchModule("think");
   else if(active&&active.id==="learnTab")switchModule("learn");
   else switchModule("sumaresta");
 }
@@ -9236,10 +9971,9 @@ function tableSummary(profile,table){
   return{att,ok,accuracy,level,masteredCount,weakCount,learningCount,untriedCount};
 }
 function tableDisplayInfo(summary){
-  if(summary.level==='untried')return{status:'Sin practicar',meta:'Aún sin datos',level:'untried'};
-  if(summary.level==='mastered')return{status:'Muy bien',meta:`${summary.ok}/${summary.att} bien · ${Math.round(summary.accuracy*100)}%`,level:'mastered'};
-  if(summary.level==='weak')return{status:'Necesita repaso',meta:`${summary.ok}/${summary.att} bien · ${Math.round(summary.accuracy*100)}%`,level:'weak'};
-  return{status:'Practicada',meta:`${summary.ok}/${summary.att} bien · ${Math.round(summary.accuracy*100)}%`,level:'learning'};
+  if(summary.level==='untried')return{status:'Sin practicar',level:'untried'};
+  if(summary.level==='mastered')return{status:'Conseguida',level:'mastered'};
+  return{status:'En progreso',level:summary.level};
 }
 
 function renderTablesGrid(){
@@ -9249,11 +9983,8 @@ function renderTablesGrid(){
     const info=tableDisplayInfo(summary);
     const b=document.createElement('button');
     b.className=`tbtn neutral-table${selectedTables.has(i)?' on':''}`;
-    const progress=summary.att ? `${summary.masteredCount}/10 cuentas dominadas` : 'Empieza por la que quieras';
-    b.innerHTML=`<span class="table-number">${i}</span><small>tabla</small><span class="table-status">${info.status}</span><span class="table-meta">${info.meta}</span><span class="table-progress">${progress}</span>`;
-    b.title=summary.att
-      ? `Tabla del ${i}: ${summary.ok} aciertos de ${summary.att} respuestas (${Math.round(summary.accuracy*100)}%).`
-      : `Tabla del ${i}: todavía sin practicar.`;
+    b.innerHTML=`<span class="table-number">${i}</span><small>tabla</small><span class="table-status">${info.status}</span>`;
+    b.title=`Tabla del ${i}: ${info.status}.`;
     b.onclick=()=>{if(selectedTables.has(i))selectedTables.delete(i);else selectedTables.add(i);renderTablesGrid()};
     g.appendChild(b);
   }
@@ -9481,7 +10212,17 @@ function loadFirebaseScripts(){
     document.head.appendChild(s1);
   });
 }
-function setSyncStatus(text){const el=$('syncStatus');if(el)el.textContent=text}
+function setSyncStatus(text){
+  const el=$('syncStatus');
+  const block=$('syncBlock');
+  if(el)el.textContent=text;
+  if(!block)return;
+  const normalized=String(text||'').toLowerCase();
+  const isOk=normalized.includes('sincronizado')||normalized.includes('sincronitzat');
+  const isError=normalized.includes('no se pudo')||normalized.includes('no s’ha pogut')||normalized.includes('no s\'ha pogut')||normalized.includes('se perdió')||normalized.includes('s’ha perdut')||normalized.includes('error');
+  block.dataset.syncState=isOk?'ok':isError?'error':'pending';
+  block.title=text||'';
+}
 function showSyncSetupUI(){$('syncSetupBlock').classList.remove('hidden');$('syncActiveBlock').classList.add('hidden')}
 function showSyncActiveUI(code){$('syncSetupBlock').classList.add('hidden');$('syncActiveBlock').classList.remove('hidden');$('syncCodeDisplay').textContent=code}
 
@@ -9594,5 +10335,7 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
   });
 }
 </script>
+<script src="src/i18n.js"></script>
+<script>window.MatesQuestI18n.start();</script>
 </body>
 </html>

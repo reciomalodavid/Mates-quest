@@ -1,10 +1,11 @@
 const CACHE_PREFIX = 'mates-quest-v';
-const CACHE_NAME = 'mates-quest-v7-1';
+const CACHE_NAME = 'mates-quest-v7-2';
 const APP_SHELL = [
   './index.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './src/i18n.js'
 ];
 
 self.addEventListener('install', (event) => {

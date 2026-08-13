@@ -1,0 +1,12 @@
+{
+  "name": "mates-quest",
+  "private": true,
+  "version": "7.2.0",
+  "type": "module",
+  "scripts": {
+    "check": "node scripts/audit-i18n-static.mjs && node scripts/check-production.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
